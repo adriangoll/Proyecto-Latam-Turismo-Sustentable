@@ -18,3 +18,13 @@ module "s3" {
   source               = "./modules/s3"
   datalake_bucket_name = var.datalake_bucket_name
 }
+
+module "iam" {
+  source = "./modules/iam"
+
+  data_engineers_group_name   = var.data_engineers_group_name
+  project_managers_group_name = var.project_managers_group_name
+
+  data_engineers_users   = var.data_engineers_users
+  project_managers_users = var.project_managers_users
+}
