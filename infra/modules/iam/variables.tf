@@ -13,3 +13,11 @@ variable "data_engineers_users" {
 variable "project_managers_users" {
   type = list(string)
 }
+
+variable "data_engineers_policy_arns" {
+  type = list(string)
+}
+
+variable "project_managers_policy_arns" {
+  type = list(string)
+}

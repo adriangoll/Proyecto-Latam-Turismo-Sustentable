@@ -49,3 +49,27 @@ variable "data_engineers_users" {
 variable "project_managers_users" {
   type = list(string)
 }
+
+variable "data_engineers_policy_arns" {
+  type = list(string)
+}
+
+variable "project_managers_policy_arns" {
+  type = list(string)
+}
+
+variable "glue_database_name" {
+  type = string
+}
+
+variable "glue_service_role_name" {
+  type = string
+}
+
+variable "glue_crawler_name" {
+  type = string
+}
+
+variable "crawler_s3_target_path" {
+  type = string
+}
