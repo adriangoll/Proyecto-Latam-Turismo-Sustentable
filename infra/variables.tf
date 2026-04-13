@@ -29,3 +29,7 @@ variable "budget_notification_email" {
 variable "budget_threshold" {
   type    = number
 }
+
+variable "datalake_bucket_name" {
+  type = string
+}

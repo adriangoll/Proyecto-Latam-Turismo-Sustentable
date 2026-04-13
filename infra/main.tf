@@ -13,3 +13,8 @@ resource "aws_budgets_budget" "zero_budget" {
     subscriber_email_addresses = [var.budget_notification_email]
   }
 }
+
+module "s3" {
+  source               = "./modules/s3"
+  datalake_bucket_name = var.datalake_bucket_name
+}

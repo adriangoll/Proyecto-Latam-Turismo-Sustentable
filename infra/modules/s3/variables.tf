@@ -1,3 +1,3 @@
-variable "bronze_bucket_name" {
+variable "datalake_bucket_name" {
   type = string
 }
