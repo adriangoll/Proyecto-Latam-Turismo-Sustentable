@@ -22,7 +22,7 @@ APIs → Amazon S3 → AWS Glue → Procesamiento (Pandas) → Amazon Athena →
 
 El siguiente diagrama representa la arquitectura general del pipeline:
 
-![Arquitectura del Data Lake](docs/diagrama_arquitectura.png)
+![Arquitectura del Data Lake](diagrama_arquitectura.png)
 ## Modelo de Datos
 
 El siguiente diagrama representa el modelo conceptual de datos, mostrando las principales entidades, atributos y relaciones utilizadas en el análisis de turismo y emisiones de CO₂.
