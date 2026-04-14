@@ -27,7 +27,7 @@ El siguiente diagrama representa la arquitectura general del pipeline:
 
 El siguiente diagrama representa el modelo conceptual de datos, mostrando las principales entidades, atributos y relaciones utilizadas en el análisis de turismo y emisiones de CO₂.
 
-![Arquitectura](docs/diagrama_arquitectura.png)
+![Modelo de Datos](diagrama_modelo_conceptual.png)
 
 ## Tecnologías Clave
 
