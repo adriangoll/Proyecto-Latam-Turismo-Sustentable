@@ -35,6 +35,12 @@ from io import BytesIO
 import pandas as pd
 import requests
 
+import os as _os
+import sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+if _HERE not in _sys.path:
+    _sys.path.insert(0, _HERE)
+
 from config import (
     COUNTRY_ISO3,
     LATAM_COUNTRIES,

@@ -14,6 +14,12 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from botocore.exceptions import ClientError
 
+import os as _os
+import sys as _sys
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+if _HERE not in _sys.path:
+    _sys.path.insert(0, _HERE)
+
 from config import S3_BUCKET
 
 # ─── Logger ───────────────────────────────────────────────────────────────────
@@ -151,7 +157,7 @@ def normalize_country_name(name: str, aliases: dict) -> str:
 def log_dataframe_summary(df: pd.DataFrame, label: str) -> None:
     """Imprime un resumen rápido del DataFrame para trazabilidad."""
     logger.info(
-        " %s | shape=%s | nulls=%d | países=%s | años=%s",
+        "📊 %s | shape=%s | nulls=%d | países=%s | años=%s",
         label,
         df.shape,
         df.isnull().sum().sum(),
