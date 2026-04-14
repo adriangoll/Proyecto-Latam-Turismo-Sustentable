@@ -8,24 +8,38 @@ La solución propone una arquitectura escalable, flexible y eficiente en costos,
 
 ## Arquitectura
 
-La solución se basa en un Data Lake implementado en Amazon S3 bajo un enfoque Medallion:
+La solución se basa en un Data Lake implementado en Amazon S3 bajo un enfoque Medallion, el cual organiza los datos en diferentes niveles de madurez:
 
-- **Bronze:** datos crudos  
-- **Silver:** datos limpios y estructurados  
-- **Gold:** KPIs listos para análisis  
+- **Bronze:** almacenamiento de datos crudos provenientes de distintas fuentes  
+- **Silver:** datos limpios, normalizados y validados para su consumo analítico  
+- **Gold:** datasets agregados y KPIs listos para análisis de negocio  
 
 ### Flujo del sistema
 
-APIs → Amazon S3 → AWS Glue → Procesamiento (Pandas) → Amazon Athena → Dashboard (Streamlit)
+El pipeline sigue un flujo end-to-end completamente orquestado:
+
+APIs → Amazon S3 (Bronze) → AWS Glue / Transformaciones (Silver) → Modelado (Gold) → Amazon Athena → Dashboard (Streamlit)
 
 ### Diagrama de Arquitectura
 
-El siguiente diagrama representa la arquitectura general del pipeline:
+El siguiente diagrama representa la arquitectura general del pipeline, incluyendo los componentes de ingesta, procesamiento, almacenamiento, consulta y visualización.
+
+Se observa la integración de herramientas como Apache Airflow para la orquestación, AWS Glue para el procesamiento de datos, Amazon Athena para consultas analíticas y Streamlit para la capa de visualización.
 
 ![Arquitectura del Data Lake](diagrama_arquitectura.png)
+
 ## Modelo de Datos
 
-El siguiente diagrama representa el modelo conceptual de datos, mostrando las principales entidades, atributos y relaciones utilizadas en el análisis de turismo y emisiones de CO₂.
+El siguiente diagrama representa el modelo conceptual de datos utilizado en la capa Gold del Data Lake.
+
+El diseño sigue un enfoque tipo esquema analítico, donde se integran diferentes entidades clave relacionadas con turismo, emisiones y variables económicas.
+
+Se identifican:
+
+- Tablas de hechos como **TOURISM_FACT**, **EMISSIONS_ECONOMY_FACT** y **TOURISM_TRANSPORT_FACT**  
+- Dimensiones como **COUNTRY**, **YEAR** y **TRANSPORT_TYPE**  
+
+Este modelo permite analizar la relación entre la actividad turística, el crecimiento económico y el impacto ambiental, facilitando consultas eficientes y generación de KPIs.
 
 ![Modelo de Datos](diagrama_modelo_conceptual.png)
 
