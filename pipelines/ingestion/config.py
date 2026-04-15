@@ -9,7 +9,7 @@ YEAR_END = 2023
 YEARS = list(range(YEAR_START, YEAR_END + 1))
 
 # ─── Países LATAM ────────────────────────────────────────────────────────────
-# Nombres tal como aparecen en OWID y World Bank
+# Nombres tal como aparecen en UNWTO y World Bank
 LATAM_COUNTRIES = [
     "Argentina",
     "Bolivia",
@@ -100,7 +100,7 @@ S3_PATHS = {
     # Raw: archivo original tal como viene de la fuente
     "raw_co2":        "raw/owid_co2/owid-co2-data.csv",
     "raw_tourism":    "raw/worldbank_tourism/",         # un CSV por indicador
-    "raw_transport":  "raw/owid_transport/tourist-arrivals-by-transport-mode.csv",
+    "raw_transport": "raw/unwto_transport/unwto_transport.xlsx",
 
     # Bronze: particionado por year= / country_code=, formato Parquet
     "bronze_co2":       "bronze/co2_emissions/",
@@ -113,8 +113,8 @@ OWID_CO2_URL = (
     "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
 )
 
-OWID_TRANSPORT_URL = (
-    "https://ourworldindata.org/grapher/tourist-arrivals-by-transport-mode.csv"
+UNWTO_TRANSPORT_URL = (
+    "https://pre-webunwto.s3.amazonaws.com/s3fs-public/2025-12/UN_Tourism_inbound_arrivals_by_transport_12_2025.xlsx"
 )
 
 # World Bank — indicadores requeridos

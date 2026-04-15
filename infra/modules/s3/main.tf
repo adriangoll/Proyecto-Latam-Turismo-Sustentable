@@ -34,9 +34,9 @@ resource "aws_s3_object" "gold_prefix" {
   content = ""
 }
 
-resource "aws_s3_object" "raw_owid_co2_prefix" {
+resource "aws_s3_object" "raw_UNWTO_co2_prefix" {
   bucket  = aws_s3_bucket.datalake.id
-  key     = "raw/owid_co2/"
+  key     = "raw/UNWTO_co2/"
   content = ""
 }
 
@@ -51,9 +51,9 @@ resource "aws_s3_object" "raw_worldbank_tourism_prefix" {
   content = ""
 }
 
-resource "aws_s3_object" "raw_owid_transport_prefix" {
+resource "aws_s3_object" "raw_UNWTO_transport_prefix" {
   bucket  = aws_s3_bucket.datalake.id
-  key     = "raw/owid_transport/"
+  key     = "raw/UNWTO_transport/"
   content = ""
 }
 
