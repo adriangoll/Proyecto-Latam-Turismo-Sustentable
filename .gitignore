@@ -1,3 +1,52 @@
+# =========================
+# PYTHON
+# =========================
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.pytest_cache/
+*.coverage
+.coverage.*
+htmlcov/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# =========================
+# LOGS
+# =========================
+*.log
+
+# =========================
+# OS / EDITOR
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# DATA (si alguna vez guardás local)
+# =========================
+*.csv
+*.parquet
+*.xlsx
+
+# =========================
+# TERRAFORM
+# =========================
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+.terraform.lock.hcl
+
+# (opcional si usás módulos locales)
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
