@@ -34,6 +34,7 @@ import requests
 
 import os as _os
 import sys as _sys
+
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:
     _sys.path.insert(0, _HERE)
@@ -62,9 +63,9 @@ logger = logging.getLogger("ingestion.worldbank_tourism")
 ISO2_TO_COUNTRY = {v: k for k, v in COUNTRY_ISO2.items()}
 
 # ─── Parámetros de la API ─────────────────────────────────────────────────────
-WB_PAGE_SIZE = 1000        # máximo permitido por la API
+WB_PAGE_SIZE = 1000  # máximo permitido por la API
 WB_RETRY_ATTEMPTS = 3
-WB_RETRY_DELAY = 2         # segundos entre reintentos
+WB_RETRY_DELAY = 2  # segundos entre reintentos
 
 
 def fetch_indicator(indicator_code: str, country_iso2_list: list[str]) -> list[dict]:
@@ -82,8 +83,7 @@ def fetch_indicator(indicator_code: str, country_iso2_list: list[str]) -> list[d
     # La API acepta múltiples países separados por ";"
     countries_param = ";".join(country_iso2_list)
     url = (
-        f"{WORLDBANK_BASE_URL}/country/{countries_param}"
-        f"/indicator/{indicator_code}"
+        f"{WORLDBANK_BASE_URL}/country/{countries_param}" f"/indicator/{indicator_code}"
     )
 
     params = {
@@ -103,7 +103,10 @@ def fetch_indicator(indicator_code: str, country_iso2_list: list[str]) -> list[d
             try:
                 logger.info(
                     "   → [%s] página %d/%d (intento %d)",
-                    indicator_code, page, total_pages, attempt,
+                    indicator_code,
+                    page,
+                    total_pages,
+                    attempt,
                 )
                 resp = requests.get(url, params=params, timeout=30)
                 resp.raise_for_status()
@@ -111,7 +114,9 @@ def fetch_indicator(indicator_code: str, country_iso2_list: list[str]) -> list[d
                 break
             except (requests.RequestException, ValueError) as e:
                 if attempt == WB_RETRY_ATTEMPTS:
-                    logger.error("❌ Fallo definitivo en %s p%d: %s", indicator_code, page, e)
+                    logger.error(
+                        "❌ Fallo definitivo en %s p%d: %s", indicator_code, page, e
+                    )
                     raise
                 logger.warning("   ⚠️ Reintentando en %ds...", WB_RETRY_DELAY)
                 time.sleep(WB_RETRY_DELAY)
@@ -180,12 +185,16 @@ def parse_wb_records(
 
         value = r.get("value")  # puede ser None (null en la API)
 
-        rows.append({
-            "country": country_name,
-            "country_code": COUNTRY_ISO3.get(country_name, r.get("countryiso3code", "")),
-            "year": year,
-            col_name: float(value) if value is not None else None,
-        })
+        rows.append(
+            {
+                "country": country_name,
+                "country_code": COUNTRY_ISO3.get(
+                    country_name, r.get("countryiso3code", "")
+                ),
+                "year": year,
+                col_name: float(value) if value is not None else None,
+            }
+        )
 
     return pd.DataFrame(rows)
 
@@ -220,7 +229,9 @@ def validate(df: pd.DataFrame) -> bool:
     if df.empty:
         errors.append("DataFrame vacío")
 
-    missing_countries = set(LATAM_COUNTRIES) - set(df.get("country", pd.Series()).unique())
+    missing_countries = set(LATAM_COUNTRIES) - set(
+        df.get("country", pd.Series()).unique()
+    )
     if missing_countries:
         logger.warning("⚠️  Países sin datos: %s", missing_countries)
 
@@ -229,7 +240,9 @@ def validate(df: pd.DataFrame) -> bool:
         null_pct = df["tourist_arrivals"].isnull().mean() * 100
         if null_pct > 60:
             errors.append(f"tourist_arrivals tiene {null_pct:.1f}% nulos (umbral: 60%)")
-            logger.warning("   Nota: World Bank tiene cobertura parcial para algunos países")
+            logger.warning(
+                "   Nota: World Bank tiene cobertura parcial para algunos países"
+            )
 
     if errors:
         for e in errors:
@@ -251,8 +264,13 @@ def run(dry_run: bool = False) -> None:
     logger.info("=" * 60)
     logger.info("🚀 Iniciando ingesta World Bank Tourism")
     logger.info("   Indicadores: %s", list(WORLDBANK_INDICATORS.keys()))
-    logger.info("   Países: %d | Años: %d–%d | Dry-run: %s",
-                len(LATAM_COUNTRIES), YEAR_START, YEAR_END, dry_run)
+    logger.info(
+        "   Países: %d | Años: %d–%d | Dry-run: %s",
+        len(LATAM_COUNTRIES),
+        YEAR_START,
+        YEAR_END,
+        dry_run,
+    )
     logger.info("=" * 60)
 
     country_iso2_list = list(COUNTRY_ISO2.values())
@@ -308,8 +326,13 @@ def run(dry_run: bool = False) -> None:
     else:
         logger.info("[DRY-RUN] DataFrame final listo para subir:")
         logger.info("\n%s", df_combined.head(10).to_string())
-        logger.info("   Shape: %s | Columnas: %s", df_combined.shape, list(df_combined.columns))
-        logger.info("   Particiones estimadas: %d", df_combined.groupby(["year", "country_code"]).ngroups)
+        logger.info(
+            "   Shape: %s | Columnas: %s", df_combined.shape, list(df_combined.columns)
+        )
+        logger.info(
+            "   Particiones estimadas: %d",
+            df_combined.groupby(["year", "country_code"]).ngroups,
+        )
 
 
 if __name__ == "__main__":

@@ -1,33 +1,33 @@
 variable "aws_region" {
-  type    = string
+  type = string
 }
 
 variable "aws_profile" {
-  type    = string
+  type = string
 }
 
 variable "budget_name" {
-  type    = string
+  type = string
 }
 
 variable "budget_limit_amount" {
-  type    = string
+  type = string
 }
 
 variable "budget_limit_unit" {
-  type    = string
+  type = string
 }
 
 variable "budget_time_unit" {
-  type    = string
+  type = string
 }
 
 variable "budget_notification_email" {
-  type    = string
+  type = string
 }
 
 variable "budget_threshold" {
-  type    = number
+  type = number
 }
 
 variable "datalake_bucket_name" {

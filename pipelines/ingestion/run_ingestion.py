@@ -32,9 +32,9 @@ logging.basicConfig(
 
 # ✔ FIX SOURCES
 SOURCES = {
-    "co2":       (ingest_owid_co2,          "OWID CO2 & Emissions"),
+    "co2": (ingest_owid_co2, "OWID CO2 & Emissions"),
     "worldbank": (ingest_worldbank_tourism, "World Bank Tourism"),
-    "transport": (ingest_unwto_transport,   "UNWTO Transport Mode"),
+    "transport": (ingest_unwto_transport, "UNWTO Transport Mode"),
 }
 
 

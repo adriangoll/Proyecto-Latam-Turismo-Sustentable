@@ -36,6 +36,7 @@ import requests
 
 import os as _os
 import sys as _sys
+
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:
     _sys.path.insert(0, _HERE)
@@ -63,16 +64,16 @@ logger = logging.getLogger("ingestion.owid_co2")
 COLUMNS_KEEP = [
     "country",
     "year",
-    "iso_code",          # ISO3 que trae OWID — lo usamos para validar
-    "co2",               # Mt de CO₂ totales
-    "co2_per_capita",    # t CO₂ por persona
-    "co2_per_gdp",       # kg CO₂ por USD de PIB
-    "cumulative_co2",    # CO₂ acumulado histórico (Mt)
-    "methane",           # Emisiones metano (Mt CO₂eq)
-    "nitrous_oxide",     # Óxido nitroso (Mt CO₂eq)
-    "gdp",               # PIB (USD 2011 PPP)
+    "iso_code",  # ISO3 que trae OWID — lo usamos para validar
+    "co2",  # Mt de CO₂ totales
+    "co2_per_capita",  # t CO₂ por persona
+    "co2_per_gdp",  # kg CO₂ por USD de PIB
+    "cumulative_co2",  # CO₂ acumulado histórico (Mt)
+    "methane",  # Emisiones metano (Mt CO₂eq)
+    "nitrous_oxide",  # Óxido nitroso (Mt CO₂eq)
+    "gdp",  # PIB (USD 2011 PPP)
     "population",
-    "energy_per_capita", # kWh per cápita
+    "energy_per_capita",  # kWh per cápita
     "share_global_co2",  # % del CO₂ mundial
 ]
 
@@ -126,8 +127,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     df["country_code"] = df["country_code"].astype(str)
 
     numeric_cols = [
-        c for c in df.columns
-        if c not in ("country", "country_code", "year")
+        c for c in df.columns if c not in ("country", "country_code", "year")
     ]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -170,8 +170,13 @@ def validate(df: pd.DataFrame) -> bool:
 def run(dry_run: bool = False) -> None:
     logger.info("=" * 60)
     logger.info("🚀 Iniciando ingesta OWID CO2")
-    logger.info("   Países: %d | Años: %d–%d | Dry-run: %s",
-                len(LATAM_COUNTRIES), YEAR_START, YEAR_END, dry_run)
+    logger.info(
+        "   Países: %d | Años: %d–%d | Dry-run: %s",
+        len(LATAM_COUNTRIES),
+        YEAR_START,
+        YEAR_END,
+        dry_run,
+    )
     logger.info("=" * 60)
 
     # 1. Descarga
@@ -208,7 +213,9 @@ def run(dry_run: bool = False) -> None:
         logger.info("\n%s", df.head(10).to_string())
         logger.info("   Shape final: %s", df.shape)
         logger.info("   Columnas: %s", list(df.columns))
-        logger.info("   Particiones estimadas: %d", df.groupby(["year", "country_code"]).ngroups)
+        logger.info(
+            "   Particiones estimadas: %d", df.groupby(["year", "country_code"]).ngroups
+        )
 
 
 if __name__ == "__main__":

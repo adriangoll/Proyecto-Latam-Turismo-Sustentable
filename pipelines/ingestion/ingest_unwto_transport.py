@@ -39,6 +39,7 @@ import requests
 
 import os as _os
 import sys as _sys
+
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:
     _sys.path.insert(0, _HERE)
@@ -117,9 +118,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     df["year"] = pd.to_numeric(df["year"], errors="coerce")
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
 
-    df = df[
-        (df["year"] >= YEAR_START) & (df["year"] <= YEAR_END)
-    ].copy()
+    df = df[(df["year"] >= YEAR_START) & (df["year"] <= YEAR_END)].copy()
 
     df["year"] = df["year"].astype(int)
 
@@ -127,15 +126,17 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
         index=["country", "year"],
         columns="transport_mode",
         values="value",
-        aggfunc="sum"
+        aggfunc="sum",
     ).reset_index()
 
-    df_pivot = df_pivot.rename(columns={
-        "air": "tourists_air",
-        "land": "tourists_land",
-        "sea": "tourists_sea",
-        "total": "tourists_total"
-    })
+    df_pivot = df_pivot.rename(
+        columns={
+            "air": "tourists_air",
+            "land": "tourists_land",
+            "sea": "tourists_sea",
+            "total": "tourists_total",
+        }
+    )
 
     for col in ["tourists_air", "tourists_land", "tourists_sea"]:
         if col not in df_pivot.columns:
@@ -153,15 +154,18 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     for mode in ["air", "sea", "land"]:
         df_pivot[f"pct_{mode}"] = float("nan")
         df_pivot.loc[mask, f"pct_{mode}"] = (
-            df_pivot.loc[mask, f"tourists_{mode}"] /
-            df_pivot.loc[mask, "tourists_total"] * 100
+            df_pivot.loc[mask, f"tourists_{mode}"]
+            / df_pivot.loc[mask, "tourists_total"]
+            * 100
         ).round(2)
 
     cols_final = [c for c in OUTPUT_COLUMNS if c in df_pivot.columns]
 
-    df = df_pivot[cols_final].sort_values(
-        ["country_code", "year"]
-    ).reset_index(drop=True)
+    df = (
+        df_pivot[cols_final]
+        .sort_values(["country_code", "year"])
+        .reset_index(drop=True)
+    )
 
     log_dataframe_summary(df, "UNWTO Transport")
     return df

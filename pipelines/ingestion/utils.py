@@ -16,6 +16,7 @@ from botocore.exceptions import ClientError
 
 import os as _os
 import sys as _sys
+
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:
     _sys.path.insert(0, _HERE)
@@ -68,7 +69,9 @@ def upload_raw_to_s3(
             Body=content,
             ContentType=content_type,
         )
-        logger.info("✅ Raw upload OK → s3://%s/%s (%d bytes)", bucket, s3_key, len(content))
+        logger.info(
+            "✅ Raw upload OK → s3://%s/%s (%d bytes)", bucket, s3_key, len(content)
+        )
     except ClientError as e:
         logger.error("❌ Error subiendo raw a S3: %s", e)
         raise
@@ -113,8 +116,7 @@ def upload_parquet_partitioned(
 
         # Construir el path estilo Hive: year=2020/country_code=ARG/
         partition_path = "/".join(
-            f"{col}={val}"
-            for col, val in zip(partition_cols, partition_values)
+            f"{col}={val}" for col, val in zip(partition_cols, partition_values)
         )
         s3_key = f"{s3_prefix.rstrip('/')}/{partition_path}/data.parquet"
 
@@ -135,7 +137,10 @@ def upload_parquet_partitioned(
             files_uploaded += 1
             logger.debug(
                 "  📦 Parquet → s3://%s/%s (rows=%d, %d bytes)",
-                bucket, s3_key, len(partition_df), len(parquet_bytes),
+                bucket,
+                s3_key,
+                len(partition_df),
+                len(parquet_bytes),
             )
         except ClientError as e:
             logger.error("❌ Error subiendo Parquet %s: %s", s3_key, e)
@@ -143,7 +148,9 @@ def upload_parquet_partitioned(
 
     logger.info(
         "✅ Bronze upload OK → s3://%s/%s | %d particiones subidas",
-        bucket, s3_prefix, files_uploaded,
+        bucket,
+        s3_prefix,
+        files_uploaded,
     )
     return files_uploaded
 
