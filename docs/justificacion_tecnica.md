@@ -3,7 +3,7 @@
 ## Pipeline de Datos para Turismo y Emisiones de CO₂ en América Latina
 ## Introducción
 El proyecto consiste en el diseño e implementación de un pipeline de datos end-to-end para analizar la relación entre el turismo y las emisiones de CO₂ en América Latina, utilizando una arquitectura de Data Lake en AWS.
-Está orientado a apoyar a una organización enfocada en sostenibilidad en la comprensión del impacto ambiental del turismo y el crecimiento económico, mediante la integración y análisis de múltiples fuentes de datos.
+Está orientado a apoyar a una organización enfocada en sustenibilidad en la comprensión del impacto ambiental del turismo y el crecimiento económico, mediante la integración y análisis de múltiples fuentes de datos.
 La solución propone una arquitectura escalable, flexible y eficiente en costos, que permite la generación de indicadores clave (KPIs) y la obtención de insights para la toma de decisiones, bajo un enfoque **zero-budget** basado en servicios cloud de pago por uso.
 
 ## Arquitectura
