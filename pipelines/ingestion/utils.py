@@ -6,16 +6,14 @@ Grupo 1 — LATAM Sustainability Data Lake
 import io
 import logging
 import os
-from typing import Optional
+import os as _os
+import sys as _sys
 
 import boto3
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 from botocore.exceptions import ClientError
-
-import os as _os
-import sys as _sys
 
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:

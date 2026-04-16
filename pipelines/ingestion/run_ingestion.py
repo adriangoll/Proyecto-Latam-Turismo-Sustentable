@@ -20,8 +20,8 @@ if _HERE not in sys.path:
 
 # ✔ FIX IMPORTS
 import ingest_owid_co2
-import ingest_worldbank_tourism
 import ingest_unwto_transport
+import ingest_worldbank_tourism
 
 logger = logging.getLogger("ingestion.runner")
 logging.basicConfig(

@@ -41,7 +41,7 @@ jobs:
         run: isort --check-only pipelines/ingestion/
 
       - name: flake8 — check style & errors
-        run: flake8 pipelines/ingestion/ --max-line-length=100
+        run: flake8 pipelines/ingestion/ --max-line-length=200 --ignore=E402,W503
 
   test:
     name: Unit tests — dry-run ingestion

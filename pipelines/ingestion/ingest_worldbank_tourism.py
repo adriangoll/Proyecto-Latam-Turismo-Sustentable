@@ -25,37 +25,24 @@ Variables de entorno requeridas:
 
 import argparse
 import logging
+import os as _os
 import sys
+import sys as _sys
 import time
 from io import StringIO
 
 import pandas as pd
 import requests
 
-import os as _os
-import sys as _sys
-
 _HERE = _os.path.dirname(_os.path.abspath(__file__))
 if _HERE not in _sys.path:
     _sys.path.insert(0, _HERE)
 
-from config import (
-    COUNTRY_ISO2,
-    COUNTRY_ISO3,
-    LATAM_COUNTRIES,
-    NAME_ALIASES,
-    S3_PATHS,
-    WORLDBANK_BASE_URL,
-    WORLDBANK_INDICATORS,
-    YEAR_END,
-    YEAR_START,
-)
-from utils import (
-    log_dataframe_summary,
-    normalize_country_name,
-    upload_parquet_partitioned,
-    upload_raw_to_s3,
-)
+from config import (COUNTRY_ISO2, COUNTRY_ISO3, LATAM_COUNTRIES, NAME_ALIASES,
+                    S3_PATHS, WORLDBANK_BASE_URL, WORLDBANK_INDICATORS,
+                    YEAR_END, YEAR_START)
+from utils import (log_dataframe_summary, normalize_country_name,
+                   upload_parquet_partitioned, upload_raw_to_s3)
 
 logger = logging.getLogger("ingestion.worldbank_tourism")
 
