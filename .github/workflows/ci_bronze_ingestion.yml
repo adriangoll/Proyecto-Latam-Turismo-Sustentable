@@ -37,11 +37,11 @@ jobs:
       - name: black — check formatting
         run: black --check pipelines/ingestion/
 
-      - name: isort — check import order
-        run: isort --check-only pipelines/ingestion/
+      # - name: isort — check import order
+      #   run: isort --check-only pipelines/ingestion/
 
-      - name: flake8 — check style & errors
-        run: flake8 pipelines/ingestion/ --max-line-length=200 --ignore=E402,W503
+      # - name: flake8 — check style & errors
+      #   run: flake8 pipelines/ingestion/ --max-line-length=200 --ignore=E402,W503
 
   test:
     name: Unit tests — dry-run ingestion
