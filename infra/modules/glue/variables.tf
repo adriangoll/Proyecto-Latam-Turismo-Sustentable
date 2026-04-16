@@ -2,6 +2,7 @@ variable "glue_database_name" {
   type = string
 }
 
+
 variable "glue_service_role_name" {
   type = string
 }

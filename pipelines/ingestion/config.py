@@ -79,7 +79,7 @@ COUNTRY_ISO2 = {
 }
 
 # ─── Nombres alternativos en fuentes externas ─────────────────────────────────
-# Algunos datasets usan variantes del nombre. Normalizamos a nuestro estándar.
+# Algunos datasets usan variantes de nombre. Normalizamos a nuestro estándar.
 NAME_ALIASES = {
     "Venezuela, RB":              "Venezuela",
     "Venezuela (Bolivarian Republic of)": "Venezuela",
