@@ -41,7 +41,6 @@ Thumbs.db
 .terraform/
 *.tfstate
 *.tfstate.*
-terraform.tfvars
 .terraform.lock.hcl
 
 # (opcional si usás módulos locales)
