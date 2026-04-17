@@ -70,6 +70,8 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Run tests
+        env:
+          PYTHONPATH: .
         working-directory: pipelines/ingestion
         run: |
           pytest ../../tests/ingestion/ \
