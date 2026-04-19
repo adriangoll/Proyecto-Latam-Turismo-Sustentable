@@ -134,6 +134,14 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     # ── Ordenar para mejor compresión Parquet ─────────────────────────────────
     df = df.sort_values(["country_code", "year"]).reset_index(drop=True)
 
+    # ── Detección de duplicados ─────────────────────────────────────────────
+    dupes = df.duplicated(subset=["country_code", "year"], keep=False)
+    if dupes.any():
+        logger.warning(
+            "⚠️ Duplicados detectados: %d filas (country_code, year)",
+            dupes.sum()
+        )
+
     log_dataframe_summary(df, "OWID CO2 — post-filtro")
     return df
 

@@ -166,6 +166,14 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
         .reset_index(drop=True)
     )
 
+        # ── Detección de duplicados ─────────────────────────────────────────────
+    dupes = df.duplicated(subset=["country_code", "year"], keep=False)
+    if dupes.any():
+        logger.warning(
+            "⚠️ Duplicados detectados: %d filas (country_code, year)",
+            dupes.sum()
+        )
+
     log_dataframe_summary(df, "UNWTO Transport")
     return df
 

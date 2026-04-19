@@ -307,6 +307,17 @@ def run(dry_run: bool = False) -> None:
 
     # 2. Combinar todos los indicadores
     df_combined = build_combined_df(all_dfs)
+
+        # ── Detección de duplicados ─────────────────────────────────────────────
+    dupes = df_combined.duplicated(
+        subset=["country_code", "year"],
+        keep=False
+    )
+    if dupes.any():
+        logger.warning(
+            "⚠️ Duplicados detectados: %d filas (country_code, year)",
+            dupes.sum()
+        )
     log_dataframe_summary(df_combined, "World Bank Tourism — combinado")
 
     # 3. Validación
