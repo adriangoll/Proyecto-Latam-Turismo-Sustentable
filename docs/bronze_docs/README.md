@@ -126,28 +126,26 @@ Bronze	Pipelines de ingesta	✅ Completado
 Raw	Estructura en S3	✅ Completado
 
 
-Integrantes del equipo:
-
 - Adrian Sosa (Scrum Master)  
   - Liderazgo de ceremonias ágiles y planificación de sprints  
-  - Desarrollo e implementación de lógica de código en pipelines
+  - Desarrollo e implementación de lógica de código en pipelines  
   - Desarrollo de CI/CD con GitHub Actions  
-  - Coordinación técnica del equipo
- 
-  - Martin Tedesco  
+  - Coordinación técnica del equipo  
+
+- Martin Tedesco  
   - Data Engineer / Data Analyst  
   - Desarrollo de lógica de procesamiento en pipelines  
-  - Apoyo en transformación de datos y análisis 
+  - Apoyo en transformación de datos y análisis  
 
- - Mariana Gil  
+- Mariana Gil  
   - Data Engineer (Infraestructura en AWS)  
   - Implementación de infraestructura con Terraform  
   - Configuración de servicios en AWS (Glue, Athena)  
   - Soporte en modelado y consulta de datos  
 
-- Luis Ramón Buruato
+- Luis Ramón Buruato  
   - Data Engineer (Capa Bronze)  
   - Diseño e implementación de pipelines de ingesta  
   - Soporte en desarrollo del proyecto  
-  - Documentación técnica del proyecto
+  - Documentación técnica del proyecto  
 
