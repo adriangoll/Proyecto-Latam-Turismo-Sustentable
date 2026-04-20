@@ -1,0 +1,102 @@
+# .github/workflows/ci_silver_transformation.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# CI Silver — se dispara en PRs o push a main que toquen pipelines/transformation/
+# Jobs: lint (black + flake8 + isort) → test (28 tests sin S3 ni red)
+#
+# Mismo patrón que ci_bronze_ingestion.yml del Sprint 1.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI Silver Transformation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pipelines/transformation/**"
+      - "tests/transformation/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "pipelines/transformation/**"
+      - "tests/transformation/**"
+
+jobs:
+  # ── Lint ────────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint (black + flake8 + isort)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install lint dependencies
+        run: pip install black flake8 isort
+
+      - name: black — format check
+        run: black --check pipelines/transformation/ tests/transformation/
+
+      - name: isort — import order check
+        run: isort --check-only pipelines/transformation/ tests/transformation/
+
+      - name: flake8 — style check
+        run: |
+          flake8 pipelines/transformation/ tests/transformation/ \
+            --max-line-length=100 \
+            --extend-ignore=E203,W503
+
+  # ── Tests ───────────────────────────────────────────────────────────────────
+  test:
+    name: Tests Silver (sin S3 ni red)
+    runs-on: ubuntu-latest
+    needs: lint
+
+    env:
+      # Variables dummy para que boto3 no falle al importar
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install \
+            pandas \
+            pyarrow \
+            boto3 \
+            s3fs \
+            pytest \
+            pytest-cov
+
+      - name: Run Silver tests
+        run: |
+          cd pipelines/transformation
+          python -m pytest ../../tests/transformation/test_silver_logic.py \
+            -v \
+            --tb=short \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-fail-under=80
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: silver-coverage-report
+          path: pipelines/transformation/.coverage
+          retention-days: 7
