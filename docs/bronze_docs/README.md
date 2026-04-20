@@ -1,5 +1,6 @@
 🥉 Bronze Layer — Pipeline de Ingesta de Datos
 
+
 📌 Descripción general
 
 La Capa Bronze es responsable de ingerir datos desde fuentes externas y almacenarlos en la Capa Raw (Data Lake) sin aplicar transformaciones.
@@ -8,6 +9,7 @@ Este enfoque sigue el patrón de arquitectura Medallion:
 
 Bronze = lógica de ingesta (pipelines)
 Raw = almacenamiento físico (S3)
+
 
 
 🧱 Arquitectura
@@ -19,6 +21,7 @@ Capa Raw (Almacenamiento en AWS S3)
 🗄️ Capa Raw (Data Lake)
 
 La Capa Raw está implementada en Amazon S3, donde todos los datos ingeridos se almacenan en su formato original.
+
 
 
 📂 Estructura del bucket
@@ -35,11 +38,13 @@ s3://latam-sustainability-datalake/raw/
 └── unwto_transport/
     └── unwto_transport.xlsx
     
+    
 📌 Características
 Datos inmutables (sin modificaciones, solo append o reemplazo completo)
 Organización por fuente
 Formatos originales preservados (CSV, XLSX)
 Fuente única de la verdad (single source of truth)
+
 
 
 🌐 Fuentes de datos
@@ -55,6 +60,7 @@ UNWTO Transport Mode
 Formato: Excel
 Descripción: Distribución del transporte turístico
 
+
 ⚙️ Ejecución del pipeline
 python run_ingestion.py --dry-run
 Comportamiento
@@ -63,6 +69,7 @@ Filtra países de LATAM (19)
 Filtra años (2013–2023)
 Ejecuta validaciones
 Sube datos a S3 (omitido en modo dry-run)
+
 
 🧪 Validación de datos
 Validación de valores nulos
@@ -76,6 +83,7 @@ Verificación de tamaño del dataset
 [OK] UNWTO Transport Mode     (12.0s)
 
 Tiempo total: 49.0s
+
 
 🔄 Pipeline CI/CD
 
@@ -94,6 +102,7 @@ pytest
 AWS S3
 GitHub Actions
 
+
 ✅ Buenas prácticas
 Separación clara: Bronze (cómputo) vs Raw (almacenamiento)
 Datos raw inmutables
@@ -102,6 +111,7 @@ Logging estructurado
 Modo dry-run para pruebas seguras
 CI/CD para asegurar calidad
 
+
 🚀 Flujo end-to-end
 Ejecutar pipeline de ingesta
 Extraer datos de las fuentes
@@ -109,10 +119,12 @@ Aplicar filtros (LATAM, años)
 Validar datasets
 Almacenar datos en S3
 
+
 📈 Estado actual
 Capa	Componente	Estado
 Bronze	Pipelines de ingesta	✅ Completado
 Raw	Estructura en S3	✅ Completado
+
 
 Integrantes del equipo:
 
