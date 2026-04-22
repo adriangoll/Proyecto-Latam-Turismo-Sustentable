@@ -73,3 +73,4 @@ variable "glue_crawler_name" {
 variable "crawler_s3_target_path" {
   type = string
 }
+

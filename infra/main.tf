@@ -39,5 +39,4 @@ module "glue" {
   glue_crawler_name      = var.glue_crawler_name
   datalake_bucket_name   = var.datalake_bucket_name
   crawler_s3_target_path = var.crawler_s3_target_path
-
 }

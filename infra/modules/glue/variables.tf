@@ -18,3 +18,4 @@ variable "datalake_bucket_name" {
 variable "crawler_s3_target_path" {
   type = string
 }
+
