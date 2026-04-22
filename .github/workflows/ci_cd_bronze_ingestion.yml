@@ -1,0 +1,146 @@
+# .github/workflows/ci_cd_bronze_ingestion.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# CI  → corre en todo PR hacia main o develop
+#       Jobs: lint (black + isort + flake8) → test (pytest)
+#
+# CD  → corre solo en push a main (merge de PR aprobado)
+#       Job: dry-run del pipeline completo contra AWS real
+#            para verificar que la ingesta sigue funcionando
+#            SIN subir datos (--dry-run no escribe a S3)
+#
+# Flujo de ramas esperado:
+#   feature/xxx → PR → develop → PR → main
+#                  ↑                   ↑
+#               CI corre          CI + CD corre
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI/CD Bronze Ingestion
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "pipelines/ingestion/**"
+      - "tests/ingestion/**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "pipelines/ingestion/**"
+      - "tests/ingestion/**"
+
+jobs:
+  # ── CI: Lint ────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install lint tools
+        run: pip install black flake8 isort
+
+      - name: black
+        run: black --check pipelines/ingestion/ tests/ingestion/
+
+      - name: isort
+        run: isort --check-only pipelines/ingestion/ tests/ingestion/
+
+      - name: flake8
+        run: |
+          flake8 pipelines/ingestion/ tests/ingestion/ \
+            --max-line-length=100 \
+            --extend-ignore=E203,W503
+
+  # ── CI: Tests ───────────────────────────────────────────────────────────────
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    env:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install pandas pyarrow boto3 requests openpyxl \
+                      pytest pytest-cov
+
+      - name: Run tests
+        run: |
+          cd pipelines/ingestion
+          python -m pytest ../../tests/ingestion/ \
+            -v --tb=short \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-report=xml:../../coverage-bronze.xml \
+            --cov-fail-under=70
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-bronze
+          path: coverage-bronze.xml
+          retention-days: 7
+
+  # ── CD: Dry-run pipeline completo (solo en push a main) ────────────────────
+  # Verifica que el pipeline de ingesta sigue corriendo correctamente
+  # contra las APIs reales sin escribir nada a S3.
+  # Si este job falla en main → el equipo sabe que hay un problema
+  # con una fuente externa antes del próximo run mensual automático.
+  deploy-verify:
+    name: CD — Verify pipeline (dry-run)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install pandas pyarrow boto3 requests openpyxl s3fs
+
+      - name: Run ingestion dry-run (CO2)
+        run: |
+          cd pipelines/ingestion
+          python run_ingestion.py --dry-run --source co2
+
+      - name: Run ingestion dry-run (World Bank)
+        run: |
+          cd pipelines/ingestion
+          python run_ingestion.py --dry-run --source worldbank
+
+      - name: Run ingestion dry-run (Transport)
+        run: |
+          cd pipelines/ingestion
+          python run_ingestion.py --dry-run --source transport
+
+      - name: Summary
+        run: echo "✅ Pipeline Bronze verificado en dry-run. Listo para el run mensual automático."

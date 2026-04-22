@@ -1,0 +1,172 @@
+# .github/workflows/ci_cd_terraform.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# CI  → en todo PR: fmt check + validate + plan (sin aplicar)
+#       El plan se publica como comentario en el PR para revisión del equipo
+#
+# CD  → en push a main: terraform apply -auto-approve
+#       Solo corre si el plan de CI fue exitoso (needs: plan)
+#
+# IMPORTANTE — regla del equipo:
+#   Nunca hacer push directo a main en infra/.
+#   Todo cambio de infra pasa por PR con revisión de al menos 1 persona.
+#   El apply automático en main es la "firma" de que el equipo aprobó.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI/CD Terraform
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "infra/**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "infra/**"
+
+env:
+  TF_VERSION: "1.6.0"
+  TF_WORKING_DIR: infra
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  # ── CI: Validate + Plan ─────────────────────────────────────────────────────
+  plan:
+    name: CI — fmt + validate + plan
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    outputs:
+      # Pasa el resultado del plan al job apply para que sepa si hay cambios
+      plan_exit_code: ${{ steps.plan.outputs.exit_code }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -input=false
+
+      - name: Terraform fmt check
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform fmt -check -recursive
+        # Si un archivo no está formateado, el PR falla aquí.
+        # Solución local: cd infra && terraform fmt -recursive
+
+      - name: Terraform validate
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+      - name: Terraform plan
+        id: plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        # -detailed-exitcode: 0=no changes, 1=error, 2=changes pending
+        run: |
+          terraform plan \
+            -input=false \
+            -detailed-exitcode \
+            -out=tfplan \
+            -var="budget_email=${{ secrets.BUDGET_EMAIL }}" \
+            2>&1 | tee plan_output.txt
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Save plan output
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}/tfplan
+          retention-days: 1
+          # Solo válido por 1 día — si el apply tarda más, hay que re-planear
+
+      - name: Comment plan on PR
+        # Publica el resultado del plan como comentario en el PR
+        # para que el equipo pueda revisar qué va a cambiar ANTES de aprobar
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const planOutput = fs.readFileSync(
+              '${{ env.TF_WORKING_DIR }}/plan_output.txt', 'utf8'
+            ).slice(-60000); // GitHub limita comentarios a 65536 chars
+
+            const exitCode = '${{ steps.plan.outputs.exit_code }}';
+            const status = exitCode === '0' ? '✅ Sin cambios'
+                         : exitCode === '2' ? '⚠️ Cambios pendientes'
+                         : '❌ Error en el plan';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Terraform Plan — ${status}\n\`\`\`hcl\n${planOutput}\n\`\`\``
+            });
+
+      - name: Fail if plan errored
+        if: steps.plan.outputs.exit_code == '1'
+        run: exit 1
+
+  # ── CD: Apply (solo en push a main) ─────────────────────────────────────────
+  # Solo corre cuando hay un merge a main (no en PRs).
+  # Usa el plan guardado del job anterior para aplicar exactamente
+  # lo que fue revisado y aprobado en el PR.
+  apply:
+    name: CD — terraform apply
+    runs-on: ubuntu-latest
+    needs: plan
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      needs.plan.outputs.plan_exit_code == '2'
+    # Solo aplica si hay cambios reales (exit_code=2).
+    # Si no hay cambios (exit_code=0) no corre — evita applies vacíos.
+
+    environment:
+      name: production
+      # Requiere aprobación manual en GitHub Settings > Environments > production
+      # Agrega un reviewer requerido para que alguien del equipo confirme
+      # antes de que el apply corra en AWS.
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -input=false
+
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform apply
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -input=false -auto-approve tfplan
+
+      - name: Summary
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          echo "## Terraform Apply" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Apply completado en AWS" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Aplicado por: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          terraform output >> $GITHUB_STEP_SUMMARY
