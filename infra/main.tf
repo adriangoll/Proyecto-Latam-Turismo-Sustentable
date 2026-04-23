@@ -37,7 +37,7 @@ module "glue" {
   glue_database_name     = var.glue_database_name
   glue_service_role_name = var.glue_service_role_name
   datalake_bucket_name   = var.datalake_bucket_name
-  
+
   bronze_co2_crawler_name       = var.bronze_co2_crawler_name
   bronze_tourism_crawler_name   = var.bronze_tourism_crawler_name
   bronze_transport_crawler_name = var.bronze_transport_crawler_name
