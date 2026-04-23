@@ -36,7 +36,21 @@ module "glue" {
   source                 = "./modules/glue"
   glue_database_name     = var.glue_database_name
   glue_service_role_name = var.glue_service_role_name
-  glue_crawler_name      = var.glue_crawler_name
   datalake_bucket_name   = var.datalake_bucket_name
-  crawler_s3_target_path = var.crawler_s3_target_path
+  
+  bronze_co2_crawler_name       = var.bronze_co2_crawler_name
+  bronze_tourism_crawler_name   = var.bronze_tourism_crawler_name
+  bronze_transport_crawler_name = var.bronze_transport_crawler_name
+
+  silver_co2_crawler_name       = var.silver_co2_crawler_name
+  silver_tourism_crawler_name   = var.silver_tourism_crawler_name
+  silver_transport_crawler_name = var.silver_transport_crawler_name
+
+  bronze_co2_s3_target_path       = var.bronze_co2_s3_target_path
+  bronze_tourism_s3_target_path   = var.bronze_tourism_s3_target_path
+  bronze_transport_s3_target_path = var.bronze_transport_s3_target_path
+
+  silver_co2_s3_target_path       = var.silver_co2_s3_target_path
+  silver_tourism_s3_target_path   = var.silver_tourism_s3_target_path
+  silver_transport_s3_target_path = var.silver_transport_s3_target_path
 }

@@ -30,5 +30,19 @@ project_managers_policy_arns = [
 
 glue_database_name     = "latam_sustainable_tourism"
 glue_service_role_name = "AWSGlueServiceRole-LatamSustainableTourism"
-glue_crawler_name      = "latam-sustainable-tourism-crawler"
-crawler_s3_target_path = "s3://latam-sustainability-datalake/raw/"
+
+bronze_co2_crawler_name       = "latam-bronze-co2-crawler"
+bronze_tourism_crawler_name   = "latam-bronze-tourism-crawler"
+bronze_transport_crawler_name = "latam-bronze-transport-crawler"
+
+silver_co2_crawler_name       = "latam-silver-co2-crawler"
+silver_tourism_crawler_name   = "latam-silver-tourism-crawler"
+silver_transport_crawler_name = "latam-silver-transport-crawler"
+
+bronze_co2_s3_target_path       = "s3://latam-sustainability-datalake/bronze/co2_emissions/"
+bronze_tourism_s3_target_path   = "s3://latam-sustainability-datalake/bronze/tourism_arrivals/"
+bronze_transport_s3_target_path = "s3://latam-sustainability-datalake/bronze/transport_mode/"
+
+silver_co2_s3_target_path       = "s3://latam-sustainability-datalake/silver/co2_emissions/"
+silver_tourism_s3_target_path   = "s3://latam-sustainability-datalake/silver/tourism_arrivals/"
+silver_transport_s3_target_path = "s3://latam-sustainability-datalake/silver/transport_mode/"

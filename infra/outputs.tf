@@ -26,7 +26,27 @@ output "glue_service_role_arn" {
   value = module.glue.glue_service_role_arn
 }
 
-output "glue_crawler_name" {
-  value = module.glue.glue_crawler_name
+output "bronze_co2_crawler_name" {
+  value = module.glue.bronze_co2_crawler_name
+}
+
+output "bronze_tourism_crawler_name" {
+  value = module.glue.bronze_tourism_crawler_name
+}
+
+output "bronze_transport_crawler_name" {
+  value = module.glue.bronze_transport_crawler_name
+}
+
+output "silver_co2_crawler_name" {
+  value = module.glue.silver_co2_crawler_name
+}
+
+output "silver_tourism_crawler_name" {
+  value = module.glue.silver_tourism_crawler_name
+}
+
+output "silver_transport_crawler_name" {
+  value = module.glue.silver_transport_crawler_name
 }
 
