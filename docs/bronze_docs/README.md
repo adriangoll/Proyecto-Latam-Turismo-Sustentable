@@ -48,7 +48,7 @@ s3://latam-sustainability-datalake/raw/
 
 ### 🌴 World Bank — Tourism
 
-![World Bank Tourism](docs/capturas_ci_cd/Captura-datos-raw-worldbank-tourism.png)
+![WorldBank Tourism](https://raw.githubusercontent.com/adriangoll/Proyecto-Latam-Turismo-Sustentable/main/docs/capturas_ci_cd/Captura-datos-raw-worldbank-tourism.png)
 
 ---
 
