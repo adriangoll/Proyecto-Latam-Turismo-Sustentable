@@ -1,0 +1,63 @@
+{
+  "dataset": "co2_emissions",
+  "generated_at": "2026-04-26T03:23:40.073105+00:00",
+  "rows_bronze": 209,
+  "rows_silver": 209,
+  "rows_dropped": 0,
+  "countries_covered": [
+    "ARG",
+    "BOL",
+    "BRA",
+    "CHL",
+    "COL",
+    "CRI",
+    "CUB",
+    "DOM",
+    "ECU",
+    "GTM",
+    "HND",
+    "MEX",
+    "NIC",
+    "PAN",
+    "PER",
+    "PRY",
+    "SLV",
+    "URY",
+    "VEN"
+  ],
+  "years_covered": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "null_pct_by_column": {
+    "country": 0.0,
+    "country_code": 0.0,
+    "year": 0.0,
+    "co2": 0.0,
+    "co2_per_capita": 0.0,
+    "co2_per_gdp": 9.09,
+    "cumulative_co2": 0.0,
+    "methane": 0.0,
+    "nitrous_oxide": 0.0,
+    "gdp": 0.0,
+    "population": 0.0,
+    "energy_per_capita": 0.0,
+    "share_global_co2": 0.0,
+    "co2_per_capita_calc": 0.0,
+    "co2_intensity_gdp": 0.0,
+    "gdp_per_capita": 0.0,
+    "gdp_growth_pct": 9.09
+  },
+  "quality_flags": [
+    "OK - sin alertas"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "dataset": "transport_mode",
+  "generated_at": "2026-04-26T03:24:07.257507+00:00",
+  "rows_bronze": 190,
+  "rows_silver": 190,
+  "rows_dropped": 0,
+  "countries_covered": [
+    "ARG",
+    "BOL",
+    "BRA",
+    "CHL",
+    "COL",
+    "CRI",
+    "CUB",
+    "DOM",
+    "ECU",
+    "GTM",
+    "HND",
+    "MEX",
+    "NIC",
+    "PAN",
+    "PER",
+    "PRY",
+    "SLV",
+    "URY",
+    "VEN"
+  ],
+  "years_covered": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "null_pct_by_column": {
+    "country": 0.0,
+    "country_code": 0.0,
+    "year": 0.0,
+    "tourists_air": 0.0,
+    "tourists_sea": 36.84,
+    "tourists_land": 11.58,
+    "tourists_total": 0.0,
+    "pct_air": 0.0,
+    "pct_sea": 36.84,
+    "pct_land": 11.58,
+    "dominant_transport": 0.0
+  },
+  "quality_flags": [
+    "OK - sin alertas"
+  ],
+  "note": "Dataset UNWTO tiene cobertura parcial por dise\u00f1o. Nulls en modos de transporte son esperados y documentados."
+}

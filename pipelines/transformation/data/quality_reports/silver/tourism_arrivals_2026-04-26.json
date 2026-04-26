@@ -1,0 +1,56 @@
+{
+  "dataset": "tourism_arrivals",
+  "generated_at": "2026-04-26T03:23:54.499869+00:00",
+  "rows_bronze": 209,
+  "rows_silver": 144,
+  "rows_dropped": 65,
+  "countries_covered": [
+    "ARG",
+    "BOL",
+    "BRA",
+    "CHL",
+    "COL",
+    "CRI",
+    "CUB",
+    "DOM",
+    "ECU",
+    "GTM",
+    "HND",
+    "MEX",
+    "NIC",
+    "PAN",
+    "PER",
+    "PRY",
+    "SLV",
+    "URY",
+    "VEN"
+  ],
+  "years_covered": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020
+  ],
+  "null_pct_by_column": {
+    "country": 0.0,
+    "country_code": 0.0,
+    "year": 0.0,
+    "tourist_arrivals": 0.0,
+    "tourism_receipts_usd": 7.64,
+    "tourist_departures": 2.08,
+    "arrivals_growth_pct": 13.19,
+    "receipts_per_tourist": 7.64
+  },
+  "quality_flags": [
+    "A\u00f1os sin datos: [2021, 2022, 2023]"
+  ],
+  "missing_years": [
+    2021,
+    2022,
+    2023
+  ]
+}
