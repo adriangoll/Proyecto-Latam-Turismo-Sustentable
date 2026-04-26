@@ -89,9 +89,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
 
     logger.info("Excel original: %s", df_raw.shape)
 
-    df = df_raw[
-        df_raw["indicator_label"].str.contains("inbound", case=False, na=False)
-    ].copy()
+    df = df_raw[df_raw["indicator_label"].str.contains("inbound", case=False, na=False)].copy()
 
     def map_transport(x):
         x = str(x).lower()
@@ -108,9 +106,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     df["transport_mode"] = df["indicator_label"].apply(map_transport)
     df = df[df["transport_mode"].notnull()].copy()
 
-    df["country"] = df["reporter_area_label"].apply(
-        lambda x: normalize_country_name(str(x), NAME_ALIASES)
-    )
+    df["country"] = df["reporter_area_label"].apply(lambda x: normalize_country_name(str(x), NAME_ALIASES))
 
     df = df[df["country"].isin(LATAM_COUNTRIES)].copy()
 
@@ -142,9 +138,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
             df_pivot[col] = float("nan")
 
     if "tourists_total" not in df_pivot.columns:
-        df_pivot["tourists_total"] = df_pivot[
-            ["tourists_air", "tourists_land", "tourists_sea"]
-        ].sum(axis=1, min_count=1)
+        df_pivot["tourists_total"] = df_pivot[["tourists_air", "tourists_land", "tourists_sea"]].sum(axis=1, min_count=1)
 
     df_pivot["country_code"] = df_pivot["country"].map(COUNTRY_ISO3)
 
@@ -152,27 +146,16 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
 
     for mode in ["air", "sea", "land"]:
         df_pivot[f"pct_{mode}"] = float("nan")
-        df_pivot.loc[mask, f"pct_{mode}"] = (
-            df_pivot.loc[mask, f"tourists_{mode}"]
-            / df_pivot.loc[mask, "tourists_total"]
-            * 100
-        ).round(2)
+        df_pivot.loc[mask, f"pct_{mode}"] = (df_pivot.loc[mask, f"tourists_{mode}"] / df_pivot.loc[mask, "tourists_total"] * 100).round(2)
 
     cols_final = [c for c in OUTPUT_COLUMNS if c in df_pivot.columns]
 
-    df = (
-        df_pivot[cols_final]
-        .sort_values(["country_code", "year"])
-        .reset_index(drop=True)
-    )
+    df = df_pivot[cols_final].sort_values(["country_code", "year"]).reset_index(drop=True)
 
-        # ── Detección de duplicados ─────────────────────────────────────────────
+    # ── Detección de duplicados ─────────────────────────────────────────────
     dupes = df.duplicated(subset=["country_code", "year"], keep=False)
     if dupes.any():
-        logger.warning(
-            "⚠️ Duplicados detectados: %d filas (country_code, year)",
-            dupes.sum()
-        )
+        logger.warning("⚠️ Duplicados detectados: %d filas (country_code, year)", dupes.sum())
 
     log_dataframe_summary(df, "UNWTO Transport")
     return df

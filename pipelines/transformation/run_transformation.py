@@ -45,9 +45,13 @@ def run_all(
     local_bronze: dict,
 ) -> None:
     SOURCES = {
-        "co2":       (transform_co2,       "CO2 Emissions",   local_bronze.get("co2")),
-        "tourism":   (transform_tourism,   "Tourism Arrivals", local_bronze.get("tourism")),
-        "transport": (transform_transport, "Transport Mode",   local_bronze.get("transport")),
+        "co2": (transform_co2, "CO2 Emissions", local_bronze.get("co2")),
+        "tourism": (transform_tourism, "Tourism Arrivals", local_bronze.get("tourism")),
+        "transport": (
+            transform_transport,
+            "Transport Mode",
+            local_bronze.get("transport"),
+        ),
     }
 
     results = {}
@@ -104,15 +108,15 @@ if __name__ == "__main__":
         choices=["co2", "tourism", "transport"],
         help="Correr solo una fuente específica",
     )
-    parser.add_argument("--local-bronze-co2",       default=None)
-    parser.add_argument("--local-bronze-tourism",   default=None)
+    parser.add_argument("--local-bronze-co2", default=None)
+    parser.add_argument("--local-bronze-tourism", default=None)
     parser.add_argument("--local-bronze-transport", default=None)
 
     args = parser.parse_args()
 
     local_bronze = {
-        "co2":       args.local_bronze_co2,
-        "tourism":   args.local_bronze_tourism,
+        "co2": args.local_bronze_co2,
+        "tourism": args.local_bronze_tourism,
         "transport": args.local_bronze_transport,
     }
 

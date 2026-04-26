@@ -37,16 +37,16 @@ Emisiones de CO₂, PIB y población con métricas derivadas de intensidad ambie
 
 | Formato | Descarga |
 |---------|---------|
-| Parquet (recomendado) | [latam_co2_emissions_v1.parquet](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.parquet) |
-| CSV | [latam_co2_emissions_v1.csv](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.csv) |
-| Metadata | [metadata.json](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/metadata.json) |
-| Diccionario | [data_dictionary.md](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/data_dictionary.md) |
+| Parquet (recomendado) | [latam_co2_emissions_v1.parquet](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.parquet) |
+| CSV | [latam_co2_emissions_v1.csv](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.csv) |
+| Metadata | [metadata.json](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/metadata.json) |
+| Diccionario | [data_dictionary.md](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/co2_emissions/data_dictionary.md) |
 
 ```python
 # Ejemplo de uso en Python
 import pandas as pd
 df = pd.read_parquet(
-    "https://latam-sustainability-dev-datalake.s3.amazonaws.com"
+    "https://latam-sustainability-datalake.s3.amazonaws.com"
     "/open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.parquet"
 )
 ```
@@ -65,14 +65,14 @@ Llegadas de turistas internacionales, ingresos turísticos y salidas por país.
 
 | Formato | Descarga |
 |---------|---------|
-| Parquet (recomendado) | [latam_tourism_arrivals_v1.parquet](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.parquet) |
-| CSV | [latam_tourism_arrivals_v1.csv](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.csv) |
-| Metadata | [metadata.json](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/metadata.json) |
-| Diccionario | [data_dictionary.md](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/data_dictionary.md) |
+| Parquet (recomendado) | [latam_tourism_arrivals_v1.parquet](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.parquet) |
+| CSV | [latam_tourism_arrivals_v1.csv](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.csv) |
+| Metadata | [metadata.json](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/metadata.json) |
+| Diccionario | [data_dictionary.md](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/tourism_arrivals/data_dictionary.md) |
 
 ```python
 df = pd.read_parquet(
-    "https://latam-sustainability-dev-datalake.s3.amazonaws.com"
+    "https://latam-sustainability-datalake.s3.amazonaws.com"
     "/open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.parquet"
 )
 ```
@@ -91,14 +91,14 @@ Llegadas desagregadas por modo de transporte: aéreo, marítimo y terrestre.
 
 | Formato | Descarga |
 |---------|---------|
-| Parquet (recomendado) | [latam_transport_mode_v1.parquet](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/latam_transport_mode_v1.parquet) |
-| CSV | [latam_transport_mode_v1.csv](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/latam_transport_mode_v1.csv) |
-| Metadata | [metadata.json](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/metadata.json) |
-| Diccionario | [data_dictionary.md](https://latam-sustainability-dev-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/data_dictionary.md) |
+| Parquet (recomendado) | [latam_transport_mode_v1.parquet](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/latam_transport_mode_v1.parquet) |
+| CSV | [latam_transport_mode_v1.csv](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/latam_transport_mode_v1.csv) |
+| Metadata | [metadata.json](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/metadata.json) |
+| Diccionario | [data_dictionary.md](https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/silver/transport_mode/data_dictionary.md) |
 
 ```python
 df = pd.read_parquet(
-    "https://latam-sustainability-dev-datalake.s3.amazonaws.com"
+    "https://latam-sustainability-datalake.s3.amazonaws.com"
     "/open-data/v1/silver/transport_mode/latam_transport_mode_v1.parquet"
 )
 ```

@@ -108,9 +108,7 @@ S3_PATHS = {
 }
 
 # ─── URLs de las fuentes ──────────────────────────────────────────────────────
-OWID_CO2_URL = (
-    "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
-)
+OWID_CO2_URL = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
 
 UNWTO_TRANSPORT_URL = "https://pre-webunwto.s3.amazonaws.com/s3fs-public/2025-12/UN_Tourism_inbound_arrivals_by_transport_12_2025.xlsx"
 

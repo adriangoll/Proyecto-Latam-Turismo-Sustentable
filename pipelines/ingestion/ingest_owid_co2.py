@@ -95,9 +95,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     logger.info("   CSV original: %s", df.shape)
 
     # ── Normalizar nombres de país (aliases de fuente) ────────────────────────
-    df["country"] = df["country"].apply(
-        lambda x: normalize_country_name(x, NAME_ALIASES)
-    )
+    df["country"] = df["country"].apply(lambda x: normalize_country_name(x, NAME_ALIASES))
 
     # ── Filtrar por países LATAM ──────────────────────────────────────────────
     df = df[df["country"].isin(LATAM_COUNTRIES)].copy()
@@ -125,9 +123,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     df["year"] = df["year"].astype(int)
     df["country_code"] = df["country_code"].astype(str)
 
-    numeric_cols = [
-        c for c in df.columns if c not in ("country", "country_code", "year")
-    ]
+    numeric_cols = [c for c in df.columns if c not in ("country", "country_code", "year")]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
@@ -137,10 +133,7 @@ def parse_and_filter(raw_bytes: bytes) -> pd.DataFrame:
     # ── Detección de duplicados ─────────────────────────────────────────────
     dupes = df.duplicated(subset=["country_code", "year"], keep=False)
     if dupes.any():
-        logger.warning(
-            "⚠️ Duplicados detectados: %d filas (country_code, year)",
-            dupes.sum()
-        )
+        logger.warning("⚠️ Duplicados detectados: %d filas (country_code, year)", dupes.sum())
 
     log_dataframe_summary(df, "OWID CO2 — post-filtro")
     return df
@@ -220,9 +213,7 @@ def run(dry_run: bool = False) -> None:
         logger.info("\n%s", df.head(10).to_string())
         logger.info("   Shape final: %s", df.shape)
         logger.info("   Columnas: %s", list(df.columns))
-        logger.info(
-            "   Particiones estimadas: %d", df.groupby(["year", "country_code"]).ngroups
-        )
+        logger.info("   Particiones estimadas: %d", df.groupby(["year", "country_code"]).ngroups)
 
 
 if __name__ == "__main__":

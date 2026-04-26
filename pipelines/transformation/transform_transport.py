@@ -83,9 +83,7 @@ def recalculate_totals_and_pcts(df: pd.DataFrame) -> pd.DataFrame:
         if mask_null_total.any():
             recalc = df.loc[mask_null_total, existing_modes].sum(axis=1, min_count=1)
             df.loc[mask_null_total, "tourists_total"] = recalc
-            logger.info(
-                "   → tourists_total recalculado en %d filas", mask_null_total.sum()
-            )
+            logger.info("   → tourists_total recalculado en %d filas", mask_null_total.sum())
 
     # Recalcular porcentajes desde el total final
     mask_total_ok = df["tourists_total"].notna() & (df["tourists_total"] > 0)
@@ -96,11 +94,7 @@ def recalculate_totals_and_pcts(df: pd.DataFrame) -> pd.DataFrame:
     ]:
         if mode in df.columns:
             df[pct_col] = None
-            df.loc[mask_total_ok, pct_col] = (
-                df.loc[mask_total_ok, mode]
-                / df.loc[mask_total_ok, "tourists_total"]
-                * 100
-            ).round(2)
+            df.loc[mask_total_ok, pct_col] = (df.loc[mask_total_ok, mode] / df.loc[mask_total_ok, "tourists_total"] * 100).round(2)
 
     # Clasificar modo dominante (útil para análisis en Gold)
     pct_cols = {
@@ -118,11 +112,7 @@ def recalculate_totals_and_pcts(df: pd.DataFrame) -> pd.DataFrame:
         dominant = pd.Series([None] * len(df), dtype=object)
         has_data = ~all_null_mask
         if has_data.any():
-            dominant[has_data] = (
-                pct_df[has_data]
-                .idxmax(axis=1)
-                .map({k: v for k, v in available_pct.items()})
-            )
+            dominant[has_data] = pct_df[has_data].idxmax(axis=1).map({k: v for k, v in available_pct.items()})
         df["dominant_transport"] = dominant
 
     logger.info("   ✅ Totales y porcentajes recalculados")
@@ -146,6 +136,7 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
         df = read_bronze_local(local_bronze)
     else:
         from config_silver import S3_BRONZE
+
         df = read_bronze_s3(S3_BRONZE["transport"])
 
     df_before = df.copy()
@@ -165,10 +156,21 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
 
     # 6. Ordenar columnas
     key_cols = ["country", "country_code", "year"]
-    transport_cols = [c for c in df.columns if c in [
-        "tourists_air", "tourists_sea", "tourists_land", "tourists_total",
-        "pct_air", "pct_sea", "pct_land", "dominant_transport",
-    ]]
+    transport_cols = [
+        c
+        for c in df.columns
+        if c
+        in [
+            "tourists_air",
+            "tourists_sea",
+            "tourists_land",
+            "tourists_total",
+            "pct_air",
+            "pct_sea",
+            "pct_land",
+            "dominant_transport",
+        ]
+    ]
     other_cols = [c for c in df.columns if c not in key_cols + transport_cols]
     df = df[key_cols + transport_cols + other_cols]
 
@@ -183,10 +185,7 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
     )
 
     # Nota especial en el reporte: cobertura parcial es esperada
-    report["note"] = (
-        "Dataset UNWTO tiene cobertura parcial por diseño. "
-        "Nulls en modos de transporte son esperados y documentados."
-    )
+    report["note"] = "Dataset UNWTO tiene cobertura parcial por diseño. Nulls en modos de transporte son esperados y documentados."
 
     # 8. Escribir
     if dry_run:

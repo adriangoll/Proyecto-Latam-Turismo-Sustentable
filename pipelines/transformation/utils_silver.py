@@ -17,9 +17,7 @@ Funciones:
 import json
 import logging
 import os
-import tempfile
 from datetime import datetime, timezone
-from typing import Optional
 
 import boto3
 import pandas as pd
@@ -30,6 +28,7 @@ logger = logging.getLogger("silver.utils")
 
 
 # ─── Lectura Bronze ───────────────────────────────────────────────────────────
+
 
 def read_bronze_s3(s3_prefix: str) -> pd.DataFrame:
     """
@@ -88,6 +87,7 @@ def read_bronze_local(local_path: str) -> pd.DataFrame:
 
 # ─── Escritura Silver ─────────────────────────────────────────────────────────
 
+
 def write_silver_s3(df: pd.DataFrame, s3_path: str) -> None:
     """
     Escribe el DataFrame Silver como un único Parquet comprimido con Snappy.
@@ -120,6 +120,7 @@ def write_silver_local(df: pd.DataFrame, local_path: str) -> None:
 
 
 # ─── Transformaciones comunes ─────────────────────────────────────────────────
+
 
 def apply_schema(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
     """
@@ -155,10 +156,7 @@ def deduplicate(df: pd.DataFrame, key: list[str], dataset_name: str) -> pd.DataF
     df = df.drop_duplicates(subset=key, keep="first").reset_index(drop=True)
     n_removed = n_before - len(df)
     if n_removed > 0:
-        logger.warning(
-            "⚠️  [%s] %d duplicados eliminados por %s",
-            dataset_name, n_removed, key
-        )
+        logger.warning("⚠️  [%s] %d duplicados eliminados por %s", dataset_name, n_removed, key)
     else:
         logger.info("   [%s] Sin duplicados detectados", dataset_name)
     return df
@@ -182,7 +180,9 @@ def drop_empty_rows(df: pd.DataFrame, cols: list[str], dataset_name: str) -> pd.
     if n_dropped > 0:
         logger.warning(
             "⚠️  [%s] %d filas eliminadas (todas las métricas son null en %s)",
-            dataset_name, n_dropped, existing_cols
+            dataset_name,
+            n_dropped,
+            existing_cols,
         )
     df = df[~mask_all_null].reset_index(drop=True)
     return df
@@ -206,22 +206,19 @@ def fill_gaps(
 
     for col in fill_forward_cols:
         if col in df.columns:
-            df[col] = df.groupby(group_col)[col].transform(
-                lambda s: s.ffill()
-            )
+            df[col] = df.groupby(group_col)[col].transform(lambda s: s.ffill())
             logger.debug("   ffill aplicado en '%s'", col)
 
     for col in interpolate_cols:
         if col in df.columns:
-            df[col] = df.groupby(group_col)[col].transform(
-                lambda s: s.interpolate(method="linear", limit_direction="forward")
-            )
+            df[col] = df.groupby(group_col)[col].transform(lambda s: s.interpolate(method="linear", limit_direction="forward"))
             logger.debug("   interpolación lineal aplicada en '%s'", col)
 
     return df
 
 
 # ─── Quality Report ───────────────────────────────────────────────────────────
+
 
 def build_quality_report(
     df_before: pd.DataFrame,
@@ -262,6 +259,7 @@ def build_quality_report(
 
     # Países faltantes
     from config_silver import LATAM_ISO3
+
     missing_countries = sorted(LATAM_ISO3 - set(df_after["country_code"].unique()))
     if missing_countries:
         report["missing_countries"] = missing_countries
@@ -269,7 +267,8 @@ def build_quality_report(
         logger.warning("⚠️  Países sin datos en Silver [%s]: %s", dataset_name, missing_countries)
 
     # Años faltantes
-    from config_silver import YEAR_START, YEAR_END
+    from config_silver import YEAR_END, YEAR_START
+
     all_years = set(range(YEAR_START, YEAR_END + 1))
     covered_years = set(df_after["year"].unique())
     missing_years = sorted(all_years - covered_years)

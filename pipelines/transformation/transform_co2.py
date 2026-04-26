@@ -85,29 +85,20 @@ def add_derived_metrics(df: pd.DataFrame) -> pd.DataFrame:
     # → co2_per_capita en toneladas por persona
     mask_pop = df["population"] > 0
     df["co2_per_capita_calc"] = None
-    df.loc[mask_pop, "co2_per_capita_calc"] = (
-        df.loc[mask_pop, "co2"] * 1_000_000 / df.loc[mask_pop, "population"]
-    ).round(4)
+    df.loc[mask_pop, "co2_per_capita_calc"] = (df.loc[mask_pop, "co2"] * 1_000_000 / df.loc[mask_pop, "population"]).round(4)
 
     # gdp en USD 2011 PPP, co2 en Mt → kg CO₂ por USD
     mask_gdp = df["gdp"] > 0
     df["co2_intensity_gdp"] = None
-    df.loc[mask_gdp, "co2_intensity_gdp"] = (
-        df.loc[mask_gdp, "co2"] * 1e9 / df.loc[mask_gdp, "gdp"]
-    ).round(6)
+    df.loc[mask_gdp, "co2_intensity_gdp"] = (df.loc[mask_gdp, "co2"] * 1e9 / df.loc[mask_gdp, "gdp"]).round(6)
 
     # GDP per cápita
     df["gdp_per_capita"] = None
-    df.loc[mask_pop & mask_gdp, "gdp_per_capita"] = (
-        df.loc[mask_pop & mask_gdp, "gdp"] / df.loc[mask_pop & mask_gdp, "population"]
-    ).round(2)
+    df.loc[mask_pop & mask_gdp, "gdp_per_capita"] = (df.loc[mask_pop & mask_gdp, "gdp"] / df.loc[mask_pop & mask_gdp, "population"]).round(2)
 
     # GDP growth % — ordenar por país y año antes de calcular
     df = df.sort_values(["country_code", "year"]).reset_index(drop=True)
-    df["gdp_growth_pct"] = (
-        df.groupby("country_code")["gdp"]
-        .pct_change() * 100
-    ).round(2)
+    df["gdp_growth_pct"] = (df.groupby("country_code")["gdp"].pct_change() * 100).round(2)
 
     logger.info("   ✅ Métricas derivadas calculadas")
     return df
@@ -130,6 +121,7 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
         df = read_bronze_local(local_bronze)
     else:
         from config_silver import S3_BRONZE
+
         df = read_bronze_s3(S3_BRONZE["co2"])
 
     df_before = df.copy()
@@ -156,15 +148,34 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
 
     # 7. Ordenar columnas — primero las claves, luego métricas originales, luego derivadas
     key_cols = ["country", "country_code", "year"]
-    original_metrics = [c for c in df.columns if c in [
-        "co2", "co2_per_capita", "co2_per_gdp", "cumulative_co2",
-        "methane", "nitrous_oxide", "gdp", "population",
-        "energy_per_capita", "share_global_co2",
-    ]]
-    derived_metrics = [c for c in df.columns if c in [
-        "co2_per_capita_calc", "co2_intensity_gdp",
-        "gdp_per_capita", "gdp_growth_pct",
-    ]]
+    original_metrics = [
+        c
+        for c in df.columns
+        if c
+        in [
+            "co2",
+            "co2_per_capita",
+            "co2_per_gdp",
+            "cumulative_co2",
+            "methane",
+            "nitrous_oxide",
+            "gdp",
+            "population",
+            "energy_per_capita",
+            "share_global_co2",
+        ]
+    ]
+    derived_metrics = [
+        c
+        for c in df.columns
+        if c
+        in [
+            "co2_per_capita_calc",
+            "co2_intensity_gdp",
+            "gdp_per_capita",
+            "gdp_growth_pct",
+        ]
+    ]
     other_cols = [c for c in df.columns if c not in key_cols + original_metrics + derived_metrics]
     df = df[key_cols + original_metrics + derived_metrics + other_cols]
 

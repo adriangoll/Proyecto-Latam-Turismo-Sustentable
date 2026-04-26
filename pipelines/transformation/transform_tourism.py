@@ -73,17 +73,12 @@ def add_derived_metrics(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(["country_code", "year"]).reset_index(drop=True)
 
     # Crecimiento % de llegadas año a año
-    df["arrivals_growth_pct"] = (
-        df.groupby("country_code")["tourist_arrivals"]
-        .pct_change() * 100
-    ).round(2)
+    df["arrivals_growth_pct"] = (df.groupby("country_code")["tourist_arrivals"].pct_change() * 100).round(2)
 
     # Ingresos por turista
     mask = df["tourist_arrivals"] > 0
     df["receipts_per_tourist"] = None
-    df.loc[mask, "receipts_per_tourist"] = (
-        df.loc[mask, "tourism_receipts_usd"] / df.loc[mask, "tourist_arrivals"]
-    ).round(2)
+    df.loc[mask, "receipts_per_tourist"] = (df.loc[mask, "tourism_receipts_usd"] / df.loc[mask, "tourist_arrivals"]).round(2)
 
     logger.info("   ✅ Métricas derivadas calculadas")
     return df
@@ -106,6 +101,7 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
         df = read_bronze_local(local_bronze)
     else:
         from config_silver import S3_BRONZE
+
         df = read_bronze_s3(S3_BRONZE["tourism"])
 
     df_before = df.copy()
@@ -128,12 +124,25 @@ def run(dry_run: bool = False, local_bronze: str = None) -> pd.DataFrame:
 
     # 7. Ordenar columnas
     key_cols = ["country", "country_code", "year"]
-    original_metrics = [c for c in df.columns if c in [
-        "tourist_arrivals", "tourism_receipts_usd", "tourist_departures",
-    ]]
-    derived_metrics = [c for c in df.columns if c in [
-        "arrivals_growth_pct", "receipts_per_tourist",
-    ]]
+    original_metrics = [
+        c
+        for c in df.columns
+        if c
+        in [
+            "tourist_arrivals",
+            "tourism_receipts_usd",
+            "tourist_departures",
+        ]
+    ]
+    derived_metrics = [
+        c
+        for c in df.columns
+        if c
+        in [
+            "arrivals_growth_pct",
+            "receipts_per_tourist",
+        ]
+    ]
     other_cols = [c for c in df.columns if c not in key_cols + original_metrics + derived_metrics]
     df = df[key_cols + original_metrics + derived_metrics + other_cols]
 

@@ -74,23 +74,91 @@ DATASET_META = {
         ),
         "source": "Our World in Data — https://github.com/owid/co2-data",
         "columns": {
-            "country":              {"type": "string",  "unit": "—",              "description": "Country name (English)"},
-            "country_code":         {"type": "string",  "unit": "ISO 3166-1 α3",  "description": "e.g. ARG, BRA, MEX"},
-            "year":                 {"type": "integer", "unit": "—",              "description": "Reference year (2013–2023)"},
-            "co2":                  {"type": "float",   "unit": "Mt CO₂",         "description": "Total CO₂ emissions"},
-            "co2_per_capita":       {"type": "float",   "unit": "t CO₂/person",   "description": "CO₂ per capita (OWID original)"},
-            "co2_per_gdp":          {"type": "float",   "unit": "kg CO₂/USD",     "description": "CO₂ intensity of GDP (OWID original)"},
-            "cumulative_co2":       {"type": "float",   "unit": "Mt CO₂",         "description": "Cumulative historical CO₂"},
-            "methane":              {"type": "float",   "unit": "Mt CO₂eq",       "description": "Methane emissions"},
-            "nitrous_oxide":        {"type": "float",   "unit": "Mt CO₂eq",       "description": "Nitrous oxide emissions"},
-            "gdp":                  {"type": "float",   "unit": "USD 2011 PPP",   "description": "Gross domestic product"},
-            "population":           {"type": "integer", "unit": "persons",        "description": "Mid-year population estimate"},
-            "energy_per_capita":    {"type": "float",   "unit": "kWh/person",     "description": "Energy consumption per capita"},
-            "share_global_co2":     {"type": "float",   "unit": "%",              "description": "Share of global CO₂ emissions"},
-            "co2_per_capita_calc":  {"type": "float",   "unit": "t CO₂/person",   "description": "Derived: co2 × 1e6 / population"},
-            "co2_intensity_gdp":    {"type": "float",   "unit": "kg CO₂/USD",     "description": "Derived: co2 × 1e9 / gdp"},
-            "gdp_per_capita":       {"type": "float",   "unit": "USD PPP/person", "description": "Derived: gdp / population"},
-            "gdp_growth_pct":       {"type": "float",   "unit": "%",              "description": "Derived: year-on-year GDP growth by country"},
+            "country": {
+                "type": "string",
+                "unit": "—",
+                "description": "Country name (English)",
+            },
+            "country_code": {
+                "type": "string",
+                "unit": "ISO 3166-1 α3",
+                "description": "e.g. ARG, BRA, MEX",
+            },
+            "year": {
+                "type": "integer",
+                "unit": "—",
+                "description": "Reference year (2013–2023)",
+            },
+            "co2": {
+                "type": "float",
+                "unit": "Mt CO₂",
+                "description": "Total CO₂ emissions",
+            },
+            "co2_per_capita": {
+                "type": "float",
+                "unit": "t CO₂/person",
+                "description": "CO₂ per capita (OWID original)",
+            },
+            "co2_per_gdp": {
+                "type": "float",
+                "unit": "kg CO₂/USD",
+                "description": "CO₂ intensity of GDP (OWID original)",
+            },
+            "cumulative_co2": {
+                "type": "float",
+                "unit": "Mt CO₂",
+                "description": "Cumulative historical CO₂",
+            },
+            "methane": {
+                "type": "float",
+                "unit": "Mt CO₂eq",
+                "description": "Methane emissions",
+            },
+            "nitrous_oxide": {
+                "type": "float",
+                "unit": "Mt CO₂eq",
+                "description": "Nitrous oxide emissions",
+            },
+            "gdp": {
+                "type": "float",
+                "unit": "USD 2011 PPP",
+                "description": "Gross domestic product",
+            },
+            "population": {
+                "type": "integer",
+                "unit": "persons",
+                "description": "Mid-year population estimate",
+            },
+            "energy_per_capita": {
+                "type": "float",
+                "unit": "kWh/person",
+                "description": "Energy consumption per capita",
+            },
+            "share_global_co2": {
+                "type": "float",
+                "unit": "%",
+                "description": "Share of global CO₂ emissions",
+            },
+            "co2_per_capita_calc": {
+                "type": "float",
+                "unit": "t CO₂/person",
+                "description": "Derived: co2 × 1e6 / population",
+            },
+            "co2_intensity_gdp": {
+                "type": "float",
+                "unit": "kg CO₂/USD",
+                "description": "Derived: co2 × 1e9 / gdp",
+            },
+            "gdp_per_capita": {
+                "type": "float",
+                "unit": "USD PPP/person",
+                "description": "Derived: gdp / population",
+            },
+            "gdp_growth_pct": {
+                "type": "float",
+                "unit": "%",
+                "description": "Derived: year-on-year GDP growth by country",
+            },
         },
     },
     "tourism_arrivals": {
@@ -103,14 +171,46 @@ DATASET_META = {
         ),
         "source": "World Bank Open Data — https://api.worldbank.org/v2",
         "columns": {
-            "country":               {"type": "string",  "unit": "—",       "description": "Country name (English)"},
-            "country_code":          {"type": "string",  "unit": "ISO α3",  "description": "e.g. ARG, BRA, MEX"},
-            "year":                  {"type": "integer", "unit": "—",       "description": "Reference year (2013–2023)"},
-            "tourist_arrivals":      {"type": "integer", "unit": "persons", "description": "International tourist arrivals"},
-            "tourism_receipts_usd":  {"type": "float",   "unit": "USD",     "description": "Tourism receipts in current USD"},
-            "tourist_departures":    {"type": "integer", "unit": "persons", "description": "International tourist departures"},
-            "arrivals_growth_pct":   {"type": "float",   "unit": "%",       "description": "Derived: year-on-year growth in arrivals"},
-            "receipts_per_tourist":  {"type": "float",   "unit": "USD",     "description": "Derived: receipts / arrivals"},
+            "country": {
+                "type": "string",
+                "unit": "—",
+                "description": "Country name (English)",
+            },
+            "country_code": {
+                "type": "string",
+                "unit": "ISO α3",
+                "description": "e.g. ARG, BRA, MEX",
+            },
+            "year": {
+                "type": "integer",
+                "unit": "—",
+                "description": "Reference year (2013–2023)",
+            },
+            "tourist_arrivals": {
+                "type": "integer",
+                "unit": "persons",
+                "description": "International tourist arrivals",
+            },
+            "tourism_receipts_usd": {
+                "type": "float",
+                "unit": "USD",
+                "description": "Tourism receipts in current USD",
+            },
+            "tourist_departures": {
+                "type": "integer",
+                "unit": "persons",
+                "description": "International tourist departures",
+            },
+            "arrivals_growth_pct": {
+                "type": "float",
+                "unit": "%",
+                "description": "Derived: year-on-year growth in arrivals",
+            },
+            "receipts_per_tourist": {
+                "type": "float",
+                "unit": "USD",
+                "description": "Derived: receipts / arrivals",
+            },
         },
     },
     "transport_mode": {
@@ -124,26 +224,72 @@ DATASET_META = {
         ),
         "source": "UN Tourism (UNWTO) — https://www.unwto.org",
         "columns": {
-            "country":           {"type": "string",  "unit": "—",       "description": "Country name (English)"},
-            "country_code":      {"type": "string",  "unit": "ISO α3",  "description": "e.g. ARG, BRA, MEX"},
-            "year":              {"type": "integer", "unit": "—",       "description": "Reference year (2013–2023)"},
-            "tourists_air":      {"type": "float",   "unit": "persons", "description": "Arrivals by air transport"},
-            "tourists_sea":      {"type": "float",   "unit": "persons", "description": "Arrivals by sea transport"},
-            "tourists_land":     {"type": "float",   "unit": "persons", "description": "Arrivals by land transport"},
-            "tourists_total":    {"type": "float",   "unit": "persons", "description": "Total arrivals (sum of modes)"},
-            "pct_air":           {"type": "float",   "unit": "%",       "description": "Share of arrivals by air"},
-            "pct_sea":           {"type": "float",   "unit": "%",       "description": "Share of arrivals by sea"},
-            "pct_land":          {"type": "float",   "unit": "%",       "description": "Share of arrivals by land"},
-            "dominant_transport":{"type": "string",  "unit": "—",       "description": "Mode with highest share (air/sea/land)"},
+            "country": {
+                "type": "string",
+                "unit": "—",
+                "description": "Country name (English)",
+            },
+            "country_code": {
+                "type": "string",
+                "unit": "ISO α3",
+                "description": "e.g. ARG, BRA, MEX",
+            },
+            "year": {
+                "type": "integer",
+                "unit": "—",
+                "description": "Reference year (2013–2023)",
+            },
+            "tourists_air": {
+                "type": "float",
+                "unit": "persons",
+                "description": "Arrivals by air transport",
+            },
+            "tourists_sea": {
+                "type": "float",
+                "unit": "persons",
+                "description": "Arrivals by sea transport",
+            },
+            "tourists_land": {
+                "type": "float",
+                "unit": "persons",
+                "description": "Arrivals by land transport",
+            },
+            "tourists_total": {
+                "type": "float",
+                "unit": "persons",
+                "description": "Total arrivals (sum of modes)",
+            },
+            "pct_air": {
+                "type": "float",
+                "unit": "%",
+                "description": "Share of arrivals by air",
+            },
+            "pct_sea": {
+                "type": "float",
+                "unit": "%",
+                "description": "Share of arrivals by sea",
+            },
+            "pct_land": {
+                "type": "float",
+                "unit": "%",
+                "description": "Share of arrivals by land",
+            },
+            "dominant_transport": {
+                "type": "string",
+                "unit": "—",
+                "description": "Mode with highest share (air/sea/land)",
+            },
         },
     },
 }
 
 # ─── Helpers S3 ───────────────────────────────────────────────────────────────
 
+
 def read_silver_parquet(silver_s3_path: str) -> pd.DataFrame:
     """Lee el Parquet Silver desde S3."""
     import s3fs
+
     fs = s3fs.S3FileSystem()
     path = silver_s3_path.replace("s3://", "")
     logger.info("📂 Leyendo Silver: s3://%s", path)
@@ -160,6 +306,7 @@ def upload_bytes(content: bytes, bucket: str, key: str, content_type: str) -> No
 
 
 # ─── Generadores de contenido ─────────────────────────────────────────────────
+
 
 def df_to_parquet_bytes(df: pd.DataFrame) -> bytes:
     buf = BytesIO()
@@ -186,40 +333,37 @@ def build_metadata_json(
     base_url = f"https://{bucket}.s3.amazonaws.com/{open_data_prefix}"
 
     # Calcular null % por columna para el metadata
-    null_pct = {
-        col: round(df[col].isnull().mean() * 100, 1)
-        for col in df.columns
-    }
+    null_pct = {col: round(df[col].isnull().mean() * 100, 1) for col in df.columns}
 
     metadata = {
-        "dataset_id":    f"latam_{dataset_key}",
-        "version":       version,
-        "title":         meta_def["title"],
-        "description":   meta_def["description"],
-        "license":       "Creative Commons Attribution 4.0 International (CC BY 4.0)",
-        "license_url":   "https://creativecommons.org/licenses/by/4.0/",
-        "source":        meta_def["source"],
+        "dataset_id": f"latam_{dataset_key}",
+        "version": version,
+        "title": meta_def["title"],
+        "description": meta_def["description"],
+        "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "source": meta_def["source"],
         "maintained_by": "Grupo 1 — LATAM Sustainability Data Lake — Henry Data Engineering 2026",
-        "repository":    "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
-        "last_updated":  datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "repository": "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
+        "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "coverage": {
-            "countries":  sorted(df["country_code"].dropna().unique().tolist()),
+            "countries": sorted(df["country_code"].dropna().unique().tolist()),
             "year_start": int(df["year"].min()),
-            "year_end":   int(df["year"].max()),
-            "rows":       int(len(df)),
-            "columns":    int(len(df.columns)),
+            "year_end": int(df["year"].max()),
+            "rows": int(len(df)),
+            "columns": int(len(df.columns)),
         },
         "null_coverage_pct": null_pct,
         "formats": {
             "parquet": f"{base_url}/{filename_base}.parquet",
-            "csv":     f"{base_url}/{filename_base}.csv",
+            "csv": f"{base_url}/{filename_base}.csv",
         },
         "schema": {
             col: {
-                "type":        meta_def["columns"].get(col, {}).get("type", "unknown"),
-                "unit":        meta_def["columns"].get(col, {}).get("unit", "—"),
+                "type": meta_def["columns"].get(col, {}).get("type", "unknown"),
+                "unit": meta_def["columns"].get(col, {}).get("unit", "—"),
                 "description": meta_def["columns"].get(col, {}).get("description", ""),
-                "null_pct":    null_pct.get(col, 0),
+                "null_pct": null_pct.get(col, 0),
             }
             for col in df.columns
         },
@@ -244,10 +388,9 @@ def build_data_dictionary_md(
         "",
         f"**Source:** {meta_def['source']}",
         "",
-        f"**License:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
+        "**License:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
         "",
-        f"**Coverage:** {int(df['year'].min())}–{int(df['year'].max())} · "
-        f"{df['country_code'].nunique()} countries · {len(df):,} rows",
+        f"**Coverage:** {int(df['year'].min())}–{int(df['year'].max())} · {df['country_code'].nunique()} countries · {len(df):,} rows",
         "",
         "---",
         "",
@@ -276,14 +419,14 @@ def build_data_dictionary_md(
         "- Derived columns (suffixed `_calc`, `_pct`, `_growth`) are computed by the pipeline.",
         "- This dataset is part of the LATAM Sustainability Data Lake open data initiative.",
         "",
-        f"*Generated automatically on {datetime.now(timezone.utc).strftime('%Y-%m-%d')} "
-        f"by export_open_data_silver.py*",
+        f"*Generated automatically on {datetime.now(timezone.utc).strftime('%Y-%m-%d')} by export_open_data_silver.py*",
     ]
 
     return "\n".join(lines).encode("utf-8")
 
 
 # ─── Runner principal ─────────────────────────────────────────────────────────
+
 
 def export_dataset(
     dataset_key: str,
@@ -296,7 +439,7 @@ def export_dataset(
 
     df = read_silver_parquet(silver_s3_path)
 
-    filename_base    = f"latam_{dataset_key}_{version}"
+    filename_base = f"latam_{dataset_key}_{version}"
     open_data_prefix = f"open-data/{version}/silver/{dataset_key}"
 
     outputs = {
@@ -346,9 +489,9 @@ def run(dry_run: bool = False, version: str = "v1", source: str = None) -> None:
     logger.info("=" * 60)
 
     datasets = {
-        "co2_emissions":   S3_SILVER["co2"]       + "data.parquet",
-        "tourism_arrivals": S3_SILVER["tourism"]  + "data.parquet",
-        "transport_mode":  S3_SILVER["transport"] + "data.parquet",
+        "co2_emissions": S3_SILVER["co2"] + "data.parquet",
+        "tourism_arrivals": S3_SILVER["tourism"] + "data.parquet",
+        "transport_mode": S3_SILVER["transport"] + "data.parquet",
     }
 
     results = {}
@@ -379,9 +522,13 @@ def run(dry_run: bool = False, version: str = "v1", source: str = None) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Export Silver → open-data/v1/silver/")
-    parser.add_argument("--dry-run",  action="store_true")
-    parser.add_argument("--version",  default="v1", help="Version tag (default: v1)")
-    parser.add_argument("--source",   choices=["co2_emissions", "tourism_arrivals", "transport_mode"],
-                        default=None, help="Exportar solo un dataset")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--version", default="v1", help="Version tag (default: v1)")
+    parser.add_argument(
+        "--source",
+        choices=["co2_emissions", "tourism_arrivals", "transport_mode"],
+        default=None,
+        help="Exportar solo un dataset",
+    )
     args = parser.parse_args()
     run(dry_run=args.dry_run, version=args.version, source=args.source)

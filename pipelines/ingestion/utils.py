@@ -67,9 +67,7 @@ def upload_raw_to_s3(
             Body=content,
             ContentType=content_type,
         )
-        logger.info(
-            "✅ Raw upload OK → s3://%s/%s (%d bytes)", bucket, s3_key, len(content)
-        )
+        logger.info("✅ Raw upload OK → s3://%s/%s (%d bytes)", bucket, s3_key, len(content))
     except ClientError as e:
         logger.error("❌ Error subiendo raw a S3: %s", e)
         raise
@@ -113,15 +111,23 @@ def upload_parquet_partitioned(
             partition_values = (partition_values,)
 
         # Construir el path estilo Hive: year=2020/country_code=ARG/
-        partition_path = "/".join(
-            f"{col}={val}" for col, val in zip(partition_cols, partition_values)
-        )
+        partition_path = "/".join(f"{col}={val}" for col, val in zip(partition_cols, partition_values))
         s3_key = f"{s3_prefix.rstrip('/')}/{partition_path}/data.parquet"
 
         # Serializar a Parquet en memoria (no toca disco)
         buffer = io.BytesIO()
+
+        partition_df = partition_df.copy()
+        partition_df["year"] = partition_df["year"].astype("int64")
+        partition_df["country_code"] = partition_df["country_code"].astype("string")
+
         table = pa.Table.from_pandas(partition_df, preserve_index=False)
-        pq.write_table(table, buffer, compression=compression)
+        pq.write_table(
+            table,
+            buffer,
+            compression=compression,
+            use_dictionary=False,  # Modificado por diferencias en tipos de datos, documentar.
+        )
         buffer.seek(0)
         parquet_bytes = buffer.read()
 

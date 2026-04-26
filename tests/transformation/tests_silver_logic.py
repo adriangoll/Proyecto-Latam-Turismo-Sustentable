@@ -9,8 +9,8 @@ Correr:
   python -m pytest ..\\..\\tests\\transformation\\ -v
 """
 
-import sys
 import os
+import sys
 
 import pandas as pd
 import pytest
@@ -21,6 +21,10 @@ SILVER_DIR = os.path.join(_HERE, "..", "..", "pipelines", "transformation")
 if SILVER_DIR not in sys.path:
     sys.path.insert(0, SILVER_DIR)
 
+from config_silver import DEDUP_KEY, SCHEMA_CO2
+from transform_co2 import add_derived_metrics as co2_metrics
+from transform_tourism import add_derived_metrics as tourism_metrics
+from transform_transport import recalculate_totals_and_pcts
 from utils_silver import (
     apply_schema,
     build_quality_report,
@@ -28,63 +32,66 @@ from utils_silver import (
     drop_empty_rows,
     fill_gaps,
 )
-from config_silver import SCHEMA_CO2, SCHEMA_TOURISM, SCHEMA_TRANSPORT, DEDUP_KEY
-from transform_co2 import add_derived_metrics as co2_metrics
-from transform_tourism import add_derived_metrics as tourism_metrics
-from transform_transport import recalculate_totals_and_pcts
-
 
 # ─── Fixtures ────────────────────────────────────────────────────────────────
+
 
 @pytest.fixture
 def df_co2_basic():
     """DataFrame mínimo válido para CO2."""
-    return pd.DataFrame({
-        "country":      ["Argentina", "Brazil", "Argentina", "Brazil"],
-        "country_code": ["ARG", "BRA", "ARG", "BRA"],
-        "year":         [2020, 2020, 2021, 2021],
-        "co2":          [180.5, 420.0, 190.0, 430.0],
-        "gdp":          [1e12, 2e12, 1.05e12, 2.1e12],
-        "population":   [45_000_000, 215_000_000, 45_500_000, 216_000_000],
-        "co2_per_capita": [4.01, 1.95, 4.18, 1.99],
-        "co2_per_gdp":    [None, None, None, None],
-        "cumulative_co2": [None, None, None, None],
-        "methane":        [None, None, None, None],
-        "nitrous_oxide":  [None, None, None, None],
-        "energy_per_capita": [None, None, None, None],
-        "share_global_co2":  [None, None, None, None],
-    })
+    return pd.DataFrame(
+        {
+            "country": ["Argentina", "Brazil", "Argentina", "Brazil"],
+            "country_code": ["ARG", "BRA", "ARG", "BRA"],
+            "year": [2020, 2020, 2021, 2021],
+            "co2": [180.5, 420.0, 190.0, 430.0],
+            "gdp": [1e12, 2e12, 1.05e12, 2.1e12],
+            "population": [45_000_000, 215_000_000, 45_500_000, 216_000_000],
+            "co2_per_capita": [4.01, 1.95, 4.18, 1.99],
+            "co2_per_gdp": [None, None, None, None],
+            "cumulative_co2": [None, None, None, None],
+            "methane": [None, None, None, None],
+            "nitrous_oxide": [None, None, None, None],
+            "energy_per_capita": [None, None, None, None],
+            "share_global_co2": [None, None, None, None],
+        }
+    )
 
 
 @pytest.fixture
 def df_tourism_basic():
-    return pd.DataFrame({
-        "country":      ["Mexico", "Chile", "Mexico", "Chile"],
-        "country_code": ["MEX", "CHL", "MEX", "CHL"],
-        "year":         [2019, 2019, 2020, 2020],
-        "tourist_arrivals":    [45_000_000, 4_500_000, 24_000_000, 1_700_000],
-        "tourism_receipts_usd": [22.4e9, 3.1e9, 8.2e9, 0.9e9],
-        "tourist_departures":   [None, None, None, None],
-    })
+    return pd.DataFrame(
+        {
+            "country": ["Mexico", "Chile", "Mexico", "Chile"],
+            "country_code": ["MEX", "CHL", "MEX", "CHL"],
+            "year": [2019, 2019, 2020, 2020],
+            "tourist_arrivals": [45_000_000, 4_500_000, 24_000_000, 1_700_000],
+            "tourism_receipts_usd": [22.4e9, 3.1e9, 8.2e9, 0.9e9],
+            "tourist_departures": [None, None, None, None],
+        }
+    )
 
 
 @pytest.fixture
 def df_transport_basic():
-    return pd.DataFrame({
-        "country":      ["Peru", "Colombia", "Peru", "Colombia"],
-        "country_code": ["PER", "COL", "PER", "COL"],
-        "year":         [2018, 2018, 2019, 2019],
-        "tourists_air":   [3_000_000, 4_000_000, 3_200_000, None],
-        "tourists_sea":   [200_000,   100_000,   210_000,   None],
-        "tourists_land":  [800_000,   2_000_000, 850_000,   None],
-        "tourists_total": [None,      6_100_000, None,      None],
-        "pct_air":  [None, None, None, None],
-        "pct_sea":  [None, None, None, None],
-        "pct_land": [None, None, None, None],
-    })
+    return pd.DataFrame(
+        {
+            "country": ["Peru", "Colombia", "Peru", "Colombia"],
+            "country_code": ["PER", "COL", "PER", "COL"],
+            "year": [2018, 2018, 2019, 2019],
+            "tourists_air": [3_000_000, 4_000_000, 3_200_000, None],
+            "tourists_sea": [200_000, 100_000, 210_000, None],
+            "tourists_land": [800_000, 2_000_000, 850_000, None],
+            "tourists_total": [None, 6_100_000, None, None],
+            "pct_air": [None, None, None, None],
+            "pct_sea": [None, None, None, None],
+            "pct_land": [None, None, None, None],
+        }
+    )
 
 
 # ─── Tests: apply_schema ─────────────────────────────────────────────────────
+
 
 class TestApplySchema:
     def test_cast_year_to_int(self, df_co2_basic):
@@ -113,6 +120,7 @@ class TestApplySchema:
 
 # ─── Tests: deduplicate ───────────────────────────────────────────────────────
 
+
 class TestDeduplicate:
     def test_removes_duplicates(self, df_co2_basic):
         df_dup = pd.concat([df_co2_basic, df_co2_basic.iloc[[0]]], ignore_index=True)
@@ -130,13 +138,12 @@ class TestDeduplicate:
         df_dup.loc[4, "co2"] = 9999.0  # segunda ocurrencia con valor diferente
         df_clean = deduplicate(df_dup, DEDUP_KEY, "test")
         # Debe conservar el primero (co2=180.5, no 9999)
-        arg_2020 = df_clean[
-            (df_clean["country_code"] == "ARG") & (df_clean["year"] == 2020)
-        ]
+        arg_2020 = df_clean[(df_clean["country_code"] == "ARG") & (df_clean["year"] == 2020)]
         assert arg_2020["co2"].values[0] == 180.5
 
 
 # ─── Tests: drop_empty_rows ───────────────────────────────────────────────────
+
 
 class TestDropEmptyRows:
     def test_drops_all_null_rows(self, df_co2_basic):
@@ -159,24 +166,29 @@ class TestDropEmptyRows:
 
 # ─── Tests: fill_gaps ─────────────────────────────────────────────────────────
 
+
 class TestFillGaps:
     def test_ffill_population(self):
-        df = pd.DataFrame({
-            "country_code": ["ARG", "ARG", "ARG"],
-            "year":         [2019, 2020, 2021],
-            "population":   [44_000_000, None, None],
-        })
+        df = pd.DataFrame(
+            {
+                "country_code": ["ARG", "ARG", "ARG"],
+                "year": [2019, 2020, 2021],
+                "population": [44_000_000, None, None],
+            }
+        )
         df_filled = fill_gaps(df, fill_forward_cols=["population"], interpolate_cols=[])
         # forward fill debe propagar el valor
         assert df_filled["population"].notna().all()
         assert df_filled.loc[1, "population"] == 44_000_000
 
     def test_interpolate_gdp(self):
-        df = pd.DataFrame({
-            "country_code": ["BRA", "BRA", "BRA"],
-            "year":         [2019, 2020, 2021],
-            "gdp":          [2e12, None, 2.2e12],
-        })
+        df = pd.DataFrame(
+            {
+                "country_code": ["BRA", "BRA", "BRA"],
+                "year": [2019, 2020, 2021],
+                "gdp": [2e12, None, 2.2e12],
+            }
+        )
         df_filled = fill_gaps(df, fill_forward_cols=[], interpolate_cols=["gdp"])
         # interpolación debe rellenar el gap intermedio
         assert df_filled.loc[1, "gdp"] == pytest.approx(2.1e12, rel=1e-3)
@@ -184,11 +196,13 @@ class TestFillGaps:
     def test_no_extrapolation_beyond_last_value(self):
         """interpolate lineal con un solo extremo conocido hace ffill implícito.
         Documentamos el comportamiento real: pandas interpola hacia adelante."""
-        df = pd.DataFrame({
-            "country_code": ["CHL", "CHL", "CHL"],
-            "year":         [2019, 2020, 2021],
-            "gdp":          [1e12, None, None],
-        })
+        df = pd.DataFrame(
+            {
+                "country_code": ["CHL", "CHL", "CHL"],
+                "year": [2019, 2020, 2021],
+                "gdp": [1e12, None, None],
+            }
+        )
         df_filled = fill_gaps(df, fill_forward_cols=[], interpolate_cols=["gdp"])
         # Con un solo punto, pandas no puede interpolar 2020 ni 2021 entre dos extremos.
         # El resultado esperado es que 2020 y 2021 sigan siendo NaN.
@@ -199,6 +213,7 @@ class TestFillGaps:
 
 
 # ─── Tests: métricas derivadas CO2 ───────────────────────────────────────────
+
 
 class TestCO2Metrics:
     def test_co2_per_capita_calc(self, df_co2_basic):
@@ -224,19 +239,30 @@ class TestCO2Metrics:
 
     def test_no_division_by_zero(self):
         """Filas con population=0 o gdp=0 no deben generar inf."""
-        df = pd.DataFrame({
-            "country": ["Test"], "country_code": ["TST"], "year": [2020],
-            "co2": [100.0], "gdp": [0.0], "population": [0],
-            "co2_per_capita": [None], "co2_per_gdp": [None],
-            "cumulative_co2": [None], "methane": [None], "nitrous_oxide": [None],
-            "energy_per_capita": [None], "share_global_co2": [None],
-        })
+        df = pd.DataFrame(
+            {
+                "country": ["Test"],
+                "country_code": ["TST"],
+                "year": [2020],
+                "co2": [100.0],
+                "gdp": [0.0],
+                "population": [0],
+                "co2_per_capita": [None],
+                "co2_per_gdp": [None],
+                "cumulative_co2": [None],
+                "methane": [None],
+                "nitrous_oxide": [None],
+                "energy_per_capita": [None],
+                "share_global_co2": [None],
+            }
+        )
         df = co2_metrics(df)
         assert not df["co2_per_capita_calc"].isin([float("inf"), float("-inf")]).any()
         assert not df["co2_intensity_gdp"].isin([float("inf"), float("-inf")]).any()
 
 
 # ─── Tests: métricas derivadas Tourism ───────────────────────────────────────
+
 
 class TestTourismMetrics:
     def test_arrivals_growth_pct(self, df_tourism_basic):
@@ -255,17 +281,22 @@ class TestTourismMetrics:
         assert mex_2019["receipts_per_tourist"].values[0] == pytest.approx(497.78, rel=1e-2)
 
     def test_no_receipts_per_tourist_when_zero_arrivals(self):
-        df = pd.DataFrame({
-            "country": ["X"], "country_code": ["TST"], "year": [2020],
-            "tourist_arrivals": [0],
-            "tourism_receipts_usd": [1_000_000],
-            "tourist_departures": [None],
-        })
+        df = pd.DataFrame(
+            {
+                "country": ["X"],
+                "country_code": ["TST"],
+                "year": [2020],
+                "tourist_arrivals": [0],
+                "tourism_receipts_usd": [1_000_000],
+                "tourist_departures": [None],
+            }
+        )
         df = tourism_metrics(df)
         assert pd.isna(df["receipts_per_tourist"].values[0])
 
 
 # ─── Tests: transport recalculate ────────────────────────────────────────────
+
 
 class TestTransportRecalculate:
     def test_total_recalculated_when_null(self, df_transport_basic):
@@ -294,17 +325,26 @@ class TestTransportRecalculate:
         assert per_2018["dominant_transport"].values[0] == "air"
 
     def test_all_null_row_no_dominant(self):
-        df = pd.DataFrame({
-            "country": ["X"], "country_code": ["TST"], "year": [2020],
-            "tourists_air": [None], "tourists_sea": [None],
-            "tourists_land": [None], "tourists_total": [None],
-            "pct_air": [None], "pct_sea": [None], "pct_land": [None],
-        })
+        df = pd.DataFrame(
+            {
+                "country": ["X"],
+                "country_code": ["TST"],
+                "year": [2020],
+                "tourists_air": [None],
+                "tourists_sea": [None],
+                "tourists_land": [None],
+                "tourists_total": [None],
+                "pct_air": [None],
+                "pct_sea": [None],
+                "pct_land": [None],
+            }
+        )
         df = recalculate_totals_and_pcts(df)
         assert pd.isna(df["dominant_transport"].values[0])
 
 
 # ─── Tests: quality report ────────────────────────────────────────────────────
+
 
 class TestQualityReport:
     def test_report_has_required_keys(self, df_co2_basic):
@@ -314,9 +354,16 @@ class TestQualityReport:
             dataset_name="co2_emissions",
             thresholds={},
         )
-        for key in ["dataset", "rows_bronze", "rows_silver", "rows_dropped",
-                    "countries_covered", "years_covered",
-                    "null_pct_by_column", "quality_flags"]:
+        for key in [
+            "dataset",
+            "rows_bronze",
+            "rows_silver",
+            "rows_dropped",
+            "countries_covered",
+            "years_covered",
+            "null_pct_by_column",
+            "quality_flags",
+        ]:
             assert key in report
 
     def test_rows_dropped_calculated_correctly(self, df_co2_basic):
@@ -326,6 +373,7 @@ class TestQualityReport:
 
     def test_threshold_flag_triggered(self, df_co2_basic):
         import numpy as np
+
         df = df_co2_basic.copy()
         df["co2"] = np.nan  # 100% nulls — usar NaN, no None, en columna float64
         report = build_quality_report(df_co2_basic, df, "test", {"co2": 30.0})

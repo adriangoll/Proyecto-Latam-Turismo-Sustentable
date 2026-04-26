@@ -1,5 +1,5 @@
-import sys
 import types
+
 import pytest
 
 # Import del runner
