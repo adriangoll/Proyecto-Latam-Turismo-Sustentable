@@ -1,26 +1,26 @@
-# .github/workflows/ci_cd_silver_transformation.yml
+# .github/workflows/ci_cd_gold.yml
 # ─────────────────────────────────────────────────────────────────────────────
-# CI  → lint + 28 tests unitarios (sin S3 ni red)
+# CI  → lint + 16 tests unitarios (sin S3 ni red)
 # CD  → en push a main:
-#         1. Corre transformación Silver completa contra S3 real
-#         2. [NUEVO] Valida Silver con Great Expectations
+#         1. Corre build Gold completo contra S3 real
+#         2. Valida Gold con Great Expectations
 #         3. Corre export a open-data/
 #         4. Dispara crawlers Glue para actualizar Glue Catalog
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: CI/CD Silver Transformation
+name: CI/CD Gold Build
 
 on:
   push:
     branches: [main, develop]
     paths:
-      - "pipelines/transformation/**"
-      - "tests/transformation/**"
+      - "pipelines/gold/**"
+      - "tests/gold/**"
   pull_request:
     branches: [main, develop]
     paths:
-      - "pipelines/transformation/**"
-      - "tests/transformation/**"
+      - "pipelines/gold/**"
+      - "tests/gold/**"
 
 jobs:
   # ── CI: Lint ────────────────────────────────────────────────────────────────
@@ -40,20 +40,20 @@ jobs:
         run: pip install black flake8 isort
 
       - name: black
-        run: black --check pipelines/transformation/ tests/transformation/
+        run: black --check pipelines/gold/ tests/gold/
 
       - name: isort
-        run: isort --check-only pipelines/transformation/ tests/transformation/
+        run: isort --check-only pipelines/gold/ tests/gold/
 
       - name: flake8
         run: |
-          flake8 pipelines/transformation/ tests/transformation/ \
+          flake8 pipelines/gold/ tests/gold/ \
             --max-line-length=100 \
             --extend-ignore=E203,W503
 
   # ── CI: Tests ───────────────────────────────────────────────────────────────
   test:
-    name: Tests (28 tests — sin S3 ni red)
+    name: Tests (16 tests — sin S3 ni red)
     runs-on: ubuntu-latest
     needs: lint
 
@@ -73,27 +73,27 @@ jobs:
       - name: Install dependencies
         run: pip install pandas pyarrow boto3 s3fs pytest pytest-cov
 
-      - name: Run Silver tests
+      - name: Run Gold tests
         run: |
-          cd pipelines/transformation
-          python -m pytest ../../tests/transformation/ \
+          cd pipelines/gold
+          python -m pytest ../../tests/gold/ \
             -v --tb=short \
             --cov=. \
             --cov-report=term-missing \
-            --cov-report=xml:../../coverage-silver.xml \
-            --cov-fail-under=80
+            --cov-report=xml:../../coverage-gold.xml \
+            --cov-fail-under=75
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-silver
-          path: coverage-silver.xml
+          name: coverage-gold
+          path: coverage-gold.xml
           retention-days: 7
 
-  # ── CD: Deploy Silver a S3 + crawlers (solo en push a main) ────────────────
-  deploy-silver:
-    name: CD — Transform + Validate + Export + Crawlers
+  # ── CD: Deploy Gold a S3 + crawlers (solo en push a main) ────────────────
+  deploy-gold:
+    name: CD — Build + Validate + Export + Crawlers
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -114,41 +114,40 @@ jobs:
       - name: Install dependencies
         run: pip install pandas pyarrow boto3 s3fs
 
-      - name: Transform Bronze → Silver
+      - name: Build Silver → Gold
         run: |
-          cd pipelines/transformation
-          python run_transformation.py
-        # Si falla aquí el workflow se detiene — Silver no se actualiza
+          cd pipelines/gold
+          python run_gold.py
+        # Si falla aquí el workflow se detiene — Gold no se actualiza
         # con datos corruptos
 
-      - name: Validate Silver with Great Expectations
+      - name: Validate Gold with Great Expectations
         run: |
           cd pipelines
-          python expectations/run_validation.py --layer silver --source all
+          python expectations/run_validation.py --layer gold
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         # Si algún check falla, el workflow se detiene (opcional: cambiar a 'continue-on-error: true')
         # continue-on-error: true
 
-      - name: Export Silver → open-data/
+      - name: Export Gold → open-data/
         run: |
-          cd pipelines/transformation
-          python export_open_data_silver.py
+          cd pipelines/gold
+          python export_open_data_gold.py
 
-      - name: Trigger Glue crawlers Silver
+      - name: Trigger Glue crawlers Gold
         run: |
-          aws glue start-crawler --name latam-dev-silver-co2
-          aws glue start-crawler --name latam-dev-silver-tourism
-          aws glue start-crawler --name latam-dev-silver-transport
-          aws glue start-crawler --name latam-dev-open-data-silver
+          aws glue start-crawler --name latam-dev-gold-fact
+          aws glue start-crawler --name latam-dev-gold-dim-country
+          aws glue start-crawler --name latam-dev-open-data-gold
           echo "✅ Crawlers iniciados — Glue Catalog se actualizará en ~2-3 min"
 
       - name: Summary
         run: |
-          echo "## Silver Deployment" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Bronze → Silver transformado" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Silver validado con Great Expectations" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Silver → open-data/ exportado" >> $GITHUB_STEP_SUMMARY
+          echo "## Gold Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Silver → Gold construido" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Gold validado con Great Expectations" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Gold → open-data/ exportado" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Crawlers Glue disparados" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
