@@ -72,7 +72,7 @@ Terraform administra un budget llamado:
 Este recurso se utiliza como control de costos dentro de la cuenta AWS del proyecto.
 
 Se verifica la creación en la consola de AWS:
-![alt text](img/Budget-zero.jpg)
+![alt text](/docs/infra/img/Budget-zero.jpg)
 
 ## 6. Bucket S3 del datalake
 
@@ -100,10 +100,10 @@ silver/transport_mode/
 gold/
 ```
 Luego de ejecutar:  
-![alt text](img/s3-terraform.jpg)
+![alt text](/docs/infra/img/s3-terraform.jpg)
 
 Se verifica en la consola de AWS la existencia del bucket con sus carpetas
-![alt text](img/s2-aws.jpg)  
+![alt text](/docs/infra/img/s2-aws.jpg)  
 
 ## 7. IAM
 
@@ -126,10 +126,10 @@ Terraform administra grupos, usuarios y políticas IAM.
 - `AWSGlueConsoleFullAccess`
 
 Usuarios  
-![alt text](img/iam-usuarios.jpg)  
+![alt text](/docs/infra/img/iam-usuarios.jpg)  
   
 Permisos  
-![alt text](img/iam-permisos.jpg)
+![alt text](/docs/infra/img/iam-permisos.jpg)
   
 
 ## 8. AWS Glue
@@ -218,13 +218,13 @@ El resultado esperado es:
 Plan: 0 to add, 0 to change, 0 to destroy
 ```
   
-![alt text](img/glue-terraform.jpg)
+![alt text](/docs/infra/img/glue-terraform.jpg)
   
 Además, en AWS Glue deben verse los 6 crawlers en estado disponible.
-![alt text](img/glue-aws.jpg)
+![alt text](/docs/infra/img/glue-aws.jpg)
   
 Verifico que el rol y el path objetivo sean correctos:
-![alt text](img/glue-rol-path.jpg)
+![alt text](/docs/infra/img/glue-rol-path.jpg)
   
 
 ## 14. Git y GitHub Actions

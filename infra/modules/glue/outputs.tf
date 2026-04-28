@@ -33,3 +33,11 @@ output "silver_tourism_crawler_name" {
 output "silver_transport_crawler_name" {
   value = aws_glue_crawler.silver_transport.name
 }
+
+output "gold_dim_country_crawler_name" {
+  value = aws_glue_crawler.gold_dim_country.name
+}
+
+output "gold_fact_tourism_emissions_crawler_name" {
+  value = aws_glue_crawler.gold_fact_tourism_emissions.name
+}

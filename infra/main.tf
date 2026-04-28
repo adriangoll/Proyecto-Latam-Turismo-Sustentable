@@ -30,6 +30,8 @@ module "iam" {
 
   data_engineers_policy_arns   = var.data_engineers_policy_arns
   project_managers_policy_arns = var.project_managers_policy_arns
+  
+  data_engineers_logs_read_policy_name = var.data_engineers_logs_read_policy_name
 }
 
 module "glue" {
@@ -46,6 +48,9 @@ module "glue" {
   silver_tourism_crawler_name   = var.silver_tourism_crawler_name
   silver_transport_crawler_name = var.silver_transport_crawler_name
 
+  gold_dim_country_crawler_name            = var.gold_dim_country_crawler_name
+  gold_fact_tourism_emissions_crawler_name = var.gold_fact_tourism_emissions_crawler_name
+
   bronze_co2_s3_target_path       = var.bronze_co2_s3_target_path
   bronze_tourism_s3_target_path   = var.bronze_tourism_s3_target_path
   bronze_transport_s3_target_path = var.bronze_transport_s3_target_path
@@ -53,4 +58,8 @@ module "glue" {
   silver_co2_s3_target_path       = var.silver_co2_s3_target_path
   silver_tourism_s3_target_path   = var.silver_tourism_s3_target_path
   silver_transport_s3_target_path = var.silver_transport_s3_target_path
+  
+  gold_dim_country_s3_target_path            = var.gold_dim_country_s3_target_path
+  gold_fact_tourism_emissions_s3_target_path = var.gold_fact_tourism_emissions_s3_target_path
+  
 }

@@ -39,6 +39,9 @@ silver_co2_crawler_name       = "latam-silver-co2-crawler"
 silver_tourism_crawler_name   = "latam-silver-tourism-crawler"
 silver_transport_crawler_name = "latam-silver-transport-crawler"
 
+gold_dim_country_crawler_name             = "latam-gold-dim-country-crawler"
+gold_fact_tourism_emissions_crawler_name  = "latam-gold-fact-tourism-emissions-crawler"
+
 bronze_co2_s3_target_path       = "s3://latam-sustainability-datalake/bronze/co2_emissions/"
 bronze_tourism_s3_target_path   = "s3://latam-sustainability-datalake/bronze/tourism_arrivals/"
 bronze_transport_s3_target_path = "s3://latam-sustainability-datalake/bronze/transport_mode/"
@@ -46,3 +49,8 @@ bronze_transport_s3_target_path = "s3://latam-sustainability-datalake/bronze/tra
 silver_co2_s3_target_path       = "s3://latam-sustainability-datalake/silver/co2_emissions/"
 silver_tourism_s3_target_path   = "s3://latam-sustainability-datalake/silver/tourism_arrivals/"
 silver_transport_s3_target_path = "s3://latam-sustainability-datalake/silver/transport_mode/"
+
+gold_dim_country_s3_target_path            = "s3://latam-sustainability-datalake/gold/dim_country/"
+gold_fact_tourism_emissions_s3_target_path = "s3://latam-sustainability-datalake/gold/fact_tourism_emissions/"
+
+data_engineers_logs_read_policy_name = "DataEngineersCloudWatchLogsReadPolicy"

@@ -156,3 +156,33 @@ resource "aws_glue_crawler" "silver_transport" {
     update_behavior = "UPDATE_IN_DATABASE"
   }
 }
+
+resource "aws_glue_crawler" "gold_dim_country" {
+  name          = var.gold_dim_country_crawler_name
+  role          = aws_iam_role.glue_service_role.arn
+  database_name = aws_glue_catalog_database.this.name
+
+  s3_target {
+    path = var.gold_dim_country_s3_target_path
+  }
+
+  schema_change_policy {
+    delete_behavior = "LOG"
+    update_behavior = "UPDATE_IN_DATABASE"
+  }
+}
+
+resource "aws_glue_crawler" "gold_fact_tourism_emissions" {
+  name          = var.gold_fact_tourism_emissions_crawler_name
+  role          = aws_iam_role.glue_service_role.arn
+  database_name = aws_glue_catalog_database.this.name
+
+  s3_target {
+    path = var.gold_fact_tourism_emissions_s3_target_path
+  }
+
+  schema_change_policy {
+    delete_behavior = "LOG"
+    update_behavior = "UPDATE_IN_DATABASE"
+  }
+}

@@ -21,3 +21,7 @@ variable "data_engineers_policy_arns" {
 variable "project_managers_policy_arns" {
   type = list(string)
 }
+
+variable "data_engineers_logs_read_policy_name" {
+  type = string
+}

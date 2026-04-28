@@ -50,3 +50,11 @@ output "silver_transport_crawler_name" {
   value = module.glue.silver_transport_crawler_name
 }
 
+output "gold_dim_country_crawler_name" {
+  value = module.glue.gold_dim_country_crawler_name
+}
+
+output "gold_fact_tourism_emissions_crawler_name" {
+  value = module.glue.gold_fact_tourism_emissions_crawler_name
+}
+

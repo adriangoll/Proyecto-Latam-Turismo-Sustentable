@@ -90,6 +90,14 @@ variable "silver_transport_crawler_name" {
   type = string
 }
 
+variable "gold_dim_country_crawler_name" {
+  type = string
+}
+
+variable "gold_fact_tourism_emissions_crawler_name" {
+  type = string
+}
+
 variable "bronze_co2_s3_target_path" {
   type = string
 }
@@ -111,5 +119,17 @@ variable "silver_tourism_s3_target_path" {
 }
 
 variable "silver_transport_s3_target_path" {
+  type = string
+}
+
+variable "gold_dim_country_s3_target_path" {
+  type = string
+}
+
+variable "gold_fact_tourism_emissions_s3_target_path" {
+  type = string
+}
+
+variable "data_engineers_logs_read_policy_name" {
   type = string
 }
