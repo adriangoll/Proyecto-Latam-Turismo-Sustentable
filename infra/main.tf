@@ -63,3 +63,11 @@ module "glue" {
   gold_fact_tourism_emissions_s3_target_path = var.gold_fact_tourism_emissions_s3_target_path
   
 }
+
+module "athena" {
+  source = "./modules/athena"
+
+  athena_workgroup_name = var.athena_workgroup_name
+  datalake_bucket_name  = var.datalake_bucket_name
+  athena_results_prefix = var.athena_results_prefix
+}

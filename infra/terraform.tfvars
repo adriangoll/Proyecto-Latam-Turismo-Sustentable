@@ -11,6 +11,7 @@ datalake_bucket_name = "latam-sustainability-datalake"
 
 data_engineers_group_name   = "data-engineers"
 project_managers_group_name = "project-manager"
+data_engineers_logs_read_policy_name = "DataEngineersCloudWatchLogsReadPolicy"
 
 data_engineers_users   = ["adrian.sosa", "luis.buruato", "mariana.gil", "martin.tedesco"]
 project_managers_users = ["adrian.sosa"]
@@ -53,4 +54,5 @@ silver_transport_s3_target_path = "s3://latam-sustainability-datalake/silver/tra
 gold_dim_country_s3_target_path            = "s3://latam-sustainability-datalake/gold/dim_country/"
 gold_fact_tourism_emissions_s3_target_path = "s3://latam-sustainability-datalake/gold/fact_tourism_emissions/"
 
-data_engineers_logs_read_policy_name = "DataEngineersCloudWatchLogsReadPolicy"
+athena_workgroup_name = "latam-sustainable-tourism"
+athena_results_prefix = "athena-results/"

@@ -72,7 +72,7 @@ Terraform administra un budget llamado:
 Este recurso se utiliza como control de costos dentro de la cuenta AWS del proyecto.
 
 Se verifica la creación en la consola de AWS:
-![alt text](/docs/infra/img/Budget-zero.jpg)
+![alt text](img/Budget-zero.jpg)
 
 ## 6. Bucket S3 del datalake
 
@@ -100,10 +100,10 @@ silver/transport_mode/
 gold/
 ```
 Luego de ejecutar:  
-![alt text](/docs/infra/img/s3-terraform.jpg)
+![alt text](img/s3-terraform.jpg)
 
 Se verifica en la consola de AWS la existencia del bucket con sus carpetas
-![alt text](/docs/infra/img/s2-aws.jpg)  
+![alt text](img/s2-aws.jpg)  
 
 ## 7. IAM
 
@@ -126,10 +126,10 @@ Terraform administra grupos, usuarios y políticas IAM.
 - `AWSGlueConsoleFullAccess`
 
 Usuarios  
-![alt text](/docs/infra/img/iam-usuarios.jpg)  
+![alt text](img/iam-usuarios.jpg)  
   
 Permisos  
-![alt text](/docs/infra/img/iam-permisos.jpg)
+![alt text](img/iam-permisos.jpg)
   
 
 ## 8. AWS Glue
@@ -158,6 +158,10 @@ Se definieron crawlers separados por capa y por dataset.
 - `latam-silver-co2-crawler`
 - `latam-silver-tourism-crawler`
 - `latam-silver-transport-crawler`
+
+### Crawlers de Gold
+- `latam-gold-dim-country-crawler`
+- `latam-gold-fact-tourism-emissions-crawler`
 
 ## 10. Targets de los crawlers
 
@@ -218,13 +222,13 @@ El resultado esperado es:
 Plan: 0 to add, 0 to change, 0 to destroy
 ```
   
-![alt text](/docs/infra/img/glue-terraform.jpg)
+![alt text](img/glue-terraform.jpg)
   
 Además, en AWS Glue deben verse los 6 crawlers en estado disponible.
-![alt text](/docs/infra/img/glue-aws.jpg)
+![alt text](img/glue-aws.jpg)
   
 Verifico que el rol y el path objetivo sean correctos:
-![alt text](/docs/infra/img/glue-rol-path.jpg)
+![alt text](img/glue-rol-path.jpg)
   
 
 ## 14. Git y GitHub Actions
@@ -266,4 +270,54 @@ Esta documentación refleja el estado final consolidado del proyecto para Terraf
 - Glue Catalog Database
 - crawlers para `bronze` y `silver`
 
-No incluye automatizaciones externas ni componentes que no formen parte del estado Terraform consolidado.
+## 16. Capa Gold en AWS Glue
+
+Luego de validar que en S3 existían archivos reales dentro de la capa `gold/`, se amplió el módulo de Glue para registrar también las tablas finales del proyecto.
+
+### Crawlers de Gold
+- `latam-gold-dim-country-crawler`
+- `latam-gold-fact-tourism-emissions-crawler`
+
+### Targets de los crawlers Gold
+- `s3://latam-sustainability-datalake/gold/dim_country/`
+- `s3://latam-sustainability-datalake/gold/fact_tourism_emissions/`
+
+### Validación realizada
+Se verificó en AWS Glue que:
+- ambos crawlers de Gold fueron creados correctamente
+![alt text](docs/infra/img/gold-crawlers.jpg)
+- el crawler `latam-gold-fact-tourism-emissions-crawler` apunta al path correcto
+- el crawler `latam-gold-dim-country-crawler` también quedó disponible para ejecución
+- los crawlers terminaron correctamente
+![alt text](docs/infra/img/gold-crawlers-run.jpg)
+![alt text](docs/infra/img/gold-crawlers-logs.jpg)
+- las tablas de Gold aparecieron registradas en el Glue Data Catalog
+![alt text](docs/infra/img/gold-tables.jpg)
+
+## 17. Permisos de lectura de logs para el equipo de Data Engineers
+
+Durante la validación de los crawlers se detectó que el grupo `data-engineers` no podía visualizar los logs de CloudWatch desde la consola de AWS Glue.
+
+Para resolverlo, se agregó en Terraform una política custom de solo lectura de logs y se adjuntó al grupo `data-engineers`.
+
+### Acciones habilitadas
+- `logs:DescribeLogGroups`
+- `logs:DescribeLogStreams`
+- `logs:GetLogEvents`
+- `logs:FilterLogEvents`
+
+### Objetivo
+Permitir que los integrantes del grupo `data-engineers` puedan revisar los logs de ejecución de crawlers y otros componentes integrados con CloudWatch Logs.
+
+## 18. Integración con Athena
+
+Una vez registrados los datasets de Gold en el Glue Data Catalog, las tablas
+quedaron disponibles para ser consultadas desde Athena.
+
+El workgroup fue provisionado con Terraform en `infra/modules/athena/`.
+
+Para mayor detalle sobre la configuración de Athena y las queries de negocio,
+ver:
+- `docs/athena.md`
+- `docs/queries.md`
+
