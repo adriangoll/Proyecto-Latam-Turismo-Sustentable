@@ -1,0 +1,188 @@
+{
+  "dataset_id": "latam_fact_tourism_emissions",
+  "version": "v1",
+  "title": "Tourism Emissions Fact Table — Latin America",
+  "description": "Integrated dataset joining CO₂ emissions, international tourism arrivals and transport mode data for 19 Latin American countries (2013–2023). Includes sustainability classification and co2_per_tourist KPI.",
+  "license": "CC BY 4.0",
+  "source": "Derived from OWID CO₂, World Bank Tourism, UN Tourism (UNWTO)",
+  "maintained_by": "Grupo 1 — Henry Data Engineering 2026",
+  "repository": "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
+  "last_updated": "2026-04-28",
+  "rows": 209,
+  "formats": {
+    "parquet": "https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/gold/fact_tourism_emissions/latam_fact_tourism_emissions_v1.parquet",
+    "csv": "https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/gold/fact_tourism_emissions/latam_fact_tourism_emissions_v1.csv"
+  },
+  "null_pct": {
+    "country": 0.0,
+    "country_code": 0.0,
+    "year": 0.0,
+    "co2": 0.0,
+    "co2_per_capita": 0.0,
+    "co2_per_capita_calc": 0.0,
+    "co2_intensity_gdp": 0.0,
+    "gdp": 0.0,
+    "gdp_per_capita": 0.0,
+    "gdp_growth_pct": 9.1,
+    "population": 0.0,
+    "share_global_co2": 0.0,
+    "tourist_arrivals": 31.1,
+    "tourism_receipts_usd": 36.4,
+    "tourist_departures": 32.5,
+    "arrivals_growth_pct": 40.2,
+    "receipts_per_tourist": 36.4,
+    "tourists_air": 9.1,
+    "tourists_sea": 42.6,
+    "tourists_land": 19.6,
+    "tourists_total": 9.1,
+    "pct_air": 9.1,
+    "pct_sea": 42.6,
+    "pct_land": 19.6,
+    "dominant_transport": 9.1,
+    "co2_per_tourist": 31.1,
+    "co2_growth_pct": 9.1,
+    "sustainability_label": 0.0
+  },
+  "schema": {
+    "country": {
+      "type": "string",
+      "unit": "—",
+      "description": "Country name"
+    },
+    "country_code": {
+      "type": "string",
+      "unit": "ISO α3",
+      "description": "ISO 3166-1 alpha-3"
+    },
+    "year": {
+      "type": "integer",
+      "unit": "—",
+      "description": "Reference year"
+    },
+    "co2": {
+      "type": "float",
+      "unit": "Mt CO₂",
+      "description": "Total CO₂ emissions"
+    },
+    "co2_per_capita": {
+      "type": "float",
+      "unit": "t/person",
+      "description": "CO₂ per capita (OWID)"
+    },
+    "co2_per_capita_calc": {
+      "type": "float",
+      "unit": "t/person",
+      "description": "CO₂ per capita (derived)"
+    },
+    "co2_intensity_gdp": {
+      "type": "float",
+      "unit": "kg CO₂/USD",
+      "description": "CO₂ per unit of GDP"
+    },
+    "gdp": {
+      "type": "float",
+      "unit": "USD PPP",
+      "description": "Gross domestic product"
+    },
+    "gdp_per_capita": {
+      "type": "float",
+      "unit": "USD PPP",
+      "description": "GDP per capita"
+    },
+    "gdp_growth_pct": {
+      "type": "float",
+      "unit": "%",
+      "description": "Year-on-year GDP growth"
+    },
+    "population": {
+      "type": "integer",
+      "unit": "persons",
+      "description": "Mid-year population"
+    },
+    "share_global_co2": {
+      "type": "float",
+      "unit": "%",
+      "description": "Share of global CO₂"
+    },
+    "tourist_arrivals": {
+      "type": "integer",
+      "unit": "persons",
+      "description": "International tourist arrivals"
+    },
+    "tourism_receipts_usd": {
+      "type": "float",
+      "unit": "USD",
+      "description": "Tourism receipts"
+    },
+    "tourist_departures": {
+      "type": "integer",
+      "unit": "persons",
+      "description": "Tourist departures"
+    },
+    "arrivals_growth_pct": {
+      "type": "float",
+      "unit": "%",
+      "description": "Year-on-year arrivals growth"
+    },
+    "receipts_per_tourist": {
+      "type": "float",
+      "unit": "USD",
+      "description": "Revenue per tourist"
+    },
+    "tourists_air": {
+      "type": "float",
+      "unit": "persons",
+      "description": "Arrivals by air"
+    },
+    "tourists_sea": {
+      "type": "float",
+      "unit": "persons",
+      "description": "Arrivals by sea"
+    },
+    "tourists_land": {
+      "type": "float",
+      "unit": "persons",
+      "description": "Arrivals by land"
+    },
+    "tourists_total": {
+      "type": "—",
+      "unit": "—",
+      "description": "—"
+    },
+    "pct_air": {
+      "type": "float",
+      "unit": "%",
+      "description": "Share by air"
+    },
+    "pct_sea": {
+      "type": "float",
+      "unit": "%",
+      "description": "Share by sea"
+    },
+    "pct_land": {
+      "type": "float",
+      "unit": "%",
+      "description": "Share by land"
+    },
+    "dominant_transport": {
+      "type": "string",
+      "unit": "—",
+      "description": "Dominant mode (air/sea/land)"
+    },
+    "co2_per_tourist": {
+      "type": "float",
+      "unit": "t CO₂",
+      "description": "CO₂ tons per tourist arrived"
+    },
+    "co2_growth_pct": {
+      "type": "float",
+      "unit": "%",
+      "description": "Year-on-year CO₂ growth"
+    },
+    "sustainability_label": {
+      "type": "string",
+      "unit": "—",
+      "description": "verde/amarillo/rojo/gris"
+    }
+  }
+}

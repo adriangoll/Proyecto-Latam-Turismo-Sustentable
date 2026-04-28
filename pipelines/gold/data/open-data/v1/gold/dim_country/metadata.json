@@ -1,0 +1,44 @@
+{
+  "dataset_id": "latam_dim_country",
+  "version": "v1",
+  "title": "Country Dimension — Latin America",
+  "description": "Reference table with ISO codes and regional classification for 19 LATAM countries.",
+  "license": "CC BY 4.0",
+  "source": "ISO 3166-1, internal project classification",
+  "maintained_by": "Grupo 1 — Henry Data Engineering 2026",
+  "repository": "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
+  "last_updated": "2026-04-28",
+  "rows": 19,
+  "formats": {
+    "parquet": "https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/gold/dim_country/latam_dim_country_v1.parquet",
+    "csv": "https://latam-sustainability-datalake.s3.amazonaws.com/open-data/v1/gold/dim_country/latam_dim_country_v1.csv"
+  },
+  "null_pct": {
+    "country_code": 0.0,
+    "country_code_iso2": 0.0,
+    "country_name": 0.0,
+    "region_latam": 0.0
+  },
+  "schema": {
+    "country_code": {
+      "type": "string",
+      "unit": "ISO α3",
+      "description": "ISO 3166-1 alpha-3"
+    },
+    "country_code_iso2": {
+      "type": "string",
+      "unit": "ISO α2",
+      "description": "ISO 3166-1 alpha-2"
+    },
+    "country_name": {
+      "type": "string",
+      "unit": "—",
+      "description": "Country name in English"
+    },
+    "region_latam": {
+      "type": "string",
+      "unit": "—",
+      "description": "Sub-region within LATAM"
+    }
+  }
+}
