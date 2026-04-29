@@ -30,7 +30,7 @@ module "iam" {
 
   data_engineers_policy_arns   = var.data_engineers_policy_arns
   project_managers_policy_arns = var.project_managers_policy_arns
-  
+
   data_engineers_logs_read_policy_name = var.data_engineers_logs_read_policy_name
 }
 
@@ -58,10 +58,10 @@ module "glue" {
   silver_co2_s3_target_path       = var.silver_co2_s3_target_path
   silver_tourism_s3_target_path   = var.silver_tourism_s3_target_path
   silver_transport_s3_target_path = var.silver_transport_s3_target_path
-  
+
   gold_dim_country_s3_target_path            = var.gold_dim_country_s3_target_path
   gold_fact_tourism_emissions_s3_target_path = var.gold_fact_tourism_emissions_s3_target_path
-  
+
 }
 
 module "athena" {

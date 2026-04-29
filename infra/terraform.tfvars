@@ -9,8 +9,8 @@ budget_threshold          = 0.01
 
 datalake_bucket_name = "latam-sustainability-datalake"
 
-data_engineers_group_name   = "data-engineers"
-project_managers_group_name = "project-manager"
+data_engineers_group_name            = "data-engineers"
+project_managers_group_name          = "project-manager"
 data_engineers_logs_read_policy_name = "DataEngineersCloudWatchLogsReadPolicy"
 
 data_engineers_users   = ["adrian.sosa", "luis.buruato", "mariana.gil", "martin.tedesco"]
@@ -40,8 +40,8 @@ silver_co2_crawler_name       = "latam-silver-co2-crawler"
 silver_tourism_crawler_name   = "latam-silver-tourism-crawler"
 silver_transport_crawler_name = "latam-silver-transport-crawler"
 
-gold_dim_country_crawler_name             = "latam-gold-dim-country-crawler"
-gold_fact_tourism_emissions_crawler_name  = "latam-gold-fact-tourism-emissions-crawler"
+gold_dim_country_crawler_name            = "latam-gold-dim-country-crawler"
+gold_fact_tourism_emissions_crawler_name = "latam-gold-fact-tourism-emissions-crawler"
 
 bronze_co2_s3_target_path       = "s3://latam-sustainability-datalake/bronze/co2_emissions/"
 bronze_tourism_s3_target_path   = "s3://latam-sustainability-datalake/bronze/tourism_arrivals/"
