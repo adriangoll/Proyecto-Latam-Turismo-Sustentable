@@ -16,6 +16,8 @@ if _ROOT not in sys.path:
 from utils import notificar_error, wrapper_procesamiento
 from pipelines.transformation import run_transformation
 from pipelines.gold import run_gold
+from pipelines.expectations.run_validation import run as run_validation
+
 
 
 default_args = {
@@ -38,15 +40,21 @@ with DAG(
         task_id='task_bronze_to_silver',
         python_callable=wrapper_procesamiento,
         op_kwargs={'script_func': run_transformation},
-        provide_context=True
+        ##provide_context=True
     )
+
+    task_validate_silver = PythonOperator(
+    task_id='task_validate_silver',
+    python_callable=run_validation,
+    op_kwargs={'layer': 'silver', 'source': 'all'},
+)
 
     # Tarea Capa Oro
     task_gold = PythonOperator(
         task_id='task_silver_to_gold',
         python_callable=wrapper_procesamiento,
         op_kwargs={'script_func': run_gold},
-        provide_context=True
+        ##provide_context=True
     )
 
     # Dependencia: No empieza Oro si falla Plata

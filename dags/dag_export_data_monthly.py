@@ -36,7 +36,9 @@ with DAG(
         external_dag_id='dag_datalake_core_monthly',
         external_task_id='task_bronze_to_silver',
         mode='reschedule', # Libera recursos mientras espera
-        poke_interval=300  # Pregunta cada 5 minutos
+        poke_interval=300,  # Pregunta cada 5 minutos
+        timeout=3600,       # ← agregar: falla después de 1 hora
+        retries=1,
     )
 
     # SENSOR ORO: Mira el DAG de ejecucion del pipeline y espera SOLO a la tarea de Oro
@@ -45,7 +47,9 @@ with DAG(
         external_dag_id='dag_datalake_core_monthly',
         external_task_id='task_silver_to_gold',
         mode='reschedule',
-        poke_interval=300
+        poke_interval=300,
+        timeout=3600,       # ← agregar: falla después de 1 hora
+        retries=1,
     )
 
     # Tareas de exportación (usando el wrapper)
@@ -53,14 +57,14 @@ with DAG(
         task_id='export_silver_to_ds',
         python_callable=wrapper_procesamiento,
         op_kwargs={'script_func': export_open_data_silver},
-        provide_context=True
+        ##provide_context=True
     )
 
     task_export_gold = PythonOperator(
         task_id='export_gold_to_ds',
         python_callable=wrapper_procesamiento,
         op_kwargs={'script_func': export_open_data_gold},
-        provide_context=True
+        ##provide_context=True
     )
 
     # Flujos independientes: Plata no espera a Oro
