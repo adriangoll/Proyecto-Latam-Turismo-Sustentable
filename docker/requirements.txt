@@ -1,0 +1,9 @@
+apache-airflow==2.9.0
+apache-airflow-providers-amazon
+
+pandas
+numpy
+boto3
+pyarrow
+great-expectations
+sqlalchemy
