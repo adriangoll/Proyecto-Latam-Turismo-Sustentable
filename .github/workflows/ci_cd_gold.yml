@@ -25,31 +25,25 @@ on:
 jobs:
   # ── CI: Lint ────────────────────────────────────────────────────────────────
   lint:
-    name: Lint
+    name: Lint (Ruff)
     runs-on: ubuntu-latest
-
+ 
     steps:
       - uses: actions/checkout@v4
-
+ 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
-
-      - name: Install lint tools
-        run: pip install black flake8 isort
-
-      - name: black
-        run: black --check pipelines/gold/ tests/gold/
-
-      - name: isort
-        run: isort --check-only pipelines/gold/ tests/gold/
-
-      - name: flake8
-        run: |
-          flake8 pipelines/gold/ tests/gold/ \
-            --max-line-length=100 \
-            --extend-ignore=E203,W503
+ 
+      - name: Install ruff
+        run: pip install ruff
+ 
+      - name: Ruff format check
+        run: ruff format --check pipelines/gold/ tests/gold/
+ 
+      - name: Ruff lint check
+        run: ruff check pipelines/gold/ tests/gold/
 
   # ── CI: Tests ───────────────────────────────────────────────────────────────
   test:

@@ -40,10 +40,10 @@ jobs:
         run: pip install ruff
  
       - name: Ruff format check
-        run: ruff format --check pipelines/gold/ tests/gold/
+        run: ruff format --check pipelines/transformation/ tests/transformation/
  
       - name: Ruff lint check
-        run: ruff check pipelines/gold/ tests/gold/
+        run: ruff check pipelines/transformation/ tests/transformation/
   # ── CI: Tests ───────────────────────────────────────────────────────────────
   test:
     name: Tests (28 tests — sin S3 ni red)

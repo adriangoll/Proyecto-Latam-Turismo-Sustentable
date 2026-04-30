@@ -1,5 +1,5 @@
 """
-config.py — Configuración central del pipeline de ingesta
+config.py — Configuración central del pipeline de ingesta.
 Grupo 1 — LATAM Sustainability Data Lake
 """
 
