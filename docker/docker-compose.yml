@@ -55,7 +55,7 @@ services:
       options:
         awslogs-group: /latam-turismo/airflow
         awslogs-region: us-east-1
-        awslogs-stream-prefix: init
+        awslogs-stream: init
 
   airflow-webserver:
     <<: *airflow-common
@@ -68,7 +68,7 @@ services:
       options:
         awslogs-group: /latam-turismo/airflow
         awslogs-region: us-east-1
-        awslogs-stream-prefix: webserver
+        awslogs-stream: webserver
 
   airflow-scheduler:
     <<: *airflow-common
@@ -79,7 +79,7 @@ services:
       options:
         awslogs-group: /latam-turismo/airflow
         awslogs-region: us-east-1
-        awslogs-stream-prefix: scheduler
+        awslogs-stream: scheduler
 
 volumes:
   postgres_db:
