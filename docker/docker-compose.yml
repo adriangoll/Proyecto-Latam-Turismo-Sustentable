@@ -15,7 +15,7 @@ x-airflow-common:
   volumes:
     -  ../airflow/dags:/opt/airflow/dags
     - ../pipelines:/opt/airflow/pipelines
-    - ../airflow/utils.py:/opt/airflow/utils.py
+    - ../dags/utils.py:/opt/airflow/utils.py
   depends_on:
       postgres:
         condition: service_healthy
