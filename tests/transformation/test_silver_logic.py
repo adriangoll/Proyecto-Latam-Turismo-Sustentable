@@ -427,7 +427,21 @@ def test_transport_total_zero():
 
 
 def test_quality_report_multiple_flags():
-    df_before = pd.DataFrame({"a": [1, 2, 3]})
-    df_after = pd.DataFrame({"a": [None, None, None]})
+    df_before = pd.DataFrame(
+        {
+            "country_code": ["ARG", "ARG", "ARG"],
+            "year": [2020, 2021, 2022],
+            "a": [1, 2, 3],
+        }
+    )
+
+    df_after = pd.DataFrame(
+        {
+            "country_code": ["ARG", "ARG", "ARG"],
+            "year": [2020, 2021, 2022],
+            "a": [None, None, None],
+        }
+    )
+
     report = build_quality_report(df_before, df_after, "test", {"a": 10})
     assert len(report["quality_flags"]) > 0
