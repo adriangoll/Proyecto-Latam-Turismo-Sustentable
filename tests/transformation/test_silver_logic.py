@@ -379,3 +379,55 @@ class TestQualityReport:
         report = build_quality_report(df_co2_basic, df, "test", {"co2": 30.0})
         flags_text = " ".join(report["quality_flags"])
         assert "co2" in flags_text
+
+
+def test_co2_with_nan_inputs():
+    df = pd.DataFrame(
+        {
+            "country": ["X"],
+            "country_code": ["TST"],
+            "year": [2020],
+            "co2": [None],
+            "gdp": [None],
+            "population": [None],
+        }
+    )
+    df = co2_metrics(df)
+    assert df["co2_per_capita_calc"].isna().all()
+
+
+def test_tourism_with_nan_values():
+    df = pd.DataFrame(
+        {
+            "country": ["X"],
+            "country_code": ["TST"],
+            "year": [2020],
+            "tourist_arrivals": [None],
+            "tourism_receipts_usd": [None],
+        }
+    )
+    df = tourism_metrics(df)
+    assert df["receipts_per_tourist"].isna().all()
+
+
+def test_transport_total_zero():
+    df = pd.DataFrame(
+        {
+            "country": ["X"],
+            "country_code": ["TST"],
+            "year": [2020],
+            "tourists_air": [0],
+            "tourists_sea": [0],
+            "tourists_land": [0],
+            "tourists_total": [0],
+        }
+    )
+    df = recalculate_totals_and_pcts(df)
+    assert df["pct_air"].isna().all()
+
+
+def test_quality_report_multiple_flags():
+    df_before = pd.DataFrame({"a": [1, 2, 3]})
+    df_after = pd.DataFrame({"a": [None, None, None]})
+    report = build_quality_report(df_before, df_after, "test", {"a": 10})
+    assert len(report["quality_flags"]) > 0

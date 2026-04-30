@@ -41,4 +41,5 @@ omit = [
     # si tenés otros run_*.py o export_*.py en silver/bronze también:
     "pipelines/*/run_*.py",
     "pipelines/*/export_*.py",
+    "pipelines/transformation/check_silver.py"
 ]

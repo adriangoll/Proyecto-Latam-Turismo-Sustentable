@@ -68,13 +68,14 @@ jobs:
         run: pip install pandas pyarrow boto3 s3fs pytest pytest-cov
 
       - name: Run Gold tests
+        env:
+          PYTHONPATH: .
         run: |
-          cd pipelines/gold
-          python -m pytest ../../tests/gold/ \
+          python -m pytest tests/gold \
             -v --tb=short \
-            --cov=. \
+            --cov=pipelines/gold \
             --cov-report=term-missing \
-            --cov-report=xml:../../coverage-gold.xml \
+            --cov-report=xml:coverage-gold.xml \
             --cov-fail-under=75
 
       - name: Upload coverage
