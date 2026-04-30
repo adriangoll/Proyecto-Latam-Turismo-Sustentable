@@ -71,3 +71,18 @@ module "athena" {
   datalake_bucket_name  = var.datalake_bucket_name
   athena_results_prefix = var.athena_results_prefix
 }
+
+module "ec2" {
+  source = "./modules/ec2"
+
+  ec2_role_name         = var.ec2_role_name
+  ec2_sg_name           = var.ec2_sg_name
+  ec2_instance_name     = var.ec2_instance_name
+  ec2_instance_type     = var.ec2_instance_type
+  ec2_ami               = var.ec2_ami
+  datalake_bucket_name  = var.datalake_bucket_name
+  eventbridge_rule_name = var.eventbridge_rule_name
+  eventbridge_role_name = var.eventbridge_role_name
+  aws_region            = var.aws_region
+  aws_account_id        = var.aws_account_id
+}

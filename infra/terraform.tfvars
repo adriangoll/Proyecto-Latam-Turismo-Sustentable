@@ -56,3 +56,13 @@ gold_fact_tourism_emissions_s3_target_path = "s3://latam-sustainability-datalake
 
 athena_workgroup_name = "latam-sustainable-tourism"
 athena_results_prefix = "athena-results/"
+
+# EC2 y EventBridge
+ec2_role_name         = "LatamTourismEC2Role"
+ec2_sg_name           = "latam-airflow-sg"
+ec2_instance_name     = "latam-airflow-ec2"
+ec2_instance_type     = "t3.small"
+ec2_ami               = "ami-0ff290337e78c83bf"
+aws_account_id 		  = "132425676374"
+eventbridge_rule_name = "latam-airflow-monthly-start"
+eventbridge_role_name = "LatamEventBridgeEC2Role"
