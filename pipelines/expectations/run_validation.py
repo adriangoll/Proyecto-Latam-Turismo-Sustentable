@@ -1,5 +1,12 @@
 import argparse
 import logging
+import os
+import sys
+
+_airflow_home = os.getenv("AIRFLOW_HOME", "/opt/airflow")
+_expectations_path = os.path.join(_airflow_home, "pipelines", "expectations")
+if _expectations_path not in sys.path:
+    sys.path.insert(0, _expectations_path)
 
 from pipelines.expectations.bronze_expectations import validate_bronze
 from pipelines.expectations.gold_expectations import validate_gold
