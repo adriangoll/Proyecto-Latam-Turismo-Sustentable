@@ -1,6 +1,6 @@
 import logging
 
-from airflow.utils.email import send_email  # Ejemplo con email
+from airflow.utils.email import send_email
 
 
 def get_dag_logger(dag_id):
@@ -28,16 +28,16 @@ def notificar_error(context):
     dag_logger.error(msg_html)
 
     send_email(to="tedescomartindaniel@gmail.com", subject=sujeto, html_content=msg_html)
-    print(f"Alerta enviada: {sujeto}")  # Solo para el ejemplo
+    print(f"Alerta enviada: {sujeto}")
 
 
 def wrapper_procesamiento(script_func, **kwargs):
     """
     Función que enriquece el log y ejecuta tu script.
     """
-    dag_id = kwargs["dag"].dag_id
-    task_id = kwargs["task"].task_id
-    logical_date = kwargs["ds"]
+    dag_id = kwargs.get("dag_run").dag_id if kwargs.get("dag_run") else "unknown"
+    task_id = kwargs.get("task_instance").task_id if kwargs.get("task_instance") else "unknown"
+    logical_date = kwargs.get("ds", "unknown")
 
     dag_logger = get_dag_logger(dag_id)
 
@@ -47,7 +47,6 @@ def wrapper_procesamiento(script_func, **kwargs):
     dag_logger.info("=" * 60)
 
     try:
-        # Ejecución del script...
         script_func()
         dag_logger.info(f"✅ TAREA {task_id} COMPLETADA")
         dag_logger.info("=" * 60)
