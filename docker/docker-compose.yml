@@ -2,7 +2,9 @@ version: '3.8'
 
 x-airflow-common:
   &airflow-common
-  build: .
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
   environment:
     AIRFLOW_CORE_EXECUTOR: LocalExecutor
     AIRFLOW_DATABASE_SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
@@ -11,9 +13,9 @@ x-airflow-common:
     AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}  
     PYTHONPATH: /opt/airflow
   volumes:
-    - ./dags:/opt/airflow/dags
-    - ./pipelines:/opt/airflow/pipelines
-    - ./utils:/opt/airflow/utils
+    -  ../airflow/dags:/opt/airflow/dags
+    - ../pipelines:/opt/airflow/pipelines
+    - ../airflow/utils.py:/opt/airflow/utils.py
   depends_on:
       postgres:
         condition: service_healthy

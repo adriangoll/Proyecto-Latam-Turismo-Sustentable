@@ -11,7 +11,7 @@ USER airflow
 # Copiamos requirements
 COPY requirements-airflow.txt .
 
-RUN pip install --no-cache-dir -r requirements-airflow.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiamos Solo lo necesario en vez de todo el proyecto
 COPY pipelines/ /opt/airflow/pipelines/
