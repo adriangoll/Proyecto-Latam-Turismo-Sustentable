@@ -72,7 +72,6 @@ jobs:
         run: |
           python -m pytest tests/transformation \
             -v --tb=short \
-            --cov=pipelines/transformation \
             --cov-report=term-missing \
             --cov-report=xml:coverage-silver.xml \
             --cov-fail-under=80
