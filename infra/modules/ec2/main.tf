@@ -63,6 +63,22 @@ data "aws_iam_policy_document" "ec2_s3_access" {
       values   = [var.ec2_instance_name]
     }
   }
+  
+	statement {
+	effect = "Allow"
+
+	actions = [
+	  "logs:CreateLogGroup",
+	  "logs:CreateLogStream",
+	  "logs:PutLogEvents",
+	  "logs:DescribeLogStreams"
+	]
+
+	resources = [
+	  "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow",
+	  "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow:*"
+	]
+  }
 }
 
 resource "aws_iam_role_policy" "ec2_s3_access" {
