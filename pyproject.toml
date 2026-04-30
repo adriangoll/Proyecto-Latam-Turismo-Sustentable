@@ -1,9 +1,35 @@
+[project]
+name = "latam-sustainability-datalake"
+version = "0.1.0"
+description = "Data Lake for LATAM Sustainability: Tourism, CO2, and Transport Analysis"
+requires-python = ">=3.11"
+
 [tool.ruff]
 line-length = 150
+target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = ["E501", "E402"]   #evita problema de líneas largas e imports que no estan al principio
+select = ["E", "F", "I", "W"]
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+    "E402",  # Module level import not at top (common in data scripts)
+]
 
 [tool.ruff.format]
 quote-style = "double"
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = ["pipelines", "tests"]
+known-third-party = ["pandas", "pyarrow", "boto3", "streamlit", "plotly"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"

@@ -31,7 +31,7 @@ on:
 jobs:
   # ── CI: Lint ────────────────────────────────────────────────────────────────
   lint:
-    name: Lint
+    name: Lint (Ruff)
     runs-on: ubuntu-latest
 
     steps:
@@ -43,19 +43,18 @@ jobs:
           cache: pip
 
       - name: Install lint tools
-        run: pip install black flake8 isort
+        run: pip install ruff
 
-      - name: black
-        run: black --check pipelines/ingestion/ tests/ingestion/
+      - name: Ruff
+        run: ruff check pipelines/ingestion/ tests/ingestion/
 
-      - name: isort
-        run: isort --check-only pipelines/ingestion/ tests/ingestion/
+      - name: Ruff
+        run: ruff format --check pipelines/ingestion/ tests/ingestion/
 
-      - name: flake8
+      - name: Ruff
         run: |
-          flake8 pipelines/ingestion/ tests/ingestion/ \
-            --max-line-length=150 \
-            --extend-ignore=E203,W503,E402,E501
+          ruff check pipelines/ingestion/ tests/ingestion/
+
 
   # ── CI: Tests ───────────────────────────────────────────────────────────────
   test:

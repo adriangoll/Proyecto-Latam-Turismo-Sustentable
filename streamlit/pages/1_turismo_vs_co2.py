@@ -5,9 +5,8 @@ import base64
 
 import plotly.express as px
 import plotly.graph_objects as go
-from utils.athena_client import query_athena
-
 import streamlit as st
+from utils.athena_client import query_athena
 
 
 def get_base64_image(path: str) -> str:
