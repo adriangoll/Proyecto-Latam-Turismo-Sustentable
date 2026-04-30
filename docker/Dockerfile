@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiamos Solo lo necesario en vez de todo el proyecto
 COPY pipelines/ /opt/airflow/pipelines/
 COPY airflow/dags/ /opt/airflow/dags/
-COPY airflow/utils.py /opt/airflow/utils.py
+COPY dags/utils.py /opt/airflow/utils.py
 
 # Para que Airflow encuentre pipelines y utils
 ENV PYTHONPATH=/opt/airflow
