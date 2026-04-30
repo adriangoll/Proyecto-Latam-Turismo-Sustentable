@@ -19,8 +19,8 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from config_expectations import EXPECTATIONS
-from utils_expectations import (
+from pipelines.expectations.config_expectations import EXPECTATIONS
+from pipelines.expectations.utils_expectations import (
     create_report,
     get_utc_date,
     read_parquet_s3,

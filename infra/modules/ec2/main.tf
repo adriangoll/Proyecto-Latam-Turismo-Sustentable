@@ -31,6 +31,12 @@ resource "aws_iam_role_policy_attachment" "ec2_ssm" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+# Adjunta permisos de CloudWatch Logs al rol EC2 (necesario para awslogs de Docker)
+resource "aws_iam_role_policy_attachment" "ec2_cloudwatch_logs" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+}
+
 # Permisos S3 sobre el datalake
 data "aws_iam_policy_document" "ec2_s3_access" {
   statement {
@@ -51,9 +57,9 @@ data "aws_iam_policy_document" "ec2_s3_access" {
   statement {
     effect = "Allow"
 
-    actions = [
-      "ec2:StopInstances"
-    ]
+		actions = [
+			"ec2:StopInstances"
+		]
 
     resources = ["*"]
 
@@ -64,6 +70,16 @@ data "aws_iam_policy_document" "ec2_s3_access" {
     }
   }
   
+	statement {
+		effect = "Allow"
+
+		actions = [
+			"ec2:DescribeInstances"
+		]
+
+		resources = ["*"]
+	}
+	
 	statement {
 	effect = "Allow"
 
@@ -136,7 +152,10 @@ user_data = <<-EOF
   systemctl start docker
 
   cd /opt
-  git clone https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable.git app
+
+  if [ ! -d "/opt/app" ]; then
+    git clone https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable.git app
+  fi
 
   cd /opt/app/docker
 
@@ -144,6 +163,27 @@ user_data = <<-EOF
 
   docker-compose run --rm airflow-init
   docker-compose up -d airflow-webserver airflow-scheduler postgres
+
+  cat > /etc/systemd/system/airflow.service <<'SERVICE'
+  [Unit]
+  Description=Airflow Docker Compose
+  After=docker.service
+  Requires=docker.service
+
+  [Service]
+  Type=oneshot
+  RemainAfterExit=true
+  WorkingDirectory=/opt/app/docker
+  ExecStart=/usr/bin/docker-compose up -d airflow-webserver airflow-scheduler postgres
+  ExecStop=/usr/bin/docker-compose down
+  TimeoutStartSec=0
+
+  [Install]
+  WantedBy=multi-user.target
+  SERVICE
+
+  systemctl daemon-reload
+  systemctl enable airflow.service
 EOF
 
 }
@@ -214,4 +254,25 @@ resource "aws_iam_role_policy" "eventbridge_ec2_start" {
   name   = "${var.eventbridge_role_name}-ec2-start"
   role   = aws_iam_role.eventbridge_role.id
   policy = data.aws_iam_policy_document.eventbridge_ec2_start.json
+}
+
+# --- Grupo de logs en CloudWatch para Airflow (usado por Docker awslogs) ---
+resource "aws_cloudwatch_log_group" "airflow" {
+  name              = "/latam-turismo/airflow"
+  retention_in_days = 7
+}
+
+resource "aws_cloudwatch_log_stream" "airflow_init" {
+  name           = "init"
+  log_group_name = aws_cloudwatch_log_group.airflow.name
+}
+
+resource "aws_cloudwatch_log_stream" "airflow_webserver" {
+  name           = "webserver"
+  log_group_name = aws_cloudwatch_log_group.airflow.name
+}
+
+resource "aws_cloudwatch_log_stream" "airflow_scheduler" {
+  name           = "scheduler"
+  log_group_name = aws_cloudwatch_log_group.airflow.name
 }

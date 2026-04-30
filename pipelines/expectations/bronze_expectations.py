@@ -6,7 +6,7 @@ import boto3
 import pandas as pd
 import pyarrow as pa
 import pyarrow.dataset as ds
-from config_expectations import EXPECTATIONS
+from pipelines.expectations.config_expectations import EXPECTATIONS
 
 logger = logging.getLogger("validation.bronze")
 

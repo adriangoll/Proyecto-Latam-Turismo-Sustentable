@@ -1,9 +1,9 @@
 import argparse
 import logging
 
-from bronze_expectations import validate_bronze
-from gold_expectations import validate_gold
-from silver_expectations import validate_silver
+from pipelines.expectations.bronze_expectations import validate_bronze
+from pipelines.expectations.gold_expectations import validate_gold
+from pipelines.expectations.silver_expectations import validate_silver
 
 logger = logging.getLogger("validation.runner")
 
