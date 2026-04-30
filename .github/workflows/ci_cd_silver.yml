@@ -67,22 +67,16 @@ jobs:
         run: pip install pandas pyarrow boto3 s3fs pytest pytest-cov
 
       - name: Run Silver tests
+        env:
+          PYTHONPATH: .
         run: |
-          cd pipelines/transformation
-          python -m pytest ../../tests/transformation/ \
+          python -m pytest tests/transformation \
             -v --tb=short \
-            --cov=. \
+            --cov=pipelines/transformation \
             --cov-report=term-missing \
-            --cov-report=xml:../../coverage-silver.xml \
+            --cov-report=xml:coverage-silver.xml \
             --cov-fail-under=80
 
-      - name: Upload coverage
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-silver
-          path: coverage-silver.xml
-          retention-days: 7
 
   # ── CD: Deploy Silver a S3 + crawlers (solo en push a main) ────────────────
   deploy-silver:

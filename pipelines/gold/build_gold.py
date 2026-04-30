@@ -1,5 +1,5 @@
 """
-build_gold.py — Construye las tablas Gold desde Silver
+build_gold.py — Construye las tablas Gold desde Silver.
 =======================================================
 Entrada : silver/co2_emissions/  silver/tourism_arrivals/   silver/transport_mode/
 Salida : gold/fact_tourism_emissions/data.parquet,

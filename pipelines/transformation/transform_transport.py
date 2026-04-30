@@ -26,6 +26,7 @@ import argparse
 import logging
 import os
 import sys
+import numpy as np
 
 import pandas as pd
 
@@ -94,7 +95,16 @@ def recalculate_totals_and_pcts(df: pd.DataFrame) -> pd.DataFrame:
     ]:
         if mode in df.columns:
             df[pct_col] = None
-            df.loc[mask_total_ok, pct_col] = (df.loc[mask_total_ok, mode] / df.loc[mask_total_ok, "tourists_total"] * 100).round(2)
+            df.loc[mask_total_ok, mode] = pd.to_numeric(df.loc[mask_total_ok, mode], errors='coerce')
+            df.loc[mask_total_ok, "tourists_total"] = pd.to_numeric(df.loc[mask_total_ok, "tourists_total"], errors='coerce')
+
+            df["tourists_total"] = pd.to_numeric(df["tourists_total"], errors='coerce')
+            for mode, pct_col in [("tourists_air", "pct_air"), ("tourists_sea", "pct_sea"), ("tourists_land", "pct_land")]:
+                if mode in df.columns:
+                    df[mode] = pd.to_numeric(df[mode], errors='coerce')
+                    df[pct_col] = np.nan
+                    mask_total_ok = df["tourists_total"].notna() & (df["tourists_total"] > 0)
+                    df.loc[mask_total_ok, pct_col] = (df.loc[mask_total_ok, mode] / df.loc[mask_total_ok, "tourists_total"] * 100).round(2)
 
     # Clasificar modo dominante (útil para análisis en Gold)
     pct_cols = {

@@ -33,3 +33,12 @@ addopts = "-v --tb=short"
 [build-system]
 requires = ["setuptools>=65.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+omit = [
+    "pipelines/gold/run_gold.py",
+    "pipelines/gold/export_open_data_gold.py",
+    # si tenés otros run_*.py o export_*.py en silver/bronze también:
+    "pipelines/*/run_*.py",
+    "pipelines/*/export_*.py",
+]

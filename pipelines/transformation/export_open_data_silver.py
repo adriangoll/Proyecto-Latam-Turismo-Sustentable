@@ -7,7 +7,7 @@ en dos formatos:
   - CSV     (para periodistas, investigadores, público general)
 
 Por cada dataset genera también:
-  - metadata.json     → descripción legible por máquinas
+  - metadata.json     → descripción legible por máquinas.
   - data_dictionary.md → descripción legible por humanos
 
 Estructura de salida:
