@@ -13,7 +13,7 @@ x-airflow-common:
     AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}  
     PYTHONPATH: /opt/airflow
   volumes:
-    -  ../airflow/dags:/opt/airflow/dags
+    - ../dags:/opt/airflow/dags
     - ../pipelines:/opt/airflow/pipelines
     - ../dags/utils.py:/opt/airflow/utils.py
   depends_on:
