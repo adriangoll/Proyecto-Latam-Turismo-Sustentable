@@ -48,6 +48,12 @@ services:
         --role Admin \
         --email admin@email.com
       "
+    logging:
+      driver: awslogs 
+      options:
+        awslogs-group: /latam-turismo/airflow
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: init
 
   airflow-webserver:
     <<: *airflow-common
@@ -55,11 +61,23 @@ services:
     ports:
       - "8080:8080"
     command: webserver
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /latam-turismo/airflow
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: webserver
 
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow_scheduler
     command: scheduler
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /latam-turismo/airflow
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: scheduler
 
 volumes:
   postgres_db:

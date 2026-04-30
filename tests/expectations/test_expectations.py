@@ -9,15 +9,14 @@ Estructura:
 
 Ejecutar desde repo root:
   python -m pytest tests/expectations/test_expectations.py -v
-  
+
 O desde pipelines/:
   python -m pytest ../tests/expectations/test_expectations.py -v
 """
 
-import json
-import sys
 import os
-from datetime import datetime, timezone
+import sys
+
 import pandas as pd
 import pytest
 
@@ -43,30 +42,36 @@ from utils_expectations import (
 
 # ─── Test fixtures ───────────────────────────────────────────────────────────
 
+
 @pytest.fixture
 def sample_df():
     """DataFrame de prueba: 2 países × 11 años = 22 filas únicas."""
     countries = ["ARG"] * 11 + ["BRA"] * 11
     years = list(range(2013, 2024)) * 2  # 11 años por país
-    return pd.DataFrame({
-        "country_code": countries,
-        "year": years,
-        "co2": [100.5 + i for i in range(22)],
-        "value": [1, 2, None] * 7 + [1],  # 7 nulos
-    })
+    return pd.DataFrame(
+        {
+            "country_code": countries,
+            "year": years,
+            "co2": [100.5 + i for i in range(22)],
+            "value": [1, 2, None] * 7 + [1],  # 7 nulos
+        }
+    )
 
 
 @pytest.fixture
 def sample_df_with_dupes():
     """DataFrame con duplicados deliberados."""
-    return pd.DataFrame({
-        "country_code": ["ARG", "ARG", "BRA"],
-        "year": [2020, 2020, 2020],  # ARG-2020 duplicado
-        "value": [100, 100, 200],
-    })
+    return pd.DataFrame(
+        {
+            "country_code": ["ARG", "ARG", "BRA"],
+            "year": [2020, 2020, 2020],  # ARG-2020 duplicado
+            "value": [100, 100, 200],
+        }
+    )
 
 
 # ─── Tests: Timestamps ──────────────────────────────────────────────────────
+
 
 def test_get_utc_now_format():
     """get_utc_now() retorna ISO 8601 con Z."""
@@ -92,6 +97,7 @@ def test_get_utc_date_format():
 
 
 # ─── Tests: Validaciones ───────────────────────────────────────────────────
+
 
 def test_validate_table_row_count_exact(sample_df):
     """Valida cantidad exacta de filas."""
@@ -149,50 +155,33 @@ def test_validate_no_duplicates_fails(sample_df_with_dupes):
 
 def test_validate_column_in_set_passes(sample_df):
     """Valores en set permitido pasan."""
-    result = validate_column_in_set(
-        sample_df,
-        column="country_code",
-        value_set={"ARG", "BRA", "CHL"}
-    )
+    result = validate_column_in_set(sample_df, column="country_code", value_set={"ARG", "BRA", "CHL"})
     assert result["ok"] is True
 
 
 def test_validate_column_in_set_fails():
     """Valores fuera del set fallan."""
     df = pd.DataFrame({"status": ["high", "low", "invalid"]})
-    result = validate_column_in_set(
-        df,
-        column="status",
-        value_set={"high", "medium", "low"}
-    )
+    result = validate_column_in_set(df, column="status", value_set={"high", "medium", "low"})
     assert result["ok"] is False
     assert "invalid" in str(result["reason"]).lower()
 
 
 def test_validate_column_between_passes(sample_df):
     """Valores en rango pasan."""
-    result = validate_column_between(
-        sample_df,
-        column="co2",
-        min_value=100.0,
-        max_value=200.0
-    )
+    result = validate_column_between(sample_df, column="co2", min_value=100.0, max_value=200.0)
     assert result["ok"] is True
 
 
 def test_validate_column_between_fails(sample_df):
     """Valores fuera de rango fallan."""
-    result = validate_column_between(
-        sample_df,
-        column="co2",
-        min_value=0.0,
-        max_value=50.0
-    )
+    result = validate_column_between(sample_df, column="co2", min_value=0.0, max_value=50.0)
     assert result["ok"] is False
     assert "values outside" in result["reason"]
 
 
 # ─── Tests: Reportes ───────────────────────────────────────────────────────
+
 
 def test_create_report_structure():
     """create_report() genera estructura correcta."""

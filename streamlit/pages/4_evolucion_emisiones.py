@@ -1,9 +1,12 @@
 # Página 4: ¿Cómo evolucionan las emisiones en función del turismo a lo largo del tiempo?
 
-import streamlit as st
+import base64
+
 import plotly.express as px
 from utils.athena_client import query_athena
-import base64
+
+import streamlit as st
+
 
 def get_base64_image(path: str) -> str:
     with open(path, "rb") as f:
@@ -55,6 +58,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de datos ---
 @st.cache_data
 def cargar_datos():
@@ -75,6 +79,7 @@ def cargar_datos():
         ORDER BY country ASC, year ASC
     """
     return query_athena(sql)
+
 
 with st.spinner("Consultando Athena..."):
     df = cargar_datos()
@@ -100,11 +105,7 @@ with col2:
         value=(anio_min, anio_max),
     )
 
-df_filtrado = df[
-    (df["country"].isin(paises_seleccionados)) &
-    (df["year"] >= anio_desde) &
-    (df["year"] <= anio_hasta)
-]
+df_filtrado = df[(df["country"].isin(paises_seleccionados)) & (df["year"] >= anio_desde) & (df["year"] <= anio_hasta)]
 
 # --- Selector de métrica ---
 st.subheader("Explorá la evolución")

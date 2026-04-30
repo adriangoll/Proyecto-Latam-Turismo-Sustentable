@@ -8,8 +8,8 @@ Ejecutar desde:
   pytest tests/expectations/test_expectations.py -v
 """
 
-import sys
 import os
+import sys
 
 # Agregar pipelines/expectations a sys.path antes de que pytest cargue los tests
 _repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

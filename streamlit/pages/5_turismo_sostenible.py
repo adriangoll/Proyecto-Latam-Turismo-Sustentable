@@ -1,9 +1,12 @@
 # Página 5: ¿Qué países muestran tendencias hacia un turismo más sostenible?
 
-import streamlit as st
+import base64
+
 import plotly.express as px
 from utils.athena_client import query_athena
-import base64
+
+import streamlit as st
+
 
 def get_base64_image(path: str) -> str:
     with open(path, "rb") as f:
@@ -56,6 +59,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de datos ---
 @st.cache_data
 def cargar_datos():
@@ -75,6 +79,7 @@ def cargar_datos():
         ORDER BY sustainability_label ASC, country ASC, year ASC
     """
     return query_athena(sql)
+
 
 with st.spinner("Consultando Athena..."):
     df = cargar_datos()
@@ -106,16 +111,9 @@ with col2:
     )
 
 if etiqueta_seleccionada == "Todas":
-    df_filtrado = df[
-        (df["year"] >= anio_desde) &
-        (df["year"] <= anio_hasta)
-    ]
+    df_filtrado = df[(df["year"] >= anio_desde) & (df["year"] <= anio_hasta)]
 else:
-    df_filtrado = df[
-        (df["sustainability_label"] == etiqueta_seleccionada) &
-        (df["year"] >= anio_desde) &
-        (df["year"] <= anio_hasta)
-    ]
+    df_filtrado = df[(df["sustainability_label"] == etiqueta_seleccionada) & (df["year"] >= anio_desde) & (df["year"] <= anio_hasta)]
 
 # --- Selector de visualización ---
 st.subheader("Explorá los datos")
@@ -144,11 +142,7 @@ if vista == "Distribución de etiquetas":
     st.plotly_chart(fig, use_container_width=True)
 
 elif vista == "CO₂ por turista por país":
-    resumen = (
-        df_filtrado.groupby(["country", "sustainability_label"])["co2_per_tourist"]
-        .mean()
-        .reset_index()
-    )
+    resumen = df_filtrado.groupby(["country", "sustainability_label"])["co2_per_tourist"].mean().reset_index()
     fig = px.bar(
         resumen.sort_values("co2_per_tourist", ascending=True),
         x="co2_per_tourist",

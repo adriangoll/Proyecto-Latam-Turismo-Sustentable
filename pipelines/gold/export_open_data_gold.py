@@ -9,6 +9,7 @@ Ejecución:
     python export_open_data_gold.py --dry-run
 """
 
+import argparse
 import json
 import logging
 import os
@@ -20,13 +21,12 @@ import boto3
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import argparse
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from config_gold import S3_BUCKET, S3_GOLD, S3_OPEN_DATA_GOLD
+from config_gold import S3_BUCKET, S3_GOLD
 
 logging.basicConfig(
     level=logging.INFO,
@@ -45,33 +45,33 @@ DATASET_META = {
         ),
         "source": "Derived from OWID CO₂, World Bank Tourism, UN Tourism (UNWTO)",
         "columns": {
-            "country":             {"type": "string",  "unit": "—",           "description": "Country name"},
-            "country_code":        {"type": "string",  "unit": "ISO α3",      "description": "ISO 3166-1 alpha-3"},
-            "year":                {"type": "integer", "unit": "—",           "description": "Reference year"},
-            "co2":                 {"type": "float",   "unit": "Mt CO₂",      "description": "Total CO₂ emissions"},
-            "co2_per_capita":      {"type": "float",   "unit": "t/person",    "description": "CO₂ per capita (OWID)"},
-            "co2_per_capita_calc": {"type": "float",   "unit": "t/person",    "description": "CO₂ per capita (derived)"},
-            "co2_intensity_gdp":   {"type": "float",   "unit": "kg CO₂/USD", "description": "CO₂ per unit of GDP"},
-            "gdp":                 {"type": "float",   "unit": "USD PPP",     "description": "Gross domestic product"},
-            "gdp_per_capita":      {"type": "float",   "unit": "USD PPP",     "description": "GDP per capita"},
-            "gdp_growth_pct":      {"type": "float",   "unit": "%",           "description": "Year-on-year GDP growth"},
-            "population":          {"type": "integer", "unit": "persons",     "description": "Mid-year population"},
-            "share_global_co2":    {"type": "float",   "unit": "%",           "description": "Share of global CO₂"},
-            "tourist_arrivals":    {"type": "integer", "unit": "persons",     "description": "International tourist arrivals"},
-            "tourism_receipts_usd":{"type": "float",   "unit": "USD",         "description": "Tourism receipts"},
-            "tourist_departures":  {"type": "integer", "unit": "persons",     "description": "Tourist departures"},
-            "arrivals_growth_pct": {"type": "float",   "unit": "%",           "description": "Year-on-year arrivals growth"},
-            "receipts_per_tourist":{"type": "float",   "unit": "USD",         "description": "Revenue per tourist"},
-            "tourists_air":        {"type": "float",   "unit": "persons",     "description": "Arrivals by air"},
-            "tourists_sea":        {"type": "float",   "unit": "persons",     "description": "Arrivals by sea"},
-            "tourists_land":       {"type": "float",   "unit": "persons",     "description": "Arrivals by land"},
-            "pct_air":             {"type": "float",   "unit": "%",           "description": "Share by air"},
-            "pct_sea":             {"type": "float",   "unit": "%",           "description": "Share by sea"},
-            "pct_land":            {"type": "float",   "unit": "%",           "description": "Share by land"},
-            "dominant_transport":  {"type": "string",  "unit": "—",           "description": "Dominant mode (air/sea/land)"},
-            "co2_per_tourist":     {"type": "float",   "unit": "t CO₂",       "description": "CO₂ tons per tourist arrived"},
-            "co2_growth_pct":      {"type": "float",   "unit": "%",           "description": "Year-on-year CO₂ growth"},
-            "sustainability_label":{"type": "string",  "unit": "—",           "description": "verde/amarillo/rojo/gris"},
+            "country": {"type": "string", "unit": "—", "description": "Country name"},
+            "country_code": {"type": "string", "unit": "ISO α3", "description": "ISO 3166-1 alpha-3"},
+            "year": {"type": "integer", "unit": "—", "description": "Reference year"},
+            "co2": {"type": "float", "unit": "Mt CO₂", "description": "Total CO₂ emissions"},
+            "co2_per_capita": {"type": "float", "unit": "t/person", "description": "CO₂ per capita (OWID)"},
+            "co2_per_capita_calc": {"type": "float", "unit": "t/person", "description": "CO₂ per capita (derived)"},
+            "co2_intensity_gdp": {"type": "float", "unit": "kg CO₂/USD", "description": "CO₂ per unit of GDP"},
+            "gdp": {"type": "float", "unit": "USD PPP", "description": "Gross domestic product"},
+            "gdp_per_capita": {"type": "float", "unit": "USD PPP", "description": "GDP per capita"},
+            "gdp_growth_pct": {"type": "float", "unit": "%", "description": "Year-on-year GDP growth"},
+            "population": {"type": "integer", "unit": "persons", "description": "Mid-year population"},
+            "share_global_co2": {"type": "float", "unit": "%", "description": "Share of global CO₂"},
+            "tourist_arrivals": {"type": "integer", "unit": "persons", "description": "International tourist arrivals"},
+            "tourism_receipts_usd": {"type": "float", "unit": "USD", "description": "Tourism receipts"},
+            "tourist_departures": {"type": "integer", "unit": "persons", "description": "Tourist departures"},
+            "arrivals_growth_pct": {"type": "float", "unit": "%", "description": "Year-on-year arrivals growth"},
+            "receipts_per_tourist": {"type": "float", "unit": "USD", "description": "Revenue per tourist"},
+            "tourists_air": {"type": "float", "unit": "persons", "description": "Arrivals by air"},
+            "tourists_sea": {"type": "float", "unit": "persons", "description": "Arrivals by sea"},
+            "tourists_land": {"type": "float", "unit": "persons", "description": "Arrivals by land"},
+            "pct_air": {"type": "float", "unit": "%", "description": "Share by air"},
+            "pct_sea": {"type": "float", "unit": "%", "description": "Share by sea"},
+            "pct_land": {"type": "float", "unit": "%", "description": "Share by land"},
+            "dominant_transport": {"type": "string", "unit": "—", "description": "Dominant mode (air/sea/land)"},
+            "co2_per_tourist": {"type": "float", "unit": "t CO₂", "description": "CO₂ tons per tourist arrived"},
+            "co2_growth_pct": {"type": "float", "unit": "%", "description": "Year-on-year CO₂ growth"},
+            "sustainability_label": {"type": "string", "unit": "—", "description": "verde/amarillo/rojo/gris"},
         },
     },
     "dim_country": {
@@ -79,10 +79,10 @@ DATASET_META = {
         "description": "Reference table with ISO codes and regional classification for 19 LATAM countries.",
         "source": "ISO 3166-1, internal project classification",
         "columns": {
-            "country_code":      {"type": "string", "unit": "ISO α3", "description": "ISO 3166-1 alpha-3"},
+            "country_code": {"type": "string", "unit": "ISO α3", "description": "ISO 3166-1 alpha-3"},
             "country_code_iso2": {"type": "string", "unit": "ISO α2", "description": "ISO 3166-1 alpha-2"},
-            "country_name":      {"type": "string", "unit": "—",      "description": "Country name in English"},
-            "region_latam":      {"type": "string", "unit": "—",      "description": "Sub-region within LATAM"},
+            "country_name": {"type": "string", "unit": "—", "description": "Country name in English"},
+            "region_latam": {"type": "string", "unit": "—", "description": "Sub-region within LATAM"},
         },
     },
 }
@@ -90,6 +90,7 @@ DATASET_META = {
 
 def read_gold_s3(s3_path: str) -> pd.DataFrame:
     import s3fs
+
     fs = s3fs.S3FileSystem()
     path = s3_path.replace("s3://", "")
     with fs.open(path) as f:
@@ -97,9 +98,7 @@ def read_gold_s3(s3_path: str) -> pd.DataFrame:
 
 
 def upload_bytes(content: bytes, bucket: str, key: str, content_type: str) -> None:
-    boto3.client("s3").put_object(
-        Bucket=bucket, Key=key, Body=content, ContentType=content_type
-    )
+    boto3.client("s3").put_object(Bucket=bucket, Key=key, Body=content, ContentType=content_type)
     logger.info("   ⬆️  s3://%s/%s", bucket, key)
 
 
@@ -121,22 +120,22 @@ def build_metadata(df: pd.DataFrame, key: str, version: str, bucket: str, prefix
     fname = f"latam_{key}_{version}"
     base = f"https://{bucket}.s3.amazonaws.com/{prefix}"
     obj = {
-        "dataset_id":    f"latam_{key}",
-        "version":       version,
-        "title":         meta["title"],
-        "description":   meta["description"],
-        "license":       "CC BY 4.0",
-        "source":        meta["source"],
+        "dataset_id": f"latam_{key}",
+        "version": version,
+        "title": meta["title"],
+        "description": meta["description"],
+        "license": "CC BY 4.0",
+        "source": meta["source"],
         "maintained_by": "Grupo 1 — Henry Data Engineering 2026",
-        "repository":    "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
-        "last_updated":  datetime.now(timezone.utc).strftime("%Y-%m-%d"),
-        "rows":          int(len(df)),
-        "formats":       {"parquet": f"{base}/{fname}.parquet", "csv": f"{base}/{fname}.csv"},
-        "null_pct":      null_pct,
-        "schema":        {
+        "repository": "https://github.com/adriangoll/Proyecto-Latam-Turismo-Sustentable",
+        "last_updated": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "rows": int(len(df)),
+        "formats": {"parquet": f"{base}/{fname}.parquet", "csv": f"{base}/{fname}.csv"},
+        "null_pct": null_pct,
+        "schema": {
             col: {
-                "type":        meta["columns"].get(col, {}).get("type", "—"),
-                "unit":        meta["columns"].get(col, {}).get("unit", "—"),
+                "type": meta["columns"].get(col, {}).get("type", "—"),
+                "unit": meta["columns"].get(col, {}).get("unit", "—"),
                 "description": meta["columns"].get(col, {}).get("description", "—"),
             }
             for col in df.columns
@@ -157,7 +156,7 @@ def build_dictionary(df: pd.DataFrame, key: str, version: str) -> bytes:
         "",
         f"**Source:** {meta['source']}",
         "",
-        f"**License:** CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/",
+        "**License:** CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/",
         "",
         "---",
         "",
@@ -166,10 +165,7 @@ def build_dictionary(df: pd.DataFrame, key: str, version: str) -> bytes:
     ]
     for col in df.columns:
         m = meta["columns"].get(col, {})
-        lines.append(
-            f"| `{col}` | {m.get('type','—')} | {m.get('unit','—')} "
-            f"| {m.get('description','—')} | {null_pct.get(col, 0):.1f}% |"
-        )
+        lines.append(f"| `{col}` | {m.get('type', '—')} | {m.get('unit', '—')} | {m.get('description', '—')} | {null_pct.get(col, 0):.1f}% |")
     lines += [
         "",
         "---",
@@ -183,14 +179,14 @@ def export_dataset(key: str, s3_gold_path: str, version: str, dry_run: bool) -> 
     logger.info("📤 Exportando Gold: %s", key)
 
     df = read_gold_s3(s3_gold_path)
-    fname  = f"latam_{key}_{version}"
+    fname = f"latam_{key}_{version}"
     prefix = f"open-data/{version}/gold/{key}"
 
     outputs = {
-        f"{prefix}/{fname}.parquet":      (df_to_parquet_bytes(df),                                  "application/octet-stream"),
-        f"{prefix}/{fname}.csv":          (df_to_csv_bytes(df),                                      "text/csv; charset=utf-8"),
-        f"{prefix}/metadata.json":        (build_metadata(df, key, version, S3_BUCKET, prefix),      "application/json"),
-        f"{prefix}/data_dictionary.md":   (build_dictionary(df, key, version),                       "text/markdown; charset=utf-8"),
+        f"{prefix}/{fname}.parquet": (df_to_parquet_bytes(df), "application/octet-stream"),
+        f"{prefix}/{fname}.csv": (df_to_csv_bytes(df), "text/csv; charset=utf-8"),
+        f"{prefix}/metadata.json": (build_metadata(df, key, version, S3_BUCKET, prefix), "application/json"),
+        f"{prefix}/data_dictionary.md": (build_dictionary(df, key, version), "text/markdown; charset=utf-8"),
     }
 
     if dry_run:
@@ -215,7 +211,7 @@ def run(dry_run: bool = False, version: str = "v1") -> None:
 
     datasets = {
         "fact_tourism_emissions": S3_GOLD["fact"],
-        "dim_country":            S3_GOLD["dim_country"],
+        "dim_country": S3_GOLD["dim_country"],
     }
 
     for key, path in datasets.items():
@@ -230,7 +226,7 @@ def run(dry_run: bool = False, version: str = "v1") -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dry-run",  action="store_true")
-    parser.add_argument("--version",  default="v1")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--version", default="v1")
     args = parser.parse_args()
     run(dry_run=args.dry_run, version=args.version)

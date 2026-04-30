@@ -1,11 +1,14 @@
 # Página 1: ¿Existe relación entre el crecimiento del turismo
 # y el aumento de emisiones de CO₂ en LATAM?
 
-import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
-from utils.athena_client import query_athena
 import base64
+
+import plotly.express as px
+import plotly.graph_objects as go
+from utils.athena_client import query_athena
+
+import streamlit as st
+
 
 def get_base64_image(path: str) -> str:
     with open(path, "rb") as f:
@@ -57,6 +60,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de datos ---
 @st.cache_data
 def cargar_datos():
@@ -71,6 +75,7 @@ def cargar_datos():
         ORDER BY year ASC
     """
     return query_athena(sql)
+
 
 with st.spinner("Consultando Athena..."):
     df = cargar_datos()
@@ -125,9 +130,7 @@ fig.add_trace(
 
 fig.update_layout(
     xaxis=dict(title="Año"),
-    yaxis=dict(
-        title=dict(text="Llegadas de turistas", font=dict(color="steelblue"))
-    ),
+    yaxis=dict(title=dict(text="Llegadas de turistas", font=dict(color="steelblue"))),
     yaxis2=dict(
         title=dict(text="Emisiones de CO₂ (Mt)", font=dict(color="red")),
         overlaying="y",

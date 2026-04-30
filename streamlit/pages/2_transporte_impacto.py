@@ -1,10 +1,13 @@
 # Página 2: ¿Qué medios de transporte turístico tienen mayor impacto ambiental?
 
-import streamlit as st
+import base64
+
 import plotly.express as px
 import plotly.graph_objects as go
 from utils.athena_client import query_athena
-import base64
+
+import streamlit as st
+
 
 def get_base64_image(path: str) -> str:
     with open(path, "rb") as f:
@@ -56,6 +59,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de datos ---
 @st.cache_data
 def cargar_datos():
@@ -74,6 +78,7 @@ def cargar_datos():
         ORDER BY promedio_co2_por_turista DESC
     """
     return query_athena(sql)
+
 
 with st.spinner("Consultando Athena..."):
     df = cargar_datos()

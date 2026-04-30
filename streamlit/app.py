@@ -2,9 +2,11 @@
 # Resume las 5 preguntas de negocio y muestra métricas generales.
 
 import base64
-import streamlit as st
+
 import plotly.express as px
 from utils.athena_client import query_athena
+
+import streamlit as st
 
 
 def get_base64_image(path: str) -> str:
@@ -59,6 +61,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de métricas generales ---
 @st.cache_data
 def cargar_metricas():
@@ -73,6 +76,7 @@ def cargar_metricas():
     """
     return query_athena(sql)
 
+
 @st.cache_data
 def cargar_sostenibilidad():
     sql = """
@@ -85,6 +89,7 @@ def cargar_sostenibilidad():
         ORDER BY cantidad_paises DESC
     """
     return query_athena(sql)
+
 
 @st.cache_data
 def cargar_evolucion():
@@ -99,6 +104,7 @@ def cargar_evolucion():
         ORDER BY year ASC
     """
     return query_athena(sql)
+
 
 with st.spinner("Cargando métricas..."):
     df_metricas = cargar_metricas()

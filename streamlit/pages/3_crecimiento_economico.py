@@ -1,9 +1,12 @@
 # Página 3: ¿Qué países logran crecimiento económico con menor impacto ambiental?
 
-import streamlit as st
+import base64
+
 import plotly.express as px
 from utils.athena_client import query_athena
-import base64
+
+import streamlit as st
+
 
 def get_base64_image(path: str) -> str:
     with open(path, "rb") as f:
@@ -56,6 +59,7 @@ st.markdown(
     """
 )
 
+
 # --- Carga de datos ---
 @st.cache_data
 def cargar_datos():
@@ -75,6 +79,7 @@ def cargar_datos():
         ORDER BY promedio_crecimiento_gdp DESC, promedio_intensidad_co2 ASC
     """
     return query_athena(sql)
+
 
 with st.spinner("Consultando Athena..."):
     df = cargar_datos()

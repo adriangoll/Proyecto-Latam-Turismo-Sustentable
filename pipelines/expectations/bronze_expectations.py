@@ -1,12 +1,11 @@
 import json
 import logging
 from datetime import datetime, timezone
-import pandas as pd
-import pyarrow.dataset as ds
-import pyarrow as pa
-import boto3
-import io
 
+import boto3
+import pandas as pd
+import pyarrow as pa
+import pyarrow.dataset as ds
 from config_expectations import EXPECTATIONS
 
 logger = logging.getLogger("validation.bronze")
@@ -44,27 +43,28 @@ def validate_bronze(dataset_name: str, s3_path: str, dry_run: bool = False) -> d
         # Bronze está particionado por año (year=2013/, year=2014/, ...)
         s3_uri = f"s3://latam-sustainability-datalake/bronze/{dataset_name}/"
         # Forzar year a int64 desde el inicio para evitar conflicto int32 vs int64
-        schema_override = pa.schema([
-            ("country", pa.string()),
-            ("year", pa.int64()),
-            ("co2", pa.float64()),
-            ("co2_per_capita", pa.float64()),
-            ("co2_per_gdp", pa.float64()),
-            ("cumulative_co2", pa.float64()),
-            ("methane", pa.float64()),
-            ("nitrous_oxide", pa.float64()),
-            ("gdp", pa.float64()),
-            ("population", pa.float64()),
-            ("energy_per_capita", pa.float64()),
-            ("share_global_co2", pa.float64()),
-            ("country_code", pa.string()),
-        ])
+        schema_override = pa.schema(
+            [
+                ("country", pa.string()),
+                ("year", pa.int64()),
+                ("co2", pa.float64()),
+                ("co2_per_capita", pa.float64()),
+                ("co2_per_gdp", pa.float64()),
+                ("cumulative_co2", pa.float64()),
+                ("methane", pa.float64()),
+                ("nitrous_oxide", pa.float64()),
+                ("gdp", pa.float64()),
+                ("population", pa.float64()),
+                ("energy_per_capita", pa.float64()),
+                ("share_global_co2", pa.float64()),
+                ("country_code", pa.string()),
+            ]
+        )
         dataset = ds.dataset(s3_uri, format="parquet", partitioning="hive", schema=schema_override)
         df = dataset.to_table().to_pandas()
-        
 
     # Validar
-    timestamp_iso = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+    timestamp_iso = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
     report = {
         "dataset": dataset_name,
@@ -73,7 +73,7 @@ def validate_bronze(dataset_name: str, s3_path: str, dry_run: bool = False) -> d
         "passed": 0,
         "failed": 0,
         "failures": [],
-        "table_stats": {"rows": len(df), "cols": len(df.columns)}
+        "table_stats": {"rows": len(df), "cols": len(df.columns)},
     }
 
     for check in expectations["checks"]:
@@ -93,7 +93,7 @@ def validate_bronze(dataset_name: str, s3_path: str, dry_run: bool = False) -> d
         s3.put_object(
             Bucket="latam-sustainability-datalake",
             Key=f"quality_reports/bronze_{dataset_name}_{timestamp_file}.json",
-            Body=json.dumps(report, indent=2)
+            Body=json.dumps(report, indent=2),
         )
 
     logger.info(f"✓ Bronze {dataset_name}: {report['passed']}/{report['total_checks']} checks OK")
@@ -134,8 +134,7 @@ def _run_check(df: pd.DataFrame, check: dict) -> dict:
         value_set = set(check["value_set"])
         invalid = df[~df[col].isin(value_set)][col].unique().tolist()
         if invalid:
-            return {"ok": False, "check": check_type, "column": col,
-                    "reason": f"Invalid values: {invalid[:5]}"}
+            return {"ok": False, "check": check_type, "column": col, "reason": f"Invalid values: {invalid[:5]}"}
         return {"ok": True, "check": check_type, "column": col}
 
     elif check_type == "column_values_type":
@@ -155,17 +154,10 @@ def _run_check(df: pd.DataFrame, check: dict) -> dict:
         min_value = check.get("min_value")
         max_value = check.get("max_value")
 
-        out_of_range = df[
-            ((df[col] < min_value) | (df[col] > max_value)) & (df[col].notnull())
-        ]
+        out_of_range = df[((df[col] < min_value) | (df[col] > max_value)) & (df[col].notnull())]
 
         if len(out_of_range) > 0:
-            return {
-                "ok": False,
-                "check": check_type,
-                "column": col,
-                "reason": f"{len(out_of_range)} values outside [{min_value}, {max_value}]"
-            }
+            return {"ok": False, "check": check_type, "column": col, "reason": f"{len(out_of_range)} values outside [{min_value}, {max_value}]"}
         return {"ok": True, "check": check_type, "column": col}
 
     return {"ok": False, "check": check_type, "reason": "Unknown check type"}
