@@ -1,5 +1,5 @@
 """
-config_gold.py — Constantes para la capa Gold .
+config_gold.py — Constantes para la capa Gold.
 """
 
 S3_BUCKET = "latam-sustainability-datalake"
