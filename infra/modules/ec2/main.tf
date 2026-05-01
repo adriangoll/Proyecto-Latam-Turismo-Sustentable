@@ -57,9 +57,9 @@ data "aws_iam_policy_document" "ec2_s3_access" {
   statement {
     effect = "Allow"
 
-		actions = [
-			"ec2:StopInstances"
-		]
+    actions = [
+      "ec2:StopInstances"
+    ]
 
     resources = ["*"]
 
@@ -69,31 +69,31 @@ data "aws_iam_policy_document" "ec2_s3_access" {
       values   = [var.ec2_instance_name]
     }
   }
-  
-	statement {
-		effect = "Allow"
 
-		actions = [
-			"ec2:DescribeInstances"
-		]
+  statement {
+    effect = "Allow"
 
-		resources = ["*"]
-	}
-	
-	statement {
-	effect = "Allow"
+    actions = [
+      "ec2:DescribeInstances"
+    ]
 
-	actions = [
-	  "logs:CreateLogGroup",
-	  "logs:CreateLogStream",
-	  "logs:PutLogEvents",
-	  "logs:DescribeLogStreams"
-	]
+    resources = ["*"]
+  }
 
-	resources = [
-	  "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow",
-	  "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow:*"
-	]
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+    ]
+
+    resources = [
+      "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow",
+      "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/latam-turismo/airflow:*"
+    ]
   }
 }
 
@@ -131,17 +131,17 @@ resource "aws_security_group" "ec2_sg" {
 
 # --- EC2 ---
 resource "aws_instance" "airflow" {
-  ami                    	  = var.ec2_ami
-  instance_type          	  = var.ec2_instance_type
-  iam_instance_profile   	  = aws_iam_instance_profile.ec2_profile.name
-  vpc_security_group_ids 	  = [aws_security_group.ec2_sg.id]
+  ami                         = var.ec2_ami
+  instance_type               = var.ec2_instance_type
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+  vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
 
   tags = {
     Name = var.ec2_instance_name
   }
 
-user_data = <<-EOF
+  user_data = <<-EOF
   #!/bin/bash
   set -e
 
