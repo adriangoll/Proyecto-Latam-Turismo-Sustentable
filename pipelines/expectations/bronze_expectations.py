@@ -1,14 +1,13 @@
 import json
 import logging
+import os
+import sys
 from datetime import datetime, timezone
 
 import boto3
 import pandas as pd
 import pyarrow as pa
 import pyarrow.dataset as ds
-
-import os
-import sys
 
 _airflow_home = os.getenv("AIRFLOW_HOME", "/opt/airflow")
 _expectations_path = os.path.join(_airflow_home, "pipelines", "expectations")

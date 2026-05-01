@@ -10,7 +10,7 @@ Por cada dataset genera también:
   - metadata.json     → descripción legible por máquinas.
   - data_dictionary.md → descripción legible por humanos
 
-Estructura de salida:
+Estructura de salida :
   s3://bucket/open-data/v1/silver/
     co2_emissions/
       latam_co2_emissions_v1.parquet
