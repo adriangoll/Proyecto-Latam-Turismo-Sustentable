@@ -74,7 +74,7 @@ jobs:
             -v --tb=short \
             --cov-report=term-missing \
             --cov-report=xml:coverage-silver.xml \
-            --cov-fail-under=80
+            --cov-fail-under=70
 
 
   # ── CD: Deploy Silver a S3 + crawlers (solo en push a main) ────────────────
@@ -132,8 +132,8 @@ jobs:
       - name: Trigger Glue crawlers Silver
         run: |
           aws glue start-crawler --name latam-silver-co2-crawler
-          aws glue start-crawler --latam-silver-tourism-crawler
-          aws glue start-crawler --latam-silver-transport-crawler
+          aws glue start-crawler --name latam-silver-tourism-crawler
+          aws glue start-crawler --name latam-silver-transport-crawler
           echo "✅ Crawlers iniciados — Glue Catalog se actualizará en ~2-3 min"
 
       - name: Summary

@@ -1,7 +1,7 @@
 """
 run_transformation.py — Orquestador Silver
 ==========================================
-Corre los 3 scripts de transformación Bronze→Silver en secuencia.
+Corre los 3 scripts de transformación Bronze→Silver en secuencia .
 
 Uso:
   python run_transformation.py --dry-run
