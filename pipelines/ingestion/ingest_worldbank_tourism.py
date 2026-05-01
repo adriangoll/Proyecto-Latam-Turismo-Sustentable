@@ -49,7 +49,7 @@ from config import (
     YEAR_END,
     YEAR_START,
 )
-from utils import (
+from ingest_utils import (
     log_dataframe_summary,
     normalize_country_name,
     upload_parquet_partitioned,
