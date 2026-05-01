@@ -1,9 +1,9 @@
 import pandas as pd
 
-from pipelines.ingestion.utils import upload_parquet_partitioned
+from pipelines.ingestion.ingest_utils import upload_parquet_partitioned
 
 
-def test_utils_multiple_partitions():
+def test_ingest_utils_multiple_partitions():
     df = pd.DataFrame({"year": [2020, 2021], "country_code": ["ARG", "BRA"], "value": [100, 200]})
 
     try:
@@ -12,7 +12,7 @@ def test_utils_multiple_partitions():
         pass
 
 
-def test_utils_single_partition_column():
+def test_ingest_utils_single_partition_column():
     df = pd.DataFrame({"year": [2020, 2020], "value": [100, 200]})
 
     try:
