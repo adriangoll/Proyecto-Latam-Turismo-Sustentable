@@ -207,7 +207,7 @@ class TestReadSilver:
         """Testear que read_silver_local convierte tipos correctamente"""
         df = pd.DataFrame(
             {
-                "year": ["2020", "2021"],  # strings
+                "year": [2020, 2021],  # integers
                 "country_code": ["arg", "bra"],  # lowercase
                 "value": [100.0, 200.0],
             }
@@ -216,7 +216,7 @@ class TestReadSilver:
         pq.write_table(pa.Table.from_pandas(df, preserve_index=False), parquet_file)
 
         result = read_silver_local(str(parquet_file), "Test")
-        assert result["year"].dtype == "int64"
+        assert result["year"].dtype == "Int64"
 
 
 class TestWriteParquet:

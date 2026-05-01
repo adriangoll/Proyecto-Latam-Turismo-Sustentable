@@ -1,5 +1,5 @@
 """
-export_open_data_gold.py — Exporta Gold a open-data/v1/gold/
+export_open_data_gold.py— Exporta Gold a open-data/v1/gold/
 =============================================================
 Mismo patrón que export_open_data_silver.py.
 Genera CSV + Parquet + metadata.json + data_dictionary.md
