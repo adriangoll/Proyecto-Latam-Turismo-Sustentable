@@ -1,7 +1,7 @@
 """
 transform_co2.py — Transformación Bronze → Silver para CO₂ & Emissions.
 =======================================================================
-Entrada : s3://...../bronze/co2_emissions/   (Parquet particionado)
+Entrada : s3://...../bronze/co2_emissions/  (Parquet particionado)
 Salida  : s3://...../silver/co2_emissions/data.parquet
 
 Transformaciones aplicadas:

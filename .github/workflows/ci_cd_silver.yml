@@ -131,10 +131,9 @@ jobs:
 
       - name: Trigger Glue crawlers Silver
         run: |
-          aws glue start-crawler --name latam-dev-silver-co2
-          aws glue start-crawler --name latam-dev-silver-tourism
-          aws glue start-crawler --name latam-dev-silver-transport
-          aws glue start-crawler --name latam-dev-open-data-silver
+          aws glue start-crawler --name latam-silver-co2-crawler
+          aws glue start-crawler --latam-silver-tourism-crawler
+          aws glue start-crawler --latam-silver-transport-crawler
           echo "✅ Crawlers iniciados — Glue Catalog se actualizará en ~2-3 min"
 
       - name: Summary
@@ -142,6 +141,5 @@ jobs:
           echo "## Silver Deployment" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Bronze → Silver transformado" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Silver validado con Great Expectations" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Silver → open-data/ exportado" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Crawlers Glue disparados" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
