@@ -69,7 +69,7 @@ def read_silver(path: str, label: str) -> pd.DataFrame:
     df = table.to_pandas(types_mapper=dict_map.get)
 
     if "year" in df.columns:
-        df["year"] = df["year"].astype("int64")
+        df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("int64")
     if "country_code" in df.columns:
         df["country_code"] = df["country_code"].astype(str)
 
