@@ -2,7 +2,7 @@
 config_gold.py — Constantes para la capa Gold .
 """
 
-S3_BUCKET = "latam-sustainability-datalake "
+S3_BUCKET = "latam-sustainability-datalake"
 
 S3_SILVER = {
     "co2": f"s3://{S3_BUCKET}/silver/co2_emissions/data.parquet",
