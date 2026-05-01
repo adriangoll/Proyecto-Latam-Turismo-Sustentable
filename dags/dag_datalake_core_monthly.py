@@ -57,4 +57,4 @@ with DAG(
     )
 
     # Dependencia: No empieza Oro si falla Plata
-    task_silver >> task_gold
+    task_silver >> task_validate_silver >> task_gold
