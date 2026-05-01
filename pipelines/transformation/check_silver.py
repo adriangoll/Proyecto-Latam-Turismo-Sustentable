@@ -1,5 +1,5 @@
 """
-check_silver.py — Verifica cobertura de los 3 datasets Silver.
+check_silver.py — Verifica cobertura de los 3 datasets Silver .
 Correr desde pipelines/transformation/
 """
 

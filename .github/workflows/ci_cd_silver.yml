@@ -100,6 +100,13 @@ jobs:
       - name: Install dependencies
         run: pip install pandas pyarrow boto3 s3fs
 
+      - name: Run Bronze Ingestion first
+        run: |
+          cd pipelines/ingestion
+          pip install requests openpyxl  # deps de ingestion
+          python run_ingestion.py
+
+
       - name: Transform Bronze → Silver
         run: |
           cd pipelines/transformation
