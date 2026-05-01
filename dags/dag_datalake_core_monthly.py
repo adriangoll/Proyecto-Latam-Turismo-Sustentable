@@ -3,6 +3,7 @@ import sys
 from datetime import datetime
 
 from airflow import DAG
+from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 # Obtenemos la ruta de la carpeta /dags
@@ -17,8 +18,11 @@ if _ROOT not in sys.path:
 from utils import notificar_error, wrapper_procesamiento
 
 from pipelines.expectations.run_validation import run as run_validation
-from pipelines.gold import run_gold
-from pipelines.transformation import run_transformation
+from pipelines.gold.run_gold import run as run_gold
+
+# ← AGREGAR ingesta
+from pipelines.ingestion.run_ingestion import run as run_ingestion
+from pipelines.transformation.run_transformation import run as run_transformation
 
 default_args = {
     "owner": "data_engineering",
@@ -29,32 +33,68 @@ default_args = {
 with DAG(
     dag_id="dag_datalake_core_monthly",
     default_args=default_args,
-    description="Pipeline de refinamiento de capas S3 (Mensual)",
+    description="Pipeline completo: Ingesta → Silver → Gold → Crawlers (Mensual)",
     schedule_interval="0 0 1 * *",  # Corre el día 1 de cada mes
     catchup=False,
     tags=["s3", "engineering", "monthly"],
 ) as dag:
-    # Tarea Capa Plata
+
+    # ← NUEVA TAREA: Ingesta Bronze
+    task_ingest_bronze = PythonOperator(
+        task_id="task_ingest_bronze",
+        python_callable=wrapper_procesamiento,
+        op_kwargs={"script_func": run_ingestion},
+    )
+
+    # Tarea Capa Silver (Bronze → Silver)
     task_silver = PythonOperator(
         task_id="task_bronze_to_silver",
         python_callable=wrapper_procesamiento,
         op_kwargs={"script_func": run_transformation},
-        ##provide_context=True
     )
 
+    # Validar Silver
     task_validate_silver = PythonOperator(
         task_id="task_validate_silver",
         python_callable=run_validation,
         op_kwargs={"layer": "silver", "source": "all"},
     )
 
-    # Tarea Capa Oro
+    # Tarea Capa Gold (Silver → Gold)
     task_gold = PythonOperator(
         task_id="task_silver_to_gold",
         python_callable=wrapper_procesamiento,
         op_kwargs={"script_func": run_gold},
-        ##provide_context=True
     )
 
-    # Dependencia: No empieza Oro si falla Plata
-    task_silver >> task_validate_silver >> task_gold
+    # Validar Gold
+    task_validate_gold = PythonOperator(
+        task_id="task_validate_gold",
+        python_callable=run_validation,
+        op_kwargs={"layer": "gold"},
+    )
+
+    # ← NUEVA TAREA: Disparar crawlers Silver
+    task_crawlers_silver = BashOperator(
+        task_id="task_crawlers_silver",
+        bash_command="""
+            aws glue start-crawler --name latam-silver-co2-crawler
+            aws glue start-crawler --name latam-silver-tourism-crawler
+            aws glue start-crawler --name latam-silver-transport-crawler
+            echo "✅ Crawlers Silver iniciados"
+        """,
+    )
+
+    # ← NUEVA TAREA: Disparar crawlers Gold
+    task_crawlers_gold = BashOperator(
+        task_id="task_crawlers_gold",
+        bash_command="""
+            aws glue start-crawler --name latam-dev-gold-fact
+            aws glue start-crawler --name latam-dev-gold-dim-country
+            aws glue start-crawler --name latam-dev-open-data-gold
+            echo "✅ Crawlers Gold iniciados"
+        """,
+    )
+
+    # Dependencias: orden correcto
+    task_ingest_bronze >> task_silver >> task_validate_silver >> task_crawlers_silver >> task_gold >> task_validate_gold >> task_crawlers_gold
