@@ -77,7 +77,7 @@ jobs:
             -input=false \
             -detailed-exitcode \
             -out=tfplan \
-            -var="budget_email=${{ secrets.BUDGET_EMAIL }}" \
+            -var="budget_notification_email=${{ secrets.BUDGET_EMAIL }}" \
             2>&1 | tee plan_output.txt
           EXIT_CODE=${PIPESTATUS[0]}
           echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
