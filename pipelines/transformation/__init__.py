@@ -1,13 +1,11 @@
 import os
 import sys
 
+_HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
+
 from run_transformation import run_all as _run_all
-
-_airflow_home = os.getenv("AIRFLOW_HOME", "/opt/airflow")
-_expectations_path = os.path.join(_airflow_home, "pipelines", "expectations")
-if _expectations_path not in sys.path:
-    sys.path.insert(0, _expectations_path)
-
 
 
 def run_transformation():
