@@ -1,1 +1,1 @@
-from pipelines.transformation.run_transformation import run as run_transformation
+from pipelines.transformation.run_transformation import run_all as run_transformation
