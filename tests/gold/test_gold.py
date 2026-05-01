@@ -181,17 +181,20 @@ class TestBuildDimCountry:
         dim = build_dim_country()
         assert dim["country_code"].nunique() == len(dim)
 
+
 class TestReadSilver:
     """Tests para lectura de Silver local"""
 
     def test_read_silver_local_valid_file(self, tmp_path):
         """Testear que read_silver_local carga un archivo válido"""
-        df = pd.DataFrame({
-            "country": ["Argentina", "Brazil"],
-            "country_code": ["ARG", "BRA"],
-            "year": [2020, 2020],
-            "co2": [180.0, 420.0],
-        })
+        df = pd.DataFrame(
+            {
+                "country": ["Argentina", "Brazil"],
+                "country_code": ["ARG", "BRA"],
+                "year": [2020, 2020],
+                "co2": [180.0, 420.0],
+            }
+        )
         parquet_file = tmp_path / "silver_co2.parquet"
         pq.write_table(pa.Table.from_pandas(df, preserve_index=False), parquet_file)
 
@@ -201,11 +204,13 @@ class TestReadSilver:
 
     def test_read_silver_local_type_conversion(self, tmp_path):
         """Testear que read_silver_local convierte tipos correctamente"""
-        df = pd.DataFrame({
-            "year": ["2020", "2021"],  # strings
-            "country_code": ["arg", "bra"],  # lowercase
-            "value": [100.0, 200.0],
-        })
+        df = pd.DataFrame(
+            {
+                "year": ["2020", "2021"],  # strings
+                "country_code": ["arg", "bra"],  # lowercase
+                "value": [100.0, 200.0],
+            }
+        )
         parquet_file = tmp_path / "test.parquet"
         pq.write_table(pa.Table.from_pandas(df, preserve_index=False), parquet_file)
 

@@ -145,7 +145,7 @@ jobs:
 
       - name: Trigger Glue crawlers Gold
         run: |
-          aws glue start-crawler --latam-gold-fact-tourism-emissions-crawler
+          aws glue start-crawler --name latam-gold-fact-tourism-emissions-crawler
           aws glue start-crawler --name latam-gold-dim-country-crawler
           echo "✅ Crawlers iniciados — Glue Catalog se actualizará en ~2-3 min"
 
