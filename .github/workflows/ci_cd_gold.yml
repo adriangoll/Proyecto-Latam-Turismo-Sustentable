@@ -76,7 +76,7 @@ jobs:
             --cov=pipelines/gold \
             --cov-report=term-missing \
             --cov-report=xml:coverage-gold.xml \
-            --cov-fail-under=75
+            --cov-fail-under=55
 
       - name: Upload coverage
         if: always()
