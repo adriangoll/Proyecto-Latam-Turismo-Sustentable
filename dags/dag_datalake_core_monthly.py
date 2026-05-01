@@ -18,11 +18,11 @@ if _ROOT not in sys.path:
 from utils import notificar_error, wrapper_procesamiento
 
 from pipelines.expectations.run_validation import run as run_validation
-from pipelines.gold.run_gold import run as run_gold
+from pipelines.gold import run_gold
 
 # ← AGREGAR ingesta
-from pipelines.ingestion.run_ingestion import run as run_ingestion
-from pipelines.transformation.run_transformation import run as run_transformation
+from pipelines.ingestion import run_ingestion
+from pipelines.transformation import run_transformation
 
 default_args = {
     "owner": "data_engineering",
@@ -38,7 +38,6 @@ with DAG(
     catchup=False,
     tags=["s3", "engineering", "monthly"],
 ) as dag:
-
     # ← NUEVA TAREA: Ingesta Bronze
     task_ingest_bronze = PythonOperator(
         task_id="task_ingest_bronze",
