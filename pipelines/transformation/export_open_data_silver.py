@@ -68,7 +68,7 @@ DATASET_META = {
         "title": "CO₂ Emissions & Economic Indicators — Latin America",
         "description": (
             "Annual CO₂ emissions, GDP, population and derived environmental metrics "
-            "for 19 Latin American countries (2013–2023). "
+            "for 19 Latin American countries (2013–2023) . "
             "Source: Our World in Data (OWID CO₂ dataset). "
             "Cleaned, normalized and enriched with derived metrics by the LATAM Sustainability project."
         ),

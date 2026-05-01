@@ -8,9 +8,9 @@ _expectations_path = os.path.join(_airflow_home, "pipelines", "expectations")
 if _expectations_path not in sys.path:
     sys.path.insert(0, _expectations_path)
 
-from pipelines.expectations.bronze_expectations import validate_bronze
-from pipelines.expectations.gold_expectations import validate_gold
-from pipelines.expectations.silver_expectations import validate_silver
+from bronze_expectations import validate_bronze
+from gold_expectations import validate_gold
+from silver_expectations import validate_silver
 
 logger = logging.getLogger("validation.runner")
 

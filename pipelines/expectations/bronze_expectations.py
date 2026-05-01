@@ -14,7 +14,7 @@ _expectations_path = os.path.join(_airflow_home, "pipelines", "expectations")
 if _expectations_path not in sys.path:
     sys.path.insert(0, _expectations_path)
 
-from pipelines.expectations.config_expectations import EXPECTATIONS
+from config_expectations import EXPECTATIONS
 
 logger = logging.getLogger("validation.bronze")
 
