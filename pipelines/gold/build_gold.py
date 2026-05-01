@@ -80,6 +80,12 @@ def read_silver(path: str, label: str) -> pd.DataFrame:
 def read_silver_local(path: str, label: str) -> pd.DataFrame:
     logger.info("📂 [LOCAL] Leyendo Silver [%s] desde %s ...", label, path)
     df = pd.read_parquet(path)
+
+    if "year" in df.columns:
+        df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
+
+    if "country_code" in df.columns:
+        df["country_code"] = df["country_code"].astype(str)
     logger.info("   → %d filas", len(df))
     return df
 
