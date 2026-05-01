@@ -72,14 +72,15 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         # -detailed-exitcode: 0=no changes, 1=error, 2=changes pending
         run: |
+          set -o pipefail
           terraform plan \
             -input=false \
             -detailed-exitcode \
             -out=tfplan \
             -var="budget_email=${{ secrets.BUDGET_EMAIL }}" \
             2>&1 | tee plan_output.txt
-          echo "exit_code=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
+          EXIT_CODE=${PIPESTATUS[0]}
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
 
       - name: Save plan output
         uses: actions/upload-artifact@v4
