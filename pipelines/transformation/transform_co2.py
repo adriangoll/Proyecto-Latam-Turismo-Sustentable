@@ -4,7 +4,7 @@ transform_co2.py — Transformación Bronze → Silver para CO₂ & Emissions.
 Entrada : s3://...../bronze/co2_emissions/  (Parquet particionado)
 Salida  : s3://...../silver/co2_emissions/data.parquet
 
-Transformaciones aplicadas:
+Transformaciones aplicadas :
   1. Cast de tipos (apply_schema).
   2. Deduplicación por (country_code, year)
   3. Drop filas donde co2 + gdp + population son todos null
