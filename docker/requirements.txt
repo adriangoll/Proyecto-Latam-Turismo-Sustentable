@@ -8,3 +8,5 @@ pyarrow
 great-expectations
 sqlalchemy
 s3fs
+openpyxl
+requests
