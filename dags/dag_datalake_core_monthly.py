@@ -1,5 +1,9 @@
 import os
 import sys
+import time
+import boto3
+
+from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
 from datetime import datetime
 
 from airflow import DAG
@@ -25,6 +29,12 @@ default_args = {
     "start_date": datetime(2024, 1, 1),
     "on_failure_callback": notificar_error,
 }
+
+
+def stop_ec2():
+    time.sleep(35)
+    boto3.client("ec2", region_name="us-east-1").stop_instances(InstanceIds=["i-0292fc72c1b2a4f1b"])
+
 
 with DAG(
     dag_id="dag_datalake_core_monthly",
@@ -54,6 +64,11 @@ with DAG(
         python_callable=wrapper_procesamiento,
         op_kwargs={"script_func": run_gold},
         ##provide_context=True
+    )
+
+    task_stop_ec2 = PythonOperator(
+        task_id="task_stop_ec2_instance",
+        python_callable=stop_ec2,
     )
 
     # Dependencia: No empieza Oro si falla Plata
