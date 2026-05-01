@@ -9,14 +9,15 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
-from build_gold import build_dim_country, build_fact, read_silver_local, write_parquet_local
+
+from pipelines.gold.build_gold import build_dim_country, build_fact, read_silver_local, write_parquet_local
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 GOLD_DIR = os.path.join(_HERE, "..", "..", "pipelines", "gold")
 if GOLD_DIR not in sys.path:
     sys.path.insert(0, GOLD_DIR)
 
-from config_gold import LATAM_COUNTRIES_META
+from pipelines.gold.config_gold import LATAM_COUNTRIES_META
 
 # ─── Fixtures ─────────────────────────────────────────────────────────────────
 
