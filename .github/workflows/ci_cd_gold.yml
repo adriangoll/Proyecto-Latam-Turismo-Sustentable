@@ -145,9 +145,8 @@ jobs:
 
       - name: Trigger Glue crawlers Gold
         run: |
-          aws glue start-crawler --name latam-dev-gold-fact
-          aws glue start-crawler --name latam-dev-gold-dim-country
-          aws glue start-crawler --name latam-dev-open-data-gold
+          aws glue start-crawler --latam-gold-fact-tourism-emissions-crawler
+          aws glue start-crawler --name latam-gold-dim-country-crawler
           echo "✅ Crawlers iniciados — Glue Catalog se actualizará en ~2-3 min"
 
       - name: Summary
@@ -155,6 +154,5 @@ jobs:
           echo "## Gold Deployment" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Silver → Gold construido" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Gold validado con Great Expectations" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Gold → open-data/ exportado" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Crawlers Glue disparados" >> $GITHUB_STEP_SUMMARY
           echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

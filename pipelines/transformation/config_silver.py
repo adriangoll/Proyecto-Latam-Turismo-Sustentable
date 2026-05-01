@@ -3,7 +3,7 @@ config_silver.py — Constantes y reglas para la capa Silver
 ===========================================================
 Define:
   - Paths S3 de entrada (Bronze) y salida (Silver).
-  - Esquemas esperados por dataset (columnas, tipos)
+  - Esquemas esperados por dataset (columnas, tipos).
   - Reglas de calidad (umbrales de nulls, rangos válidos)
   - Columnas clave para deduplicación
 """
