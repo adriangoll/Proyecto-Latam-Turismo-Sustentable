@@ -281,11 +281,7 @@ Este entorno permite:
 
 ---
 
-# 🚀 Nivel del setup
 
-* ✅ Production-ready básico
-* ✅ Proyecto real de Data Engineering
-* ✅ Portafolio fuerte para entrevistas
 
 
 
