@@ -1,52 +1,92 @@
-# Documentación de Terraform — Proyecto Latam Turismo Sustentable
+# 🏗️ Terraform — Infraestructura como Código (IaC)
+
+---
 
 ## 1. Objetivo
 
-Este documento resume la infraestructura administrada con Terraform para el proyecto **Proyecto-Latam-Turismo-Sustentable**.
+Este documento describe la infraestructura gestionada con Terraform para el proyecto **Proyecto-Latam-Turismo-Sustentable**.
 
-El alcance documentado incluye:
-- configuración inicial de Terraform
-- budget en AWS
-- bucket S3 del datalake
-- grupos, usuarios y permisos IAM
-- módulo de AWS Glue
+El alcance incluye:
 
-## 2. Requisitos previos
+* Provisionamiento de infraestructura en AWS
+* Data Lake en S3 (arquitectura medallion)
+* Gestión de accesos (IAM)
+* Catálogo de datos (AWS Glue)
+* Consultas analíticas (Athena)
+* Ejecución de pipelines (EC2 + Airflow)
+* Automatización (EventBridge)
+* Observabilidad (CloudWatch)
+* Control de costos (AWS Budget)
 
-Antes de ejecutar Terraform:
+---
 
-1. Instalar Terraform
-2. Verificar la versión instalada
-3. Posicionarse en la carpeta `infra/`
+## 2. Arquitectura general
 
-### Instalación
+```text
+Terraform
+   ↓
+AWS Infraestructura
+   ↓
+EC2 (Docker + Airflow)
+   ↓
+Pipelines (Bronze → Silver → Gold)
+   ↓
+S3 (Data Lake)
+   ↓
+Glue (Catálogo)
+   ↓
+Athena (Consultas)
+   ↓
+CloudWatch (Logs)
+```
+
+---
+
+## 3. Estructura del proyecto
+
+```bash
+infra/
+├── main.tf
+├── variables.tf
+├── terraform.tfvars
+├── providers.tf
+│
+├── modules/
+│   ├── s3/
+│   ├── ec2/
+│   ├── iam/
+│   ├── glue/
+│   └── athena/
+```
+
+---
+
+## 4. Requisitos previos
+
 ```bash
 winget install HashiCorp.Terraform
 terraform version
 ```
 
-### Carpeta de trabajo
 ```bash
 cd Proyecto-Latam-Turismo-Sustentable/infra
 ```
 
-## 3. Configuración de credenciales AWS
+---
 
-Para validar o configurar acceso a AWS se utilizan estos comandos:
+## 5. Configuración AWS
 
 ```bash
 aws sts get-caller-identity
 aws configure --profile grupo1
 ```
 
-### Perfil de trabajo
-- Perfil: `grupo1`
-- Región por defecto: `us-east-1`
-- Formato de salida recomendado: `json`
+* Región: `us-east-1`
+* Perfil: `grupo1`
 
-## 4. Flujo básico de Terraform
+---
 
-El flujo de trabajo utilizado en el proyecto es:
+## 6. Flujo de trabajo Terraform
 
 ```bash
 terraform init
@@ -56,268 +96,279 @@ terraform plan
 terraform apply
 ```
 
-### Qué hace cada comando
-- `terraform init`: inicializa módulos y providers
-- `terraform fmt -recursive`: aplica formato estándar a todos los archivos `.tf`
-- `terraform validate`: valida sintaxis y referencias
-- `terraform plan`: muestra la planificación de cambios
-- `terraform apply`: aplica los cambios en AWS
+---
 
-## 5. Budget en AWS
+## 7. S3 — Data Lake
 
-Terraform administra un budget llamado:
+Bucket principal:
 
-- `zero-budget`
+```text
+latam-sustainability-datalake
+```
 
-Este recurso se utiliza como control de costos dentro de la cuenta AWS del proyecto.
+### Estructura
 
-Se verifica la creación en la consola de AWS:
-![alt text](img/Budget-zero.jpg)
-
-## 6. Bucket S3 del datalake
-
-El bucket principal del proyecto es:
-
-- `latam-sustainability-datalake`
-
-### Región
-- `us-east-1`
-
-### Estructura principal del datalake
 ```text
 raw/
-raw/owid_co2/
-raw/worldbank_tourism/
-raw/owid_transport/
 bronze/
-bronze/co2_emissions/
-bronze/tourism_arrivals/
-bronze/transport_mode/
 silver/
-silver/co2_emissions/
-silver/tourism_arrivals/
-silver/transport_mode/
 gold/
 ```
-Luego de ejecutar:  
-![alt text](img/s3-terraform.jpg)
 
-Se verifica en la consola de AWS la existencia del bucket con sus carpetas
-![alt text](img/s2-aws.jpg)  
+Subcarpetas:
 
-## 7. IAM
+* `raw/owid_co2/`
+* `raw/worldbank_tourism/`
+* `raw/unwto_transport/`
+* `bronze/co2_emissions/`
+* `bronze/tourism_arrivals/`
+* `bronze/transport_mode/`
 
-Terraform administra grupos, usuarios y políticas IAM.
+👉 Implementa arquitectura **Medallion (Lakehouse)**
+
+### 📸 Evidencia
+
+![S3 Terraform](./img/s3-terraform.jpg)
+![S3 AWS](./img/s2-aws.jpg)
+
+---
+
+## 8. IAM — Seguridad
 
 ### Grupos
-- `data-engineers`
-- `project-manager`
+
+* data-engineers
+* project-manager
 
 ### Usuarios
-- `adrian.sosa`
-- `luis.buruato`
-- `mariana.gil`
-- `martin.tedesco`
 
-### Políticas del grupo `data-engineers`
-- `AmazonAthenaFullAccess`
-- `AmazonEC2FullAccess`
-- `AmazonS3FullAccess`
-- `AWSGlueConsoleFullAccess`
+* adrian.sosa
+* luis.buruato
+* mariana.gil
+* martin.tedesco
 
-Usuarios  
-![alt text](img/iam-usuarios.jpg)  
-  
-Permisos  
-![alt text](img/iam-permisos.jpg)
-  
+### Permisos clave
 
-## 8. AWS Glue
+* S3 Full Access
+* EC2 Full Access
+* Athena
+* Glue
 
-En este proyecto, el módulo de Glue se usa para:
+### 📸 Evidencia
 
-- crear la base de datos del catálogo
-- crear crawlers para registrar esquemas en AWS Glue Data Catalog
+![IAM Usuarios](./img/iam-usuarios.jpg)
+![IAM Permisos](./img/iam-permisos.jpg)
 
-### Base de datos de Glue
-- `latam_sustainable_tourism`
+---
 
-### Rol de servicio de Glue
-- `AWSGlueServiceRole-LatamSustainableTourism`
+## 9. AWS Glue — Catálogo
 
-## 9. Crawlers de Glue
+Base de datos:
 
-Se definieron crawlers separados por capa y por dataset.
-
-### Crawlers de Bronze
-- `latam-bronze-co2-crawler`
-- `latam-bronze-tourism-crawler`
-- `latam-bronze-transport-crawler`
-
-### Crawlers de Silver
-- `latam-silver-co2-crawler`
-- `latam-silver-tourism-crawler`
-- `latam-silver-transport-crawler`
-
-### Crawlers de Gold
-- `latam-gold-dim-country-crawler`
-- `latam-gold-fact-tourism-emissions-crawler`
-
-## 10. Targets de los crawlers
-
-### Bronze
-- `s3://latam-sustainability-datalake/bronze/co2_emissions/`
-- `s3://latam-sustainability-datalake/bronze/tourism_arrivals/`
-- `s3://latam-sustainability-datalake/bronze/transport_mode/`
-
-### Silver
-- `s3://latam-sustainability-datalake/silver/co2_emissions/`
-- `s3://latam-sustainability-datalake/silver/tourism_arrivals/`
-- `s3://latam-sustainability-datalake/silver/transport_mode/`
-
-## 11. Particiones
-
-Los crawlers deben apuntar a la raíz del dataset, no a una partición puntual.
-
-Ejemplo correcto:
 ```text
-s3://latam-sustainability-datalake/bronze/co2_emissions/
+latam_sustainable_tourism
 ```
 
-Dentro de esa ruta, Glue puede detectar particiones como:
+### Crawlers
+
+#### Bronze
+
+* latam-bronze-co2-crawler
+* latam-bronze-tourism-crawler
+* latam-bronze-transport-crawler
+
+#### Silver
+
+* latam-silver-co2-crawler
+* latam-silver-tourism-crawler
+* latam-silver-transport-crawler
+
+#### Gold
+
+* latam-gold-dim-country-crawler
+* latam-gold-fact-tourism-emissions-crawler
+
+### 📸 Evidencia
+
+![Glue Terraform](./img/glue-terraform.jpg)
+![Glue AWS](./img/glue-aws.jpg)
+
+---
+
+## 10. Athena
+
+Workgroup:
+
 ```text
-year=2024/month=01/
+latam-sustainable-tourism
 ```
 
-## 12. Validaciones realizadas
+Permite consultas SQL sobre S3 usando Glue Data Catalog.
 
-La validación del despliegue se hizo de dos maneras:
+---
 
-### Desde Terraform
+## 11. EC2 + Airflow (Pipeline Engine)
+
+Se despliega una instancia EC2:
+
+* Tipo: `t3.small`
+* Sistema: Ubuntu
+* Docker + Docker Compose
+* Airflow (webserver + scheduler)
+
+### Automatización
+
+* Instalación automática (`user_data`)
+* Clonación del repositorio
+* Inicialización de Airflow
+
+👉 La instancia ejecuta los pipelines del proyecto
+
+---
+
+## 12. EventBridge — Automatización
+
+Regla configurada:
+
+```text
+cron(0 0 1 * ? *)
+```
+
+### Función
+
+* Arranca la EC2 automáticamente el día 1 de cada mes
+* Permite ejecución programada de pipelines
+
+---
+
+## 13. CloudWatch — Logs
+
+Configuración:
+
+* Log Group: `/latam-turismo/airflow`
+* Streams:
+
+  * init
+  * webserver
+  * scheduler
+
+### Uso
+
+* Centralización de logs
+* Debug de pipelines
+* Monitoreo
+
+### 📸 Evidencia
+
+![Logs](./img/gold-crawlers-logs.jpg)
+
+---
+
+## 14. AWS Budget
+
+Budget:
+
+```text
+zero-budget
+```
+
+* Límite: 0.01 USD
+* Notificación por email
+
+👉 Previene costos inesperados
+
+### 📸 Evidencia
+
+![Budget](./img/Budget-zero.jpg)
+
+---
+
+## 15. Flujo de datos
+
+```text
+RAW → BRONZE → SILVER → GOLD
+```
+
+---
+
+## 16. Validaciones
+
+### Terraform
+
 ```bash
 terraform validate
 terraform plan
 ```
 
-### Desde AWS Console
-- verificación del budget
-- verificación del bucket S3
-- verificación de carpetas/prefijos
-- verificación de grupos y usuarios IAM
-- verificación de políticas asociadas
-- verificación de crawlers de Glue
-- verificación del `Data source` objetivo de cada crawler
+### AWS Console
 
-## 13. Verificación final recomendada
+* S3 ✔️
+* IAM ✔️
+* Glue ✔️
+* Crawlers ✔️
+* Athena ✔️
+* EC2 ✔️
 
-Después de aplicar cambios:
+---
+
+## 17. Verificación final
 
 ```bash
 terraform plan
 ```
 
-El resultado esperado es:
+Resultado esperado:
 
 ```text
 Plan: 0 to add, 0 to change, 0 to destroy
 ```
-  
-![alt text](img/glue-terraform.jpg)
-  
-Además, en AWS Glue deben verse los 6 crawlers en estado disponible.
-![alt text](img/glue-aws.jpg)
-  
-Verifico que el rol y el path objetivo sean correctos:
-![alt text](img/glue-rol-path.jpg)
-  
 
-## 14. Git y GitHub Actions
+---
 
-### Flujo de subida
-Desde la raíz del proyecto:
+## 18. Git y CI/CD
 
 ```bash
-git status
 git add .
-git commit -m "Mensaje descriptivo"
+git commit -m "update terraform"
 git push origin main
 ```
 
-### Nota sobre formato
-Si GitHub Actions falla en el paso:
+---
 
-```bash
-terraform fmt -check -recursive
+## 19. Arquitectura integrada (resumen)
+
+```text
+Terraform → AWS → EC2 (Airflow) → S3 → Glue → Athena → CloudWatch
 ```
 
-entonces hay que ejecutar localmente:
+---
 
-```bash
-cd infra
-terraform fmt -recursive
-```
+## 20. Buenas prácticas implementadas
 
-y volver a commitear los cambios de formato.
+* Infraestructura modular
+* Separación por capas
+* Automatización completa
+* Observabilidad
+* Control de costos
 
-## 15. Alcance final de esta documentación
+---
 
-Esta documentación refleja el estado final consolidado del proyecto para Terraform:
+## 21. Nivel del proyecto
 
-- budget
-- bucket S3 del datalake
-- estructura de capas
-- IAM
-- Glue Catalog Database
-- crawlers para `bronze` y `silver`
+👉 Data Lake + Airflow + Terraform + AWS
 
-## 16. Capa Gold en AWS Glue
+👉 Nivel: **Data Engineer profesional**
 
-Luego de validar que en S3 existían archivos reales dentro de la capa `gold/`, se amplió el módulo de Glue para registrar también las tablas finales del proyecto.
+---
 
-### Crawlers de Gold
-- `latam-gold-dim-country-crawler`
-- `latam-gold-fact-tourism-emissions-crawler`
+## 22. Mejoras futuras
 
-### Targets de los crawlers Gold
-- `s3://latam-sustainability-datalake/gold/dim_country/`
-- `s3://latam-sustainability-datalake/gold/fact_tourism_emissions/`
+* VPC privada
+* Auto scaling
+* CI/CD Terraform
+* Multi-entorno (dev/prod)
+* Alertas CloudWatch
 
-### Validación realizada
-Se verificó en AWS Glue que:
-- ambos crawlers de Gold fueron creados correctamente
-![alt text](docs/infra/img/gold-crawlers.jpg)
-- el crawler `latam-gold-fact-tourism-emissions-crawler` apunta al path correcto
-- el crawler `latam-gold-dim-country-crawler` también quedó disponible para ejecución
-- los crawlers terminaron correctamente
-![alt text](docs/infra/img/gold-crawlers-run.jpg)
-![alt text](docs/infra/img/gold-crawlers-logs.jpg)
-- las tablas de Gold aparecieron registradas en el Glue Data Catalog
-![alt text](docs/infra/img/gold-tables.jpg)
+---
 
-## 17. Permisos de lectura de logs para el equipo de Data Engineers
-
-Durante la validación de los crawlers se detectó que el grupo `data-engineers` no podía visualizar los logs de CloudWatch desde la consola de AWS Glue.
-
-Para resolverlo, se agregó en Terraform una política custom de solo lectura de logs y se adjuntó al grupo `data-engineers`.
-
-### Acciones habilitadas
-- `logs:DescribeLogGroups`
-- `logs:DescribeLogStreams`
-- `logs:GetLogEvents`
-- `logs:FilterLogEvents`
-
-### Objetivo
-Permitir que los integrantes del grupo `data-engineers` puedan revisar los logs de ejecución de crawlers y otros componentes integrados con CloudWatch Logs.
-
-## 18. Integración con Athena
-
-Una vez registrados los datasets de Gold en el Glue Data Catalog, las tablas
-quedaron disponibles para ser consultadas desde Athena.
-
-El workgroup fue provisionado con Terraform en `infra/modules/athena/`.
-
-Para mayor detalle sobre la configuración de Athena y las queries de negocio,
-ver:
-- `docs/athena.md`
-- `docs/queries.md`
 
