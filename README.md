@@ -1,15 +1,37 @@
-🌎 LATAM Sustainable Tourism — Data Platform
+# 🌎 LATAM Sustainable Tourism — Data Platform
 
-📌 Overview
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![AWS](https://img.shields.io/badge/AWS-S3%20%7C%20Glue%20%7C%20Athena-orange)
+![Airflow](https://img.shields.io/badge/Airflow-Orchestration-red)
+![Terraform](https://img.shields.io/badge/Terraform-IaC-purple)
 
-Plataforma de Data Engineering end-to-end que integra datos de emisiones, turismo y transporte en LATAM para generar insights sobre sostenibilidad.
+---
 
-Construida bajo arquitectura Medallion (Bronze → Silver → Gold) y publicada como Open Data + Dashboard interactivo (Streamlit).
+## 🚀 TL;DR
 
-👉 Objetivo: transformar datos dispersos en un data product analítico listo para toma de decisiones.
+Plataforma de Data Engineering en AWS que integra datos de **CO₂, turismo y transporte en LATAM**, implementando arquitectura **Medallion (Bronze → Silver → Gold)**, con validaciones automáticas, Open Data y dashboard interactivo.
 
+👉 End-to-end: **Ingest → Transform → Validate → Serve → Visualize**
 
-🏗️ Arquitectura
+---
+
+## 📌 Overview
+
+El proyecto implementa una plataforma de datos que transforma múltiples fuentes externas en un **data product analítico listo para toma de decisiones**.
+
+Integra:
+
+* Emisiones de CO₂
+* Turismo internacional
+* Transporte
+
+Permite analizar la sostenibilidad del turismo en LATAM con un enfoque de negocio.
+
+---
+
+## 🏗️ Arquitectura
+
+```text
 APIs / Files (OWID, World Bank, UNWTO)
                 ↓
         🥉 Bronze (Raw - S3)
@@ -19,113 +41,222 @@ APIs / Files (OWID, World Bank, UNWTO)
         🥇 Gold (Business)
                 ↓
    📊 Streamlit / Power BI / Open Data
-   
-🥉 Bronze — Data Ingestion
-Ingesta desde:
-Our World in Data (CO₂)
-World Bank (Tourism)
-UNWTO (Transport)
-Sin transformaciones
-Validaciones básicas
+```
+
+---
+
+## 📁 Project Structure
+
+```bash
+├── pipelines/        # lógica de datos
+├── dags/             # orquestación (Airflow)
+├── infra/            # infraestructura (Terraform)
+├── docs/             # documentación técnica
+├── queries/          # SQL (Athena)
+├── streamlit/        # dashboard
+├── docker/           # entorno de ejecución
+```
+
+---
+
+## 🥉 Bronze — Data Ingestion
+
+### 📥 Fuentes
+
+* Our World in Data (CO₂)
+* World Bank (Tourism)
+* UNWTO (Transport)
+
+### ⚙️ Características
+
+* Datos sin transformar
+* Validaciones básicas
+* Persistencia en S3
 
 📍 Output:
 
+```
 s3://latam-sustainability-datalake/raw/
-🥈 Silver — Data Transformation
-Limpieza y estandarización
-Eliminación de duplicados
-Manejo de nulos
-Métricas derivadas
-📂 Datasets
-co2_emissions
-tourism_arrivals
-transport_mode
+```
+
+---
+
+## 🥈 Silver — Data Transformation
+
+### 🔧 Procesamiento
+
+* Limpieza y estandarización
+* Eliminación de duplicados
+* Manejo de nulos
+* Métricas derivadas
+
+### 📂 Datasets
+
+* co2_emissions
+* tourism_arrivals
+* transport_mode
 
 📍 Output:
 
-silver/*.parquet
-🥇 Gold — Business Layer
-📂 Modelos
-🧾 fact_tourism_emissions
-Integración completa de datasets
-KPIs:
-CO₂ per tourist
-GDP metrics
-Tourism growth
-Sustainability label
-🌎 dim_country
-Dimensión geográfica LATAM
+```
+s3://latam-sustainability-datalake/silver/
+```
+
+---
+
+## 🥇 Gold — Business Layer
+
+### 📊 Modelos
+
+#### 🧾 fact_tourism_emissions
+
+* Integración completa de datasets
+* KPIs:
+
+  * CO₂ per tourist
+  * GDP metrics
+  * Tourism growth
+  * Sustainability label
+
+#### 🌎 dim_country
+
+* Dimensión geográfica LATAM
 
 📍 Output:
 
-gold/*.parquet
-📤 Open Data
+```
+s3://latam-sustainability-datalake/gold/
+```
 
-Datasets publicados automáticamente en formato abierto.
+---
 
-📦 Incluye:
+## 📊 Analytical Queries
 
-CSV
-Parquet
-metadata.json
-data_dictionary.md
+Consultas SQL en Athena para análisis de negocio:
+
+* Turismo vs CO₂
+* Impacto del transporte
+* Crecimiento económico vs emisiones
+* Evolución de emisiones
+* Países con turismo sostenible
+
+📁 Ubicación:
+
+```
+queries/
+```
+
+---
+
+## 📤 Open Data
+
+Publicación automática de datasets:
+
+* CSV
+* Parquet
+* metadata.json
+* data_dictionary.md
 
 📍 Ubicación:
 
+```
 s3://<bucket>/open-data/v1/gold/
+```
 
-Generado con:
+---
 
-python export_open_data_gold.py
-📊 Dashboard — Streamlit
-📌 Descripción
+## 📊 Dashboard — Streamlit
 
 Aplicación interactiva para explorar:
 
-Emisiones de CO₂ por país
-Turismo internacional
-Relación CO₂ vs turismo
-KPI de sostenibilidad
-▶️ Ejecutar local
+* Emisiones de CO₂
+* Turismo internacional
+* KPIs de sostenibilidad
+
+▶️ Ejecutar:
+
+```bash
 streamlit run app.py
-🌐 Funcionalidades
-Filtros por país y año
-Visualizaciones interactivas
-KPIs dinámicos
-Comparaciones entre países
+```
 
-👉 Aquí es donde el proyecto deja de ser pipeline y se vuelve producto.
+👉 El proyecto evoluciona de pipeline a **data product**
 
-🧪 Data Quality
+---
 
-Validaciones automáticas en todas las capas
-(sistema tipo Great Expectations)
+## 🧪 Data Quality
 
-✔️ Schema
-✔️ Nulls
-✔️ Rangos
-✔️ Integridad en Gold
+Validaciones automáticas (tipo Great Expectations):
+
+* Schema
+* Nulls
+* Rangos
+* Integridad en Gold
 
 📍 Reportes:
 
+```
 s3://latam-sustainability-datalake/quality_reports/
-🚀 CI/CD
+```
 
-GitHub Actions:
+---
 
-Lint (black)
-Tests (pytest)
-Coverage
-Validación de datos
-🧰 Tech Stack
-Python
-pandas
-boto3
-PyArrow
-AWS S3
-Streamlit
-GitHub Actions
-🧪 Run End-to-End
+## ☁️ Infraestructura (Terraform)
+
+Provisionada como código:
+
+* S3 (Data Lake)
+* EC2 (Airflow + Docker)
+* Glue (Data Catalog)
+* Athena (Query Engine)
+* EventBridge (Scheduling)
+* CloudWatch (Logs)
+* AWS Budget (cost control)
+
+---
+
+## 🔐 Security & Governance
+
+Buenas prácticas implementadas:
+
+* IAM Roles (sin credenciales hardcodeadas)
+* Principio de mínimo privilegio
+* `.env` no versionado (`.env.example` incluido)
+* Control de acceso a S3
+* Logs en CloudWatch
+* Control de costos con AWS Budget
+
+⚠️ Nota:
+Proyecto académico — no incluye KMS ni VPC privada (roadmap futuro)
+
+---
+
+## 🚀 CI/CD
+
+GitHub Actions ejecuta:
+
+* Lint (black)
+* Tests (pytest)
+* Coverage
+* Validación de datos
+
+---
+
+## 🧰 Tech Stack
+
+* Python
+* pandas / PyArrow
+* boto3
+* AWS (S3, Glue, Athena, EC2)
+* Streamlit
+* Terraform
+* Docker
+* GitHub Actions
+
+---
+
+## 🚀 Run End-to-End
+
+```bash
 # 1. Ingesta
 python run_ingestion.py
 
@@ -140,40 +271,66 @@ python export_open_data_gold.py
 
 # 5. Dashboard
 streamlit run app.py
-📌 Design Decisions
-Bronze inmutable (Single Source of Truth)
-No se inventan datos
-Silver optimizado (datasets pequeños)
-Gold orientado a negocio
-Open Data versionado (v1)
-⚠️ Limitations
-UNWTO dataset parcial
-Algunos países/años faltantes
-No hay orquestador (aún)
-🔮 Roadmap
-Airflow / Step Functions
-Power BI dashboard
-Data contracts
-API pública
-👨‍💻 Team
-Adrian Sosa — Scrum Master
-Martin Tedesco — Data Engineer
-Mariana Gil — AWS Infra
-Luis Ramón Buruato — Data Engineer (Bronze / Pipelines)
+```
 
-⭐ Final Thoughts
+---
 
-Este proyecto evoluciona de:
+## 🤝 Work Distribution
 
-Pipeline → Data Lake → Data Product
+El desarrollo se organizó en:
+
+* Ingesta (Bronze)
+* Transformación (Silver)
+* Modelado (Gold)
+* Infraestructura (Terraform + AWS)
+* Visualización (Streamlit)
+
+Cada módulo fue desarrollado de forma independiente y validado en conjunto.
+
+---
+
+## ⚠️ Limitations
+
+* Dataset UNWTO parcial
+* Datos faltantes en algunos países
+* Orquestación en evolución
+
+---
+
+## 🔮 Roadmap
+
+* Airflow completo / Step Functions
+* Dashboard en Power BI
+* Data contracts
+* API pública
+
+---
+
+## 👨‍💻 Team
+
+| Nombre             | Rol                                |
+| ------------------ | ---------------------------------- |
+| Adrian Sosa        | Scrum Master                       |
+| Martin Tedesco     | Data Engineer                      |
+| Mariana Gil        | AWS Infrastructure                 |
+| Luis Ramón Buruato | Data Engineer (Bronze & Pipelines) |
+
+---
+
+## ⭐ Final Thoughts
+
+El proyecto evoluciona desde un pipeline hacia una **plataforma de datos completa**.
 
 Incluye:
 
-✔️ Ingesta confiable
-✔️ Transformación con calidad
-✔️ Modelado analítico
-✔️ Validación automática
-✔️ Open Data
-✔️ Dashboard interactivo
+* ✔️ Ingesta confiable
+* ✔️ Transformación con calidad
+* ✔️ Modelado analítico
+* ✔️ Validación automática
+* ✔️ Open Data
+* ✔️ Dashboard interactivo
 
-👉 Resultado: una plataforma lista para análisis real de sostenibilidad en turismo LATAM.
+👉 Resultado: una solución end-to-end para análisis de sostenibilidad en turismo LATAM.
+
+---
+
