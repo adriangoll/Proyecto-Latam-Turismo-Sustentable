@@ -21,8 +21,11 @@ git clone <repo_url>cd Final-Henry-Turismo-Sustentable
 
 2. Configurar variables de entorno
 cp .env.example .env
+
 🔐 Generar claves necesarias
 # FERNET KEYpython3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"# SECRET KEYopenssl rand -hex 32
+
+
 👉 Pegarlas en .env:
 AIRFLOW_FERNET_KEY=AIRFLOW_SECRET_KEY=AIRFLOW_ADMIN_USER=adminAIRFLOW_ADMIN_PASSWORD=<definir_password_seguro>
 
