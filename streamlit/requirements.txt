@@ -1,6 +1,0 @@
-streamlit
-boto3
-pandas
-plotly
-pyathena
-statsmodels

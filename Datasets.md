@@ -105,10 +105,9 @@ df = pd.read_parquet(
 
 ---
 
-## Gold — KPIs de negocio *(próximamente)*
+## Gold — KPIs de negocio 
 
-Los datasets Gold estarán disponibles al finalizar el Sprint 2.
-Responderán directamente las preguntas de negocio del proyecto:
+Los datasets Gold responderán directamente las preguntas de negocio del proyecto:
 
 - ¿Existe relación entre el crecimiento del turismo y el aumento de emisiones de CO₂ en LATAM?
 - ¿Qué medios de transporte turístico tienen mayor impacto ambiental?
