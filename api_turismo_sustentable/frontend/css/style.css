@@ -61,9 +61,9 @@ html { scroll-behavior: smooth; }
 body {
   background-color: var(--bg);
   background-image: url('../assets/fondo.png');   /* ← reemplazá esta URL */
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
   color:       var(--text);
   font-family: var(--font-body);
@@ -75,11 +75,12 @@ body {
 /* Overlay semitransparente sobre el fondo para que el texto sea legible */
 body::before {
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
-  background: rgba(245, 240, 232, 0.60);  /* crema al 60% — se ven los logos */
+  background: rgba(245, 240, 232, 0.60);
   pointer-events: none;
   z-index: 0;
+  min-height: 100%;
 }
 
 /* Todo el contenido encima del overlay */
@@ -97,13 +98,22 @@ body > * {
 
 /* ─── Nav ─────────────────────────────────────────────────────────────────── */
 nav {
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 100;
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  padding: 14px 0;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  isolation: isolate;
+}
+
+nav.scrolled {
+  position: sticky;
   background: rgba(245, 240, 232, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 14px 0;
   box-shadow: 0 2px 12px rgba(45,106,45,0.08);
 }
 

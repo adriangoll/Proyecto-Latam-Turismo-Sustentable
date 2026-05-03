@@ -121,3 +121,21 @@ async function downloadCSV(layer) {
     btn.innerHTML = originalText;
   }
 }
+
+// ── Nav sticky al scroll ──────────────────────────────────────────────────────
+(function() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+  let sticky = false;
+  const navHeight = nav.offsetHeight;
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > navHeight && !sticky) {
+      sticky = true;
+      nav.classList.add('scrolled');
+    } else if (window.scrollY <= navHeight && sticky) {
+      sticky = false;
+      nav.classList.remove('scrolled');
+    }
+  }, { passive: true });
+})();

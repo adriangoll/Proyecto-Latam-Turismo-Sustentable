@@ -299,11 +299,11 @@ async function downloadCSV(layer) {
   const btn   = document.getElementById(`btn-${layer}`);
   const errEl = document.getElementById("download-error");
   errEl.classList.remove("visible");
- 
+
   const originalText = btn.innerHTML;
   btn.disabled  = true;
   btn.innerHTML = `<span class="spinner"></span> Generando enlace...`;
- 
+
   try {
     const res  = await fetch(`${CONFIG.API_URL}/api/download/${layer}`);
     if (!res.ok) {
@@ -312,7 +312,7 @@ async function downloadCSV(layer) {
     }
     const data = await res.json();
     window.open(data.url, "_blank");
- 
+
   } catch (err) {
     errEl.textContent = `Error: ${err.message}`;
     errEl.classList.add("visible");
@@ -321,3 +321,21 @@ async function downloadCSV(layer) {
     btn.innerHTML = originalText;
   }
 }
+
+// ── Nav sticky al scroll ──────────────────────────────────────────────────────
+(function() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+  let sticky = false;
+  const navHeight = nav.offsetHeight;
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > navHeight && !sticky) {
+      sticky = true;
+      nav.classList.add('scrolled');
+    } else if (window.scrollY <= navHeight && sticky) {
+      sticky = false;
+      nav.classList.remove('scrolled');
+    }
+  }, { passive: true });
+})();

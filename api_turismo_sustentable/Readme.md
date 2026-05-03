@@ -2,30 +2,32 @@
 
 App web interactiva que expone los datos Gold del pipeline LATAM Tourism Emissions.
 
-**Stack:** FastAPI · pandas · boto3 · Plotly.js · Google gemini-3-flash-preview  
-**Deploy:** Backend → Render free tier · Frontend → Netlify (drag & drop)
+**Stack:** FastAPI · pandas · boto3 · Plotly.js · Google `gemini-3-flash-preview`  
+**Deploy:** Backend → Render free tier · Frontend → Netlify (drag & drop)  
+**Live:** https://latam-turismo-sustentable.netlify.app
 
 ---
 
 ## Estructura
 
 ```
-latam-tourism-app/
+api_turismo_sustentable/
 ├── backend/
-│   ├── main.py           # FastAPI app, CORS, endpoints
-│   ├── data_loader.py    # Lee Parquet de S3 al arrancar
-│   ├── questions.py      # 8 preguntas fijas → Plotly JSON
-│   ├── custom_query.py   # Gemini + exec() → Plotly JSON
+│   ├── main.py           # FastAPI app, CORS, todos los endpoints
+│   ├── data_loader.py    # Lee Parquet de S3 al arrancar (carga única en memoria)
+│   ├── questions.py      # 8 consultas predefinidas → Plotly JSON
+│   ├── custom_query.py   # Gemini + exec() controlado → Plotly JSON
 │   ├── requirements.txt
+│   ├── .python-version   # Fija Python 3.11.9 para Render
 │   └── .env.example      # Copiar como .env y completar
 └── frontend/
-    ├── index.html        # Pantalla 1: Home + metric cards
-    ├── explorar.html     # Pantalla 2: Preguntas + custom query
+    ├── index.html        # Pantalla 1: Home + KPI cards + Top 10
+    ├── explorar.html     # Pantalla 2: Consultas + visualización con IA
     ├── css/style.css
     └── js/
-        ├── config.js     # API_URL (cambiar para producción)
-        ├── main.js
-        └── explorar.js
+        ├── config.js     # API_URL — cambiar para producción
+        ├── main.js       # Lógica del Home
+        └── explorar.js   # Lógica de Explorar
 ```
 
 ---
@@ -54,13 +56,13 @@ Verificar en: http://localhost:8000/docs
 
 Opción simple: abrir `frontend/index.html` directamente en el browser.
 
-Opción con live-server (VS Code extension):
+Con Live Server (VS Code):
 ```bash
-# Instalar Live Server en VS Code, luego click derecho en index.html → Open with Live Server
-# Por defecto corre en http://localhost:5500
+# Click derecho en index.html → Open with Live Server
+# Corre en http://localhost:5500
 ```
 
-Asegurarse que en `frontend/js/config.js`:
+Verificar que `frontend/js/config.js` tenga:
 ```js
 API_URL: "http://localhost:8000"
 ```
@@ -78,7 +80,7 @@ API_URL: "http://localhost:8000"
 | `DIM_COUNTRY_KEY` | `gold/dim_country/data.parquet` |
 | `FACT_KEY` | `gold/fact_tourism_emissions/data.parquet` |
 | `GEMINI_API_KEY` | Google AI Studio → https://aistudio.google.com |
-| `CORS_ORIGIN` | URL del frontend en Netlify |
+| `CORS_ORIGIN` | URL del frontend en Netlify (sin barra al final) |
 
 ---
 
@@ -86,13 +88,14 @@ API_URL: "http://localhost:8000"
 
 ### Backend → Render.com
 
-1. Subir `/backend` a GitHub
+1. El backend vive en `api_turismo_sustentable/backend/` dentro del repo del pipeline
 2. Render → New Web Service → conectar repo
-3. **Runtime:** Python
-4. **Start command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+3. **Root Directory:** `api_turismo_sustentable/backend`
+4. **Runtime:** Python
 5. **Build command:** `pip install -r requirements.txt`
-6. Agregar todas las variables de entorno en el panel de Render
-7. Render asigna URL: `https://latam-tourism-api.onrender.com`
+6. **Start command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+7. Agregar todas las variables de entorno en el panel de Render
+8. Render asigna URL tipo: `https://latam-tourism-api.onrender.com`
 
 ### Frontend → Netlify
 
@@ -100,10 +103,17 @@ API_URL: "http://localhost:8000"
    ```js
    API_URL: "https://latam-tourism-api.onrender.com"
    ```
-2. netlify.com → Add new site → Deploy manually → drag `/frontend`
+2. netlify.com → Add new site → Deploy manually → arrastrar carpeta `frontend/`
 3. Netlify asigna URL pública instantánea
+4. Copiar esa URL y actualizar `CORS_ORIGIN` en las variables de entorno de Render
 
-4. Copiar la URL de Netlify y actualizar `CORS_ORIGIN` en Render.
+### Mantener Render activo (anti-hibernate)
+
+El frontend hace ping automático a `/health` cada 14 minutos.  
+Para garantizar disponibilidad 24/7 (ej. durante un examen), configurar **UptimeRobot**:
+- Monitor type: HTTP
+- URL: `https://tu-servicio.onrender.com/health`
+- Intervalo: 5 minutos
 
 ---
 
@@ -111,13 +121,17 @@ API_URL: "http://localhost:8000"
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| GET | `/` | Health check |
-| GET | `/health` | Estado del servidor + filas cargadas |
-| GET | `/api/overview` | KPIs para cards del Home |
-| GET | `/api/questions` | Lista de 8 preguntas fijas |
-| GET | `/api/question/{id}` | Plotly JSON de una pregunta |
-| GET | `/api/question/1?year=2022` | Q1 con año específico |
-| POST | `/api/custom` | Custom query via Gemini |
+| GET | `/` | Health check básico |
+| GET | `/health` | Estado + filas cargadas desde S3 |
+| GET | `/api/overview` | KPIs para las 4 cards del Home |
+| GET | `/api/questions` | Lista de las 8 consultas predefinidas |
+| GET | `/api/question/{id}` | Plotly JSON de una consulta (1-8) |
+| GET | `/api/question/1?year=2022` | Consulta 1 filtrada por año |
+| POST | `/api/custom` | Visualización personalizada vía Gemini |
+| GET | `/api/download/gold` | URL firmada S3 → CSV Gold |
+| GET | `/api/download/silver_co2` | URL firmada S3 → CSV Silver CO₂ |
+| GET | `/api/download/silver_arrivals` | URL firmada S3 → CSV Silver llegadas |
+| GET | `/api/download/silver_transport` | URL firmada S3 → CSV Silver transporte |
 
 ### Ejemplo POST /api/custom
 
@@ -129,10 +143,13 @@ API_URL: "http://localhost:8000"
 }
 ```
 
+Métricas disponibles: `co2` · `arrivals` · `co2_per_capita` · `yoy`
+
 ---
 
-## Notas
+## Notas técnicas
 
-- **Render free tier hiberna** tras 15 min sin requests → el frontend hace un ping cada 14 min automáticamente.
-- **exec() de Gemini** corre en namespace controlado sin acceso a filesystem, OS ni red.
-- Los Parquet se cargan en memoria al arrancar FastAPI. Si en el futuro crecen mucho, considerar lazy loading por año.
+- **Render free tier** hiberna tras 15 min sin requests → el frontend hace ping cada 14 min. Usar UptimeRobot para disponibilidad continua.
+- **Gemini custom query** genera código Python en runtime que corre en un namespace controlado — sin acceso a filesystem, OS ni red. Tokens prohibidos validados antes del `exec()`.
+- **Datos en memoria** — los dos Parquet Gold se cargan una sola vez al arrancar FastAPI (`lifespan`). Con 209 filas el cold start es < 5 segundos.
+- **URLs firmadas S3** expiran en 10 minutos. Si la descarga falla, hacer click de nuevo para generar una nueva URL.
