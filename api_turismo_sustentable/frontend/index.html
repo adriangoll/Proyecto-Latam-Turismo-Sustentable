@@ -116,28 +116,61 @@
     </div>
   </section>
 
-  <!-- ── Descargas ────────────────────────────────────────────────────────────── -->
+  <!-- ── Descarga de datos ──────────────────────────────────────────────────── -->
   <section style="padding: 0 0 48px;">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Datos abiertos</h2>
-        <span class="section-tag">Capa Gold · Capa Silver</span>
+        <h2 class="section-title">Descargá los datos</h2>
+        <span class="section-tag">Acceso abierto · Pipeline LATAM</span>
       </div>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; max-width: 560px;">
-        Descargá los datos procesados dese nuestras fuentes.
-        <span style="display: block ; margin-top: 8px;">
-          El enlace es válido por 10 minutos, deberas refrescar la página si expira.
-        </span>
-      </p>
-      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <button class="btn btn-primary" onclick="downloadCSV('gold')" id="btn-gold">
-          <span>⬇️</span> CSV Publico general — Turismo &amp; Emisiones
-        </button>
-        <button class="btn btn-outline" onclick="downloadCSV('silver')" id="btn-silver">
-          <span>⬇️</span> CSV Para ML — Datos procesados
-        </button>
+ 
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px;">
+ 
+        <!-- Bloque Gold → público general -->
+        <div style="background: rgba(255,255,255,0.88); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; backdrop-filter: blur(8px);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 22px;">🌍</span>
+            <div>
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal);">Público general</div>
+              <div style="font-family: var(--font-display); font-size: 1.1rem; color: var(--text);">Datos consolidados</div>
+            </div>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;">
+            Dataset final con emisiones de CO₂ y llegadas turísticas por país. Listo para usar en Excel, Tableau o cualquier herramienta de análisis.
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="downloadCSV('gold')" id="btn-gold" style="width: 100%; justify-content: center;">
+            ⬇️ CSV Gold — Turismo &amp; Emisiones
+          </button>
+        </div>
+ 
+        <!-- Bloque Silver → ciencia de datos -->
+        <div style="background: rgba(255,255,255,0.88); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; backdrop-filter: blur(8px);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 22px;">🔬</span>
+            <div>
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">Ciencia de datos</div>
+              <div style="font-family: var(--font-display); font-size: 1.1rem; color: var(--text);">Tablas intermedias</div>
+            </div>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;">
+            Tablas procesadas de la capa Silver del pipeline. Ideales para modelado, feature engineering o análisis exploratorio.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="downloadCSV('silver_co2')" id="btn-silver_co2" style="justify-content: center;">
+              ⬇️ Emisiones CO₂
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="downloadCSV('silver_arrivals')" id="btn-silver_arrivals" style="justify-content: center;">
+              ⬇️ Llegadas turísticas
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="downloadCSV('silver_transport')" id="btn-silver_transport" style="justify-content: center;">
+              ⬇️ Modos de transporte
+            </button>
+          </div>
+        </div>
+ 
       </div>
-      <div id="download-error" class="error-msg" style="margin-top: 12px;"></div>
+ 
+      <div id="download-error" class="error-msg" style="margin-top: 16px;"></div>
     </div>
   </section>
   <!-- ── Footer ────────────────────────────────────────────────────────────── -->

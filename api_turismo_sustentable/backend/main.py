@@ -179,11 +179,23 @@ def custom_query(req: CustomQueryRequest):
 DOWNLOAD_FILES = {
     "gold": {
         "key":   "open-data/v1/gold/fact_tourism_emissions/latam_fact_tourism_emissions_v1.csv",
-        "label": "Gold — fact_tourism_emissions",
+        "label": "Gold — Turismo & Emisiones",
+        "filename": "latam_fact_tourism_emissions_gold.csv",
     },
-    "silver": {
-        "key":   os.getenv("SILVER_CSV_KEY", "silver/fact_tourism_emissions/data.csv"),
-        "label": "Silver — fact_tourism_emissions",
+    "silver_co2": {
+        "key":   "open-data/v1/silver/co2_emissions/latam_co2_emissions_v1.csv",
+        "label": "Silver — Emisiones CO₂",
+        "filename": "latam_co2_emissions_silver.csv",
+    },
+    "silver_arrivals": {
+        "key":   "open-data/v1/silver/tourism_arrivals/latam_tourism_arrivals_v1.csv",
+        "label": "Silver — Llegadas turísticas",
+        "filename": "latam_tourism_arrivals_silver.csv",
+    },
+    "silver_transport": {
+        "key":   "open-data/v1/silver/transport_mode/latam_transport_mode_v1.csv",
+        "label": "Silver — Modos de transporte",
+        "filename": "latam_transport_mode_silver.csv",
     },
 }
 

@@ -93,30 +93,25 @@ body > * {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  justify-content: center;
-  align-items: center;
-  left: 50%;
 }
 
 /* ─── Nav ─────────────────────────────────────────────────────────────────── */
 nav {
   position: sticky;
-  align-content: center;
   top: 0;
   z-index: 100;
   background: rgba(245, 240, 232, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding:  0;
+  padding: 14px 0;
   box-shadow: 0 2px 12px rgba(45,106,45,0.08);
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 16px;
-
 }
 
 .nav-brand {
@@ -199,8 +194,6 @@ nav {
 }
 
 .hero-label {
-  margin-left: 200px;
-  width: max-content;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -217,9 +210,6 @@ nav {
 }
 
 .hero h1 {
-  margin-left: 200px;
-  text-align: center;
-  width: max-content;
   font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1.1;
@@ -741,3 +731,10 @@ footer a {
 
 .badge-teal { background: var(--teal-dim); color: var(--teal-light); border: 1px solid var(--border); }
 .badge-yellow { background: rgba(180, 130, 0, 0.12); color: #8a6200; border: 1px solid rgba(180,130,0,0.3); }
+
+/* ─── Download cards responsive ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .download-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
