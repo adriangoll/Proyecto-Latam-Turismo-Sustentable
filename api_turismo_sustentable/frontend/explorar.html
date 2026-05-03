@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorar — LATAM Tourism Emissions</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/explorar.js" defer></script>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-icon">🌿</div>
+        <div class="nav-brand-text">
+          LATAM Tourism
+          <span>Emissions Dashboard</span>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="explorar.html" class="active">🔍 Explorar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Page header ─────────────────────────────────────────────────────── -->
+  <div style="padding: 48px 0 32px;">
+    <div class="container">
+      <div class="hero-label fade-up">
+        <span>🔍</span> Análisis interactivo
+      </div>
+      <h1 style="font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 12px;" class="fade-up">
+        Explorar datos
+      </h1>
+      <p style="color: var(--text-muted); font-size: 15px; max-width: 540px;" class="fade-up">
+        Consultas frecuentes o construí tu propia visualización con IA.
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- SECCIÓN A — Preguntas fijas                                           -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section style="padding: 0 0 16px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Consultas frecuentes</h2>
+        <span class="section-tag">8 análisis predefinidos</span>
+      </div>
+
+      <!-- Cards de preguntas — se renderizan con JS -->
+      <div class="questions-grid" id="questions-grid">
+        <div style="color: var(--text-muted); font-size:13px; padding:12px;">
+          Cargando preguntas...
+        </div>
+      </div>
+
+      <!-- Área donde se muestra el gráfico de la pregunta elegida -->
+      <div class="chart-area" id="fixed-chart-area">
+        <div class="chart-area-header">
+          <div>
+            <h3 id="fixed-chart-title">—</h3>
+            <p id="fixed-chart-desc"></p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="close-fixed-chart">✕ Cerrar</button>
+        </div>
+
+        <!-- Filtro de año solo para Q1 -->
+        <div id="year-filter" style="display:none; margin-bottom:16px;">
+          <label style="font-size:12px; color:var(--text-muted); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; display:block; margin-bottom:6px;">
+            Año
+          </label>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <select id="year-select" style="padding:8px 12px; background:var(--bg-surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; min-width:100px;"></select>
+            <button class="btn btn-primary btn-sm" id="apply-year-filter">Actualizar →</button>
+          </div>
+        </div>
+
+        <div class="error-msg" id="fixed-chart-error">
+          No se pudo cargar este gráfico.
+        </div>
+
+        <div id="fixed-chart-container" style="width:100%; min-height:360px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- SECCIÓN B — Tu pregunta (Gemini custom query)                        -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section style="padding: 0 0 48px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Haz tu consulta</h2>
+        <span class="badge badge-yellow">✨ IA con Gemini</span>
+      </div>
+
+      <div class="custom-section">
+        <p class="subtitle">
+          Seleccioná países, métrica y rango de años. Gemini generará el gráfico en base a los datos reales de nuestros datos.
+        </p>
+
+        <div class="form-grid">
+          <!-- Países -->
+          <div class="form-group">
+            <label>Países</label>
+            <div id="countries-select">
+              <!-- Se pueblan con JS -->
+            </div>
+          </div>
+
+          <!-- Métrica -->
+          <div class="form-group">
+            <label>Métrica</label>
+            <select id="metric-select">
+              <option value="co2">Emisiones CO₂ (kt)</option>
+              <option value="arrivals">Llegadas internacionales</option>
+              <option value="co2_per_capita">CO₂ per cápita</option>
+              <option value="yoy">Crecimiento YoY (%)</option>
+            </select>
+          </div>
+
+          <!-- Rango de años -->
+          <div class="form-group">
+            <label>Rango de años</label>
+            <div class="range-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+              <div style="display:flex; gap:8px; align-items:center; width:100%;">
+                <input type="number" id="year-from" value="2013" min="2013" max="2023" style="width:90px;" />
+                <span>–</span>
+                <input type="number" id="year-to"   value="2023" min="2013" max="2023" style="width:90px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="run-custom-btn">
+          <span id="custom-btn-text">Generar gráfico con IA →</span>
+          <span id="custom-btn-spinner" class="spinner" style="display:none;"></span>
+        </button>
+
+        <div class="error-msg" id="custom-error" style="margin-top:12px;"></div>
+      </div>
+
+      <!-- Resultado del custom query -->
+      <div class="chart-area" id="custom-chart-area">
+        <div class="chart-area-header">
+          <div>
+            <h3>Gráfico generado por IA</h3>
+            <p style="font-size:12px; color:var(--text-muted);">
+              Generado con gemini-3-flash-previewsh sobre datos Gold  LATAM.
+            </p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="close-custom-chart">✕ Cerrar</button>
+        </div>
+        <div id="custom-chart-container" style="width:100%; min-height:360px;"></div>
+      </div>
+    </div>
+  </section>
+<!-- ── Descarga de datos ──────────────────────────────────────────────────── -->
+  <section style="padding: 0 0 48px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Datos abiertos</h2>
+        <span class="section-tag">Capa Gold · Capa Silver</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; max-width: 560px;">
+        Descargá los datos procesados del pipeline directamente desde S3.
+        El enlace es válido por 10 minutos.
+      </p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="downloadCSV('gold')" id="btn-gold">
+          <span>⬇️</span> CSV Gold — Turismo &amp; Emisiones
+        </button>
+        <button class="btn btn-outline" onclick="downloadCSV('silver')" id="btn-silver">
+          <span>⬇️</span> CSV Silver — Datos procesados
+        </button>
+      </div>
+      <div id="download-error" class="error-msg" style="margin-top: 12px;"></div>
+    </div>
+  </section>
+  <!-- ── Footer ────────────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <p>
+        LATAM Tourism Emissions · Data Engineering Project ·
+        Soy Henry ·
+        <a href="index.html">← Volver al Home</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

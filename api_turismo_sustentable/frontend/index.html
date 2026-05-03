@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LATAM Tourism Emissions</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" defer></script>
+  <!-- App scripts -->
+  <script src="js/config.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-icon">🌿</div>
+        <div class="nav-brand-text">
+          LATAM Tourism
+          <span>Emissions Dashboard</span>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">🏠 Home</a></li>
+        <li><a href="explorar.html">🔍 Explorar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-label fade-up">
+        <span>🌎</span> Fuente de datos abiertos LATAM
+      </div>
+      <h1 class="fade-up">
+        Turismo <em>sostenible</em><br />en América Latina
+      </h1>
+      <p class="fade-up">
+        Explorá las emisiones de CO₂ y el flujo de llegadas internacionales
+        de los países LATAM. Datos Gold procesados.
+      </p>
+      <a href="explorar.html" class="btn btn-primary fade-up">
+        Explorar datos →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Metric Cards ─────────────────────────────────────────────────────── -->
+  <section style="padding: 0 0 16px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Resumen</h2>
+        <span class="section-tag">Métricas globales</span>
+      </div>
+
+      <div class="cards-grid" id="cards-grid">
+        <!-- Se renderizan desde main.js -->
+        <div class="metric-card fade-up" id="card-countries">
+          <span class="card-icon">🌍</span>
+          <div class="card-value" id="val-countries">—</div>
+          <div class="card-label">Países</div>
+          <div class="card-sublabel">cubiertos en LATAM</div>
+        </div>
+
+        <div class="metric-card fade-up" id="card-years">
+          <span class="card-icon">📅</span>
+          <div class="card-value" id="val-years">—</div>
+          <div class="card-label">Años</div>
+          <div class="card-sublabel">de datos históricos</div>
+        </div>
+
+        <div class="metric-card fade-up" id="card-co2">
+          <span class="card-icon">☁️</span>
+          <div class="card-value" id="val-co2">—</div>
+          <div class="card-label">Mt CO₂</div>
+          <div class="card-sublabel">emisiones totales acumuladas</div>
+        </div>
+
+        <div class="metric-card fade-up" id="card-arrivals">
+          <span class="card-icon">✈️</span>
+          <div class="card-value" id="val-arrivals">—</div>
+          <div class="card-label">M llegadas</div>
+          <div class="card-sublabel">internacionales acumuladas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── Top 10 Chart ─────────────────────────────────────────────────────── -->
+  <section style="padding: 0 0 32px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Top 10 emisores</h2>
+        <span class="section-tag" id="chart-year-tag">último año</span>
+      </div>
+
+      <div class="chart-wrapper" id="chart-wrapper">
+        <div id="chart-container"></div>
+      </div>
+
+      <div class="error-msg" id="chart-error">
+        No se pudo cargar el gráfico. Verificá que la API esté corriendo.
+      </div>
+
+      <div style="text-align:center; margin-top:8px;">
+        <a href="explorar.html" class="btn btn-outline">
+          Ver todas las gráficas disponibles →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Descargas ────────────────────────────────────────────────────────────── -->
+  <section style="padding: 0 0 48px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Datos abiertos</h2>
+        <span class="section-tag">Capa Gold · Capa Silver</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; max-width: 560px;">
+        Descargá los datos procesados dese nuestras fuentes.
+        <span style="display: block ; margin-top: 8px;">
+          El enlace es válido por 10 minutos, deberas refrescar la página si expira.
+        </span>
+      </p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="downloadCSV('gold')" id="btn-gold">
+          <span>⬇️</span> CSV Publico general — Turismo &amp; Emisiones
+        </button>
+        <button class="btn btn-outline" onclick="downloadCSV('silver')" id="btn-silver">
+          <span>⬇️</span> CSV Para ML — Datos procesados
+        </button>
+      </div>
+      <div id="download-error" class="error-msg" style="margin-top: 12px;"></div>
+    </div>
+  </section>
+  <!-- ── Footer ────────────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <p>
+        LATAM Tourism Emissions · Data Engineering Project ·
+        Soy Henry ·
+        <a href="explorar.html">Explorar datos</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
