@@ -50,6 +50,12 @@ with DAG(
         python_callable=wrapper_procesamiento,
         op_kwargs={"script_func": run_ingestion},
     )
+    # Validar bronze
+    task_validate_bronze = PythonOperator(
+        task_id="task_validate_bronze",
+        python_callable=run_validation,
+        op_kwargs={"layer": "bronze", "source": "co2_emissions"},
+    )
 
     # Tarea Capa Silver (Bronze → Silver)
     task_silver = PythonOperator(
@@ -107,4 +113,4 @@ with DAG(
     )
 
     # Dependencias: orden correcto
-    task_ingest_bronze >> task_silver >> task_validate_silver >> task_crawlers_silver >> task_gold >> task_validate_gold >> task_crawlers_gold >> task_stop_ec2 
+    task_ingest_bronze >> task_validate_bronze >> task_silver >> task_validate_silver >> task_crawlers_silver >> task_gold >> task_validate_gold >> task_crawlers_gold >> task_stop_ec2 
