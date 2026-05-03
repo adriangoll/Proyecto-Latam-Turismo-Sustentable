@@ -1,250 +1,223 @@
-.
-./.coverage
-./.pytest_cache
-./.pytest_cache/CACHEDIR.TAG
-./.pytest_cache/README.md
-./.pytest_cache/v
-./.pytest_cache/v/cache
-./.pytest_cache/v/cache/lastfailed
-./.pytest_cache/v/cache/nodeids
-./.ruff_cache
-./.ruff_cache/0.15.12
-./.ruff_cache/0.15.12/11239758682910369253
-./.ruff_cache/0.15.12/12183469442252135986
-./.ruff_cache/0.15.12/12814931867771489987
-./.ruff_cache/0.15.12/13467391526859657832
-./.ruff_cache/0.15.12/13610438436770026956
-./.ruff_cache/0.15.12/14254558367081404907
-./.ruff_cache/0.15.12/1427448105747587953
-./.ruff_cache/0.15.12/15830095416395315809
-./.ruff_cache/0.15.12/15999708387034442216
-./.ruff_cache/0.15.12/17479027123490506224
-./.ruff_cache/0.15.12/17695836599510713009
-./.ruff_cache/0.15.12/18438172741570945974
-./.ruff_cache/0.15.12/1939226490574937481
-./.ruff_cache/0.15.12/2192854355093517376
-./.ruff_cache/0.15.12/3342981690461104688
-./.ruff_cache/0.15.12/5392503122695400245
-./.ruff_cache/0.15.12/6285538655767032598
-./.ruff_cache/0.15.12/7754066860058760492
-./.ruff_cache/0.15.12/8976152361594386020
-./.ruff_cache/0.15.12/9870659378504925294
-./.ruff_cache/CACHEDIR.TAG
-./coverage-bronze.xml
-./coverage-silver.xml
-./dags
-./dags/dag_datalake_core_monthly.py
-./dags/dag_export_data_monthly.py
-./dags/utils.py
-./Datasets.md
-./docker
-./docker/.dockerignore
-./docker/.env
-./docker/docker-compose.yml
-./docker/docker.md
-./docker/Dockerfile
-./docker/requirements.txt
-./docs
-./docs/athena
-./docs/athena/athena.md
-./docs/athena/queries.md
-./docs/bronze_docs
-./docs/bronze_docs/data_quality_error_hand.md
-./docs/bronze_docs/datos-capa-raw-bronze.png
-./docs/bronze_docs/README.md
-./docs/capturas_ci_cd
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-15 233227.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-15 233247.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-15 233304.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-16 013331.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-16 013350.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-16 013406.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-16 231355.png
-./docs/capturas_ci_cd/Captura de pantalla 2026-04-16 231457.png
-./docs/capturas_ci_cd/Captura-datos-raw-owid-co2.png
-./docs/capturas_ci_cd/Captura-datos-raw-unwto-transport.png
-./docs/capturas_ci_cd/Captura-datos-raw-worldbank-tourism.png
-./docs/general
-./docs/general/datos-capa-silver.png
-./docs/general/diagrama_arquitectura.png
-./docs/general/diagrama_modelo_conceptual.png
-./docs/general/justificacion_tecnica.md
-./docs/general/Lineamientos PF _ DE_Grupo1.docx.pdf
-./docs/general/Planilla de Entrega-PropuestaPF_Grupo1.docx.pdf
-./docs/gold_docs
-./docs/gold_docs/README.md
-./docs/great_expectations_docs
-./docs/great_expectations_docs/problemas_expectations.md
-./docs/great_expectations_docs/readme_expectations.md
-./docs/silver_docs
-./docs/silver_docs/README.md
-./docs/terraform_docs
-./docs/terraform_docs/img
-./docs/terraform_docs/img/Budget-zero.jpg
-./docs/terraform_docs/img/glue-aws.jpg
-./docs/terraform_docs/img/glue-rol-path.jpg
-./docs/terraform_docs/img/glue-terraform.jpg
-./docs/terraform_docs/img/gold-crawlers-logs.jpg
-./docs/terraform_docs/img/gold-crawlers-run.jpg
-./docs/terraform_docs/img/gold-crawlers.jpg
-./docs/terraform_docs/img/gold-tables.jpg
-./docs/terraform_docs/img/iam-permisos.jpg
-./docs/terraform_docs/img/iam-usuarios.jpg
-./docs/terraform_docs/img/s2-aws.jpg
-./docs/terraform_docs/img/s3-terraform.jpg
-./docs/terraform_docs/infra_ec2_airflow.md
-./docs/terraform_docs/terraform.md
-./estructura.txt
-./infra
-./infra/.terraform
-./infra/.terraform/modules
-./infra/.terraform/modules/modules.json
-./infra/.terraform/providers
-./infra/.terraform/providers/registry.terraform.io
-./infra/.terraform/providers/registry.terraform.io/hashicorp
-./infra/.terraform/providers/registry.terraform.io/hashicorp/aws
-./infra/.terraform/providers/registry.terraform.io/hashicorp/aws/6.41.0
-./infra/.terraform/providers/registry.terraform.io/hashicorp/aws/6.41.0/windows_amd64
-./infra/.terraform/providers/registry.terraform.io/hashicorp/aws/6.41.0/windows_amd64/LICENSE.txt
-./infra/.terraform/providers/registry.terraform.io/hashicorp/aws/6.41.0/windows_amd64/terraform-provider-aws_v6.41.0_x5.exe
-./infra/.terraform.lock.hcl
-./infra/main.tf
-./infra/modules
-./infra/modules/athena
-./infra/modules/athena/main.tf
-./infra/modules/athena/outputs.tf
-./infra/modules/athena/variables.tf
-./infra/modules/ec2
-./infra/modules/ec2/main.tf
-./infra/modules/ec2/outputs.tf
-./infra/modules/ec2/variables.tf
-./infra/modules/glue
-./infra/modules/glue/main.tf
-./infra/modules/glue/outputs.tf
-./infra/modules/glue/variables.tf
-./infra/modules/iam
-./infra/modules/iam/main.tf
-./infra/modules/iam/outputs.tf
-./infra/modules/iam/variables.tf
-./infra/modules/s3
-./infra/modules/s3/main.tf
-./infra/modules/s3/outputs.tf
-./infra/modules/s3/variables.tf
-./infra/outputs.tf
-./infra/providers.tf
-./infra/terraform.tfstate
-./infra/terraform.tfstate.backup
-./infra/terraform.tfvars
-./infra/variables.tf
-./pipelines
-./pipelines/expectations
-./pipelines/expectations/bronze_expectations.py
-./pipelines/expectations/config_expectations.py
-./pipelines/expectations/dim_country_gold.parquet
-./pipelines/expectations/gold_expectations.py
-./pipelines/expectations/run_validation.py
-./pipelines/expectations/silver_expectations.py
-./pipelines/expectations/transport_mode_silver.parquet
-./pipelines/expectations/utils_expectations.py
-./pipelines/expectations/__init__.py
-./pipelines/gold
-./pipelines/gold/build_gold.py
-./pipelines/gold/config_gold.py
-./pipelines/gold/data
-./pipelines/gold/data/gold
-./pipelines/gold/data/gold/dim_country
-./pipelines/gold/data/gold/dim_country/data.parquet
-./pipelines/gold/data/gold/fact_tourism_emissions
-./pipelines/gold/data/gold/fact_tourism_emissions/data.parquet
-./pipelines/gold/data/open-data
-./pipelines/gold/data/open-data/v1
-./pipelines/gold/data/open-data/v1/gold
-./pipelines/gold/data/open-data/v1/gold/dim_country
-./pipelines/gold/data/open-data/v1/gold/dim_country/data_dictionary.md
-./pipelines/gold/data/open-data/v1/gold/dim_country/latam_dim_country_v1.csv
-./pipelines/gold/data/open-data/v1/gold/dim_country/latam_dim_country_v1.parquet
-./pipelines/gold/data/open-data/v1/gold/dim_country/metadata.json
-./pipelines/gold/data/open-data/v1/gold/fact_tourism_emissions
-./pipelines/gold/data/open-data/v1/gold/fact_tourism_emissions/data_dictionary.md
-./pipelines/gold/data/open-data/v1/gold/fact_tourism_emissions/latam_fact_tourism_emissions_v1.csv
-./pipelines/gold/data/open-data/v1/gold/fact_tourism_emissions/latam_fact_tourism_emissions_v1.parquet
-./pipelines/gold/data/open-data/v1/gold/fact_tourism_emissions/metadata.json
-./pipelines/gold/estructura.txt
-./pipelines/gold/export_open_data_gold.py
-./pipelines/gold/gold_error.log
-./pipelines/gold/run_gold.py
-./pipelines/gold/__init__.py
-./pipelines/ingestion
-./pipelines/ingestion/config.py
-./pipelines/ingestion/ingest_owid_co2.py
-./pipelines/ingestion/ingest_unwto_transport.py
-./pipelines/ingestion/ingest_utils.py
-./pipelines/ingestion/ingest_worldbank_tourism.py
-./pipelines/ingestion/requirements.txt
-./pipelines/ingestion/run_ingestion.py
-./pipelines/ingestion/__init__.py
-./pipelines/transformation
-./pipelines/transformation/check_silver.py
-./pipelines/transformation/config_silver.py
-./pipelines/transformation/data
-./pipelines/transformation/data/quality_reports
-./pipelines/transformation/data/quality_reports/silver
-./pipelines/transformation/data/quality_reports/silver/co2_emissions_2026-04-26.json
-./pipelines/transformation/data/quality_reports/silver/tourism_arrivals_2026-04-26.json
-./pipelines/transformation/data/quality_reports/silver/transport_mode_2026-04-26.json
-./pipelines/transformation/data/silver
-./pipelines/transformation/data/silver/co2_emissions
-./pipelines/transformation/data/silver/co2_emissions/data.parquet
-./pipelines/transformation/data/silver/tourism_arrivals
-./pipelines/transformation/data/silver/tourism_arrivals/data.parquet
-./pipelines/transformation/data/silver/transport_mode
-./pipelines/transformation/data/silver/transport_mode/data.parquet
-./pipelines/transformation/export_open_data_silver.py
-./pipelines/transformation/run_transformation.py
-./pipelines/transformation/transform_co2.py
-./pipelines/transformation/transform_tourism.py
-./pipelines/transformation/transform_transport.py
-./pipelines/transformation/utils_silver.py
-./pipelines/transformation/__init__.py
-./pipelines/__init__.py
-./pyproject.toml
-./queries
-./queries/01_turismo_vs_co2.sql
-./queries/02_transporte_impacto_ambiental.sql
-./queries/03_crecimiento_economico_vs_co2.sql
-./queries/04_evolucion_emisiones_turismo.sql
-./queries/05_paises_turismo_sostenible.sql
-./queries/READEME.md
-./README.md
-./streamlit
-./streamlit/app.py
-./streamlit/assets
-./streamlit/assets/fondo.png
-./streamlit/assets/fondo_claro.png
-./streamlit/pages
-./streamlit/pages/1_turismo_vs_co2.py
-./streamlit/pages/2_transporte_impacto.py
-./streamlit/pages/3_crecimiento_economico.py
-./streamlit/pages/4_evolucion_emisiones.py
-./streamlit/pages/5_turismo_sostenible.py
-./streamlit/requirements.txt
-./streamlit/utils
-./streamlit/utils/athena_client.py
-./streamlit/utils/__init__.py
-./tests
-./tests/expectations
-./tests/expectations/conftest.py
-./tests/expectations/test_expectations.py
-./tests/expectations/__init__.py
-./tests/gold
-./tests/gold/test_gold.py
-./tests/ingestion
-./tests/ingestion/test_ingest_utils.py
-./tests/ingestion/test_run_all_simple.py
-./tests/ingestion/test_run_ingestion.py
-./tests/ingestion/test_worldbank.py
-./tests/ingestion/__init__.py
-./tests/transformation
-./tests/transformation/test_silver_logic.py
-./tests/transformation/__init__.py
-./tests/__init__.py
+🏠 .
+├── 📂 .github
+│   └── 📂 workflows
+│       ├── 📄 ci_cd_bronze_ingestion.yml
+│       ├── 📄 ci_cd_gold.yml
+│       ├── 📄 ci_cd_silver.yml
+│       └── 📄 ci_cd_terraform.yml
+├── 📂 .pytest_cache
+│   ├── 📂 v
+│   │   └── 📂 cache
+│   │       ├── 📄 lastfailed
+│   │       └── 📄 nodeids
+│   ├── 📄 .gitignore
+│   ├── 📄 CACHEDIR.TAG
+│   └── 📄 README.md
+├── 📂 api_turismo_sustentable
+│   ├── 📂 backend
+│   │   ├── 📄 .python-version
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 custom_query.py
+│   │   ├── 📄 data_loader.py
+│   │   ├── 📄 main.py
+│   │   ├── 📄 questions.py
+│   │   └── 📄 requirements.txt
+│   ├── 📂 frontend
+│   │   ├── 📂 assets
+│   │   │   └── 📄 fondo.png
+│   │   ├── 📂 css
+│   │   │   └── 📄 style.css
+│   │   ├── 📂 js
+│   │   │   ├── 📄 config.js
+│   │   │   ├── 📄 explorar.js
+│   │   │   └── 📄 main.js
+│   │   ├── 📄 explorar.html
+│   │   └── 📄 index.html
+│   ├── 📄 .gitignore
+│   └── 📄 Readme.md
+├── 📂 dags
+│   ├── 📄 dag_datalake_core_monthly.py
+│   ├── 📄 dag_export_data_monthly.py
+│   └── 📄 utils.py
+├── 📂 docker
+│   ├── 📄 .dockerignore
+│   ├── 📄 .env
+│   ├── 📄 Dockerfile
+│   ├── 📄 docker-compose.yml
+│   ├── 📄 docker.md
+│   └── 📄 requirements.txt
+├── 📂 docs
+│   ├── 📂 athena
+│   │   ├── 📄 athena.md
+│   │   └── 📄 queries.md
+│   ├── 📂 bronze_docs
+│   │   ├── 📄 README.md
+│   │   ├── 📄 data_quality_error_hand.md
+│   │   └── 📄 datos-capa-raw-bronze.png
+│   ├── 📂 capturas_ci_cd
+│   │   ├── 📄 Captura de pantalla 2026-04-15 233227.png
+│   │   ├── 📄 Captura de pantalla 2026-04-15 233247.png
+│   │   ├── 📄 Captura de pantalla 2026-04-15 233304.png
+│   │   ├── 📄 Captura de pantalla 2026-04-16 013331.png
+│   │   ├── 📄 Captura de pantalla 2026-04-16 013350.png
+│   │   ├── 📄 Captura de pantalla 2026-04-16 013406.png
+│   │   ├── 📄 Captura de pantalla 2026-04-16 231355.png
+│   │   ├── 📄 Captura de pantalla 2026-04-16 231457.png
+│   │   ├── 📄 Captura-datos-raw-owid-co2.png
+│   │   ├── 📄 Captura-datos-raw-unwto-transport.png
+│   │   └── 📄 Captura-datos-raw-worldbank-tourism.png
+│   ├── 📂 general
+│   │   ├── 📄 Lineamientos PF _ DE_Grupo1.docx.pdf
+│   │   ├── 📄 Planilla de Entrega-PropuestaPF_Grupo1.docx.pdf
+│   │   ├── 📄 datos-capa-silver.png
+│   │   ├── 📄 diagrama_arquitectura.png
+│   │   ├── 📄 diagrama_modelo_conceptual.png
+│   │   └── 📄 justificacion_tecnica.md
+│   ├── 📂 gold_docs
+│   │   └── 📄 README.md
+│   ├── 📂 great_expectations_docs
+│   │   ├── 📄 problemas_expectations.md
+│   │   └── 📄 readme_expectations.md
+│   ├── 📂 silver_docs
+│   │   └── 📄 README.md
+│   └── 📂 terraform_docs
+│       ├── 📂 img
+│       │   ├── 📄 Budget-zero.jpg
+│       │   ├── 📄 glue-aws.jpg
+│       │   ├── 📄 glue-rol-path.jpg
+│       │   ├── 📄 glue-terraform.jpg
+│       │   ├── 📄 gold-crawlers-logs.jpg
+│       │   ├── 📄 gold-crawlers-run.jpg
+│       │   ├── 📄 gold-crawlers.jpg
+│       │   ├── 📄 gold-tables.jpg
+│       │   ├── 📄 iam-permisos.jpg
+│       │   ├── 📄 iam-usuarios.jpg
+│       │   ├── 📄 s2-aws.jpg
+│       │   └── 📄 s3-terraform.jpg
+│       ├── 📄 infra_ec2_airflow.md
+│       └── 📄 terraform.md
+├── 📂 infra
+│   ├── 📂 modules
+│   │   ├── 📂 athena
+│   │   │   ├── 📄 main.tf
+│   │   │   ├── 📄 outputs.tf
+│   │   │   └── 📄 variables.tf
+│   │   ├── 📂 ec2
+│   │   │   ├── 📄 main.tf
+│   │   │   ├── 📄 outputs.tf
+│   │   │   └── 📄 variables.tf
+│   │   ├── 📂 glue
+│   │   │   ├── 📄 main.tf
+│   │   │   ├── 📄 outputs.tf
+│   │   │   └── 📄 variables.tf
+│   │   ├── 📂 iam
+│   │   │   ├── 📄 main.tf
+│   │   │   ├── 📄 outputs.tf
+│   │   │   └── 📄 variables.tf
+│   │   └── 📂 s3
+│   │       ├── 📄 main.tf
+│   │       ├── 📄 outputs.tf
+│   │       └── 📄 variables.tf
+│   ├── 📄 .gitignore
+│   ├── 📄 main.tf
+│   ├── 📄 outputs.tf
+│   ├── 📄 providers.tf
+│   ├── 📄 terraform.tfvars
+│   └── 📄 variables.tf
+├── 📂 pipelines
+│   ├── 📂 expectations
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 bronze_expectations.py
+│   │   ├── 📄 config_expectations.py
+│   │   ├── 📄 gold_expectations.py
+│   │   ├── 📄 run_validation.py
+│   │   ├── 📄 silver_expectations.py
+│   │   └── 📄 utils_expectations.py
+│   ├── 📂 gold
+│   │   ├── 📂 data
+│   │   │   └── 📂 open-data
+│   │   │       └── 📂 v1
+│   │   │           └── 📂 gold
+│   │   │               ├── 📂 dim_country
+│   │   │               │   ├── 📄 data_dictionary.md
+│   │   │               │   └── 📄 metadata.json
+│   │   │               └── 📂 fact_tourism_emissions
+│   │   │                   ├── 📄 data_dictionary.md
+│   │   │                   └── 📄 metadata.json
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 build_gold.py
+│   │   ├── 📄 config_gold.py
+│   │   ├── 📄 estructura.txt
+│   │   ├── 📄 export_open_data_gold.py
+│   │   └── 📄 run_gold.py
+│   ├── 📂 ingestion
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 config.py
+│   │   ├── 📄 ingest_owid_co2.py
+│   │   ├── 📄 ingest_unwto_transport.py
+│   │   ├── 📄 ingest_utils.py
+│   │   ├── 📄 ingest_worldbank_tourism.py
+│   │   ├── 📄 requirements.txt
+│   │   └── 📄 run_ingestion.py
+│   ├── 📂 transformation
+│   │   ├── 📂 data
+│   │   │   └── 📂 quality_reports
+│   │   │       └── 📂 silver
+│   │   │           ├── 📄 co2_emissions_2026-04-26.json
+│   │   │           ├── 📄 tourism_arrivals_2026-04-26.json
+│   │   │           └── 📄 transport_mode_2026-04-26.json
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 check_silver.py
+│   │   ├── 📄 config_silver.py
+│   │   ├── 📄 export_open_data_silver.py
+│   │   ├── 📄 run_transformation.py
+│   │   ├── 📄 transform_co2.py
+│   │   ├── 📄 transform_tourism.py
+│   │   ├── 📄 transform_transport.py
+│   │   └── 📄 utils_silver.py
+│   └── 📄 __init__.py
+├── 📂 queries
+│   ├── 📄 01_turismo_vs_co2.sql
+│   ├── 📄 02_transporte_impacto_ambiental.sql
+│   ├── 📄 03_crecimiento_economico_vs_co2.sql
+│   ├── 📄 04_evolucion_emisiones_turismo.sql
+│   ├── 📄 05_paises_turismo_sostenible.sql
+│   └── 📄 READEME.md
+├── 📂 streamlit
+│   ├── 📂 assets
+│   │   ├── 📄 fondo.png
+│   │   └── 📄 fondo_claro.png
+│   ├── 📂 pages
+│   │   ├── 📄 1_turismo_vs_co2.py
+│   │   ├── 📄 2_transporte_impacto.py
+│   │   ├── 📄 3_crecimiento_economico.py
+│   │   ├── 📄 4_evolucion_emisiones.py
+│   │   └── 📄 5_turismo_sostenible.py
+│   ├── 📂 utils
+│   │   ├── 📄 __init__.py
+│   │   └── 📄 athena_client.py
+│   └── 📄 app.py
+├── 📂 tests
+│   ├── 📂 expectations
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 conftest.py
+│   │   └── 📄 test_expectations.py
+│   ├── 📂 gold
+│   │   └── 📄 test_gold.py
+│   ├── 📂 ingestion
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 test_ingest_utils.py
+│   │   ├── 📄 test_run_all_simple.py
+│   │   ├── 📄 test_run_ingestion.py
+│   │   └── 📄 test_worldbank.py
+│   ├── 📂 transformation
+│   │   ├── 📄 __init__.py
+│   │   └── 📄 test_silver_logic.py
+│   └── 📄 __init__.py
+├── 📄 .gitignore
+├── 📄 Datasets.md
+├── 📄 README.md
+├── 📄 coverage-bronze.xml
+├── 📄 coverage-silver.xml
+├── 📄 estructura.txt
+└── 📄 pyproject.toml

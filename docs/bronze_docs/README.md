@@ -22,6 +22,12 @@ Amazon S3 (Raw - Data Lake)
 
 ---
 
+## 🔧 Diagrama General
+
+## ![Diagrama-Bronze](datos-capa-raw-bronze.png)
+
+---
+
 ## 🗄️ Data Lake (Raw Layer)
 
 📍 Bucket:
@@ -94,25 +100,25 @@ python run_ingestion.py --dry-run
 
 ## 🔄 Qué hace el pipeline
 
-* Extrae datos de APIs / archivos
-* Filtra:
+- Extrae datos de APIs / archivos
+- Filtra:
+  - Países LATAM (19)
+  - Años (2013–2023)
 
-  * Países LATAM (19)
-  * Años (2013–2023)
-* Valida:
+- Valida:
+  - Esquema
+  - Valores nulos
 
-  * Esquema
-  * Valores nulos
-* Carga a S3
+- Carga a S3
 
 ---
 
 ## 🧪 Validaciones
 
-* ✔️ Columnas esperadas
-* ✔️ Valores nulos
-* ✔️ Países LATAM
-* ✔️ Rango de años
+- ✔️ Columnas esperadas
+- ✔️ Valores nulos
+- ✔️ Países LATAM
+- ✔️ Rango de años
 
 ---
 
@@ -132,37 +138,37 @@ Total: 49.0s
 
 GitHub Actions:
 
-* Lint → black
-* Tests → pytest
-* Coverage report
+- Lint → black
+- Tests → pytest
+- Coverage report
 
 ---
 
 ## 🛠️ Stack
 
-* Python
-* pandas
-* boto3
-* requests
-* AWS S3
-* GitHub Actions
+- Python
+- pandas
+- boto3
+- requests
+- AWS S3
+- GitHub Actions
 
 ---
 
 ## ✅ Buenas prácticas
 
-* Datos **inmutables**
-* Separación Bronze / Raw
-* Pipelines modulares
-* Logging estructurado
-* Modo seguro (dry-run)
+- Datos **inmutables**
+- Separación Bronze / Raw
+- Pipelines modulares
+- Logging estructurado
+- Modo seguro (dry-run)
 
 ---
 
 ## 📈 Estado
 
-| Componente | Estado     |
-| ---------- | ---------- |
+| Componente | Estado      |
+| ---------- | ----------- |
 | Bronze     | ✅ Completo |
 | Raw (S3)   | ✅ Completo |
 
@@ -170,17 +176,13 @@ GitHub Actions:
 
 ## 👨‍💻 Equipo
 
-* **Adrian Sosa** — Scrum Master
-* **Martin Tedesco** — Data Engineer
-* **Mariana Gil** — AWS Infra
-* **Luis Ramón Buruato** — Bronze / Pipelines
+- **Adrian Sosa** — Scrum Master
+- **Martin Tedesco** — Data Engineer
+- **Mariana Gil** — AWS Infra
+- **Luis Ramón Buruato** — Bronze / Pipelines
 
 ---
 
 ## ⭐ Conclusión
 
 > La capa Bronze garantiza datos originales, confiables y listos para su transformación en Silver.
-
-
-
-
