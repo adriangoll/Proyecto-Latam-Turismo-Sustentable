@@ -2,6 +2,7 @@
 main.py
 FastAPI app principal.
 Endpoints:
+  HEAD /                         → health check (para Render)
   GET  /                        → health check
   GET  /api/overview            → métricas para cards del Home
   GET  /api/questions           → lista de preguntas fijas disponibles
@@ -17,6 +18,7 @@ from typing import Optional
 import boto3
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
+from fastapi import Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -94,7 +96,9 @@ def health():
         "fact_rows":      len(fact),
         "fact_loaded":    not fact.empty,
     }
-
+@app.head("/")
+def root_head():
+    return Response(status_code=200)
 
 @app.get("/api/overview", tags=["data"])
 def overview():
