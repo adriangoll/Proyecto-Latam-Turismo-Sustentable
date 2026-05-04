@@ -219,6 +219,31 @@ silver/
 
 ---
 
+## ⚠️ Detección de Outliers (Fase Futura)
+
+### Implementado
+- Script: `detect_outliers.py`
+- Método: IQR (Interquartile Range) con multiplier 1.5
+- Detecta valores fuera de [Q1 - 1.5×IQR, Q3 + 1.5×IQR]
+
+### Por qué NO se eliminan
+1. Eventos reales (COVID-19, crisis políticas)
+2. Preservar información histórica
+3. Decisión de negocio de la ONG
+
+### Próximas fases
+- [ ] Integración S3 completa
+- [ ] Reportes automáticos en Airflow
+- [ ] Revisión manual y marcado (keep/remove)
+- [ ] Modelado predictivo con outliers etiquetados
+
+### Ejecutar
+```bash
+python detect_outliers.py --dataset co2_emissions --dry-run
+```
+
+---
+
 ## 🧪 Desarrollo local
 
 El proyecto soporta ejecución en modo **dry-run**:
