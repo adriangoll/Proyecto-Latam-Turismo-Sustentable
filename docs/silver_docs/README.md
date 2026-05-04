@@ -2,14 +2,14 @@
 
 ## 📌 Descripción
 
-Este repositorio contiene las transformaciones de la **capa Silver** del *Data Lake de Turismo Sostenible en LATAM*.
+Este repositorio contiene las transformaciones de la **capa Silver** del _Data Lake de Turismo Sostenible en LATAM_.
 
 La capa Silver tiene como objetivo:
 
-* Limpiar y estandarizar los datos provenientes de Bronze
-* Aplicar reglas de calidad de datos
-* Enriquecer datasets con métricas derivadas
-* Generar datasets listos para análisis (Power BI, Gold, Open Data)
+- Limpiar y estandarizar los datos provenientes de Bronze
+- Aplicar reglas de calidad de datos
+- Enriquecer datasets con métricas derivadas
+- Generar datasets listos para análisis (Power BI, Gold, Open Data)
 
 ---
 
@@ -22,6 +22,12 @@ Silver (limpios, validados, enriquecidos)  ← ESTE PROYECTO
    ↓
 Gold (modelos de negocio) [pendiente]
 ```
+
+---
+
+## 🔧 Diagrama General
+
+## ![Diagrama-Bronze](datos-capa-silver.png)
 
 ---
 
@@ -45,12 +51,12 @@ config_silver.py
 
 Incluye:
 
-* Paths en S3 (Bronze y Silver)
-* Esquemas esperados por dataset
-* Reglas de calidad
-* Claves de deduplicación
-* Países LATAM válidos
-* Rango temporal (2013–2023)
+- Paths en S3 (Bronze y Silver)
+- Esquemas esperados por dataset
+- Reglas de calidad
+- Claves de deduplicación
+- Países LATAM válidos
+- Rango temporal (2013–2023)
 
 ---
 
@@ -58,39 +64,37 @@ Incluye:
 
 ### 1. CO₂ Emissions
 
-Script: 
+Script:
 
 **Transformaciones:**
 
-* Validación de esquema y tipos
-* Eliminación de duplicados (`country_code`, `year`)
-* Eliminación de filas sin datos relevantes
-* Relleno de datos:
+- Validación de esquema y tipos
+- Eliminación de duplicados (`country_code`, `year`)
+- Eliminación de filas sin datos relevantes
+- Relleno de datos:
+  - Forward-fill → población
+  - Interpolación → PIB
 
-  * Forward-fill → población
-  * Interpolación → PIB
-* Métricas derivadas:
-
-  * CO₂ per cápita
-  * Intensidad de CO₂ por PIB
-  * PIB per cápita
-  * Crecimiento del PIB (%)
+- Métricas derivadas:
+  - CO₂ per cápita
+  - Intensidad de CO₂ por PIB
+  - PIB per cápita
+  - Crecimiento del PIB (%)
 
 ---
 
 ### 2. Tourism
 
-Script: 
+Script:
 
 **Transformaciones:**
 
-* Validación de esquema
-* Eliminación de duplicados
-* Eliminación de filas sin llegadas
-* Métricas derivadas:
-
-  * Crecimiento de turistas (%)
-  * Ingreso por turista
+- Validación de esquema
+- Eliminación de duplicados
+- Eliminación de filas sin llegadas
+- Métricas derivadas:
+  - Crecimiento de turistas (%)
+  - Ingreso por turista
 
 ⚠️ No se realiza interpolación para evitar inventar datos financieros.
 
@@ -98,20 +102,19 @@ Script:
 
 ### 3. Transport Mode
 
-Script: 
+Script:
 
 **Transformaciones:**
 
-* Validación de esquema
-* Eliminación de duplicados
-* Eliminación de filas sin datos de transporte
-* Re-cálculo de:
+- Validación de esquema
+- Eliminación de duplicados
+- Eliminación de filas sin datos de transporte
+- Re-cálculo de:
+  - Total de turistas
+  - Porcentajes por tipo de transporte
 
-  * Total de turistas
-  * Porcentajes por tipo de transporte
-* Nueva variable:
-
-  * `dominant_transport`
+- Nueva variable:
+  - `dominant_transport`
 
 ⚠️ Dataset con cobertura parcial por diseño.
 
@@ -119,16 +122,16 @@ Script:
 
 ## 🧰 Utilidades compartidas
 
-Módulo: 
+Módulo:
 
 Funciones principales:
 
-* Lectura desde S3 y local
-* Escritura en formato Parquet (Snappy)
-* Aplicación de esquemas
-* Deduplicación
-* Manejo de valores nulos
-* Generación de reportes de calidad
+- Lectura desde S3 y local
+- Escritura en formato Parquet (Snappy)
+- Aplicación de esquemas
+- Deduplicación
+- Manejo de valores nulos
+- Generación de reportes de calidad
 
 ---
 
@@ -136,11 +139,11 @@ Funciones principales:
 
 Cada transformación genera un **reporte de calidad** con:
 
-* Filas antes vs después
-* % de valores nulos por columna
-* Países faltantes
-* Años faltantes
-* Alertas por umbrales definidos
+- Filas antes vs después
+- % de valores nulos por columna
+- Países faltantes
+- Años faltantes
+- Alertas por umbrales definidos
 
 Ubicación:
 
@@ -185,7 +188,7 @@ python run_transformation.py --dry-run \
 
 ## 📤 Exportación Open Data
 
-Script: 
+Script:
 
 Exporta los datasets Silver a:
 
@@ -195,13 +198,13 @@ s3://<bucket>/open-data/v1/silver/
 
 Formatos:
 
-* Parquet (análisis)
-* CSV (uso público)
+- Parquet (análisis)
+- CSV (uso público)
 
 Incluye:
 
-* `metadata.json`
-* `data_dictionary.md`
+- `metadata.json`
+- `data_dictionary.md`
 
 ---
 
@@ -261,28 +264,28 @@ Permite probar sin necesidad de S3.
 
 ## 📌 Decisiones de diseño
 
-* No se particiona Silver (datasets pequeños)
-* Validación estricta de esquema
-* No se inventan datos (principio clave)
-* Transformaciones específicas por dataset
-* Preparado para escalar a Gold
+- No se particiona Silver (datasets pequeños)
+- Validación estricta de esquema
+- No se inventan datos (principio clave)
+- Transformaciones específicas por dataset
+- Preparado para escalar a Gold
 
 ---
 
 ## ⚠️ Limitaciones
 
-* Dataset de transporte incompleto por naturaleza
-* Algunos países o años pueden faltar
-* Capa Gold aún no implementada
+- Dataset de transporte incompleto por naturaleza
+- Algunos países o años pueden faltar
+- Capa Gold aún no implementada
 
 ---
 
 ## 🔮 Próximos pasos
 
-* Construcción de capa Gold
-* Integración con Power BI
-* Automatización (Airflow / AWS Step Functions)
-* CI/CD para validación de datos
+- Construcción de capa Gold
+- Integración con Power BI
+- Automatización (Airflow / AWS Step Functions)
+- CI/CD para validación de datos
 
 ---
 
@@ -298,4 +301,3 @@ Data Engineering — 2026
 La capa Silver convierte datos crudos en:
 
 > **Datasets limpios, confiables y listos para análisis sobre turismo sostenible en LATAM**
-
